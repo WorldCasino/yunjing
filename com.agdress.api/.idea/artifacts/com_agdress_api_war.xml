@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="com.agdress.api:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="com.agdress.api-1.0.war">
+      <element id="artifact" artifact-name="com.agdress.api:war exploded" />
+    </root>
+  </artifact>
+</component>
