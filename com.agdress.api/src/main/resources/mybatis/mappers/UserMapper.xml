@@ -6,11 +6,16 @@
         <id column="user_id" property="userId" jdbcType="BIGINT"/>
         <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
-        <result column="gender" property="gender" jdbcType="INTEGER" javaType="com.agdress.enums.GenderEnum"/>
+        <result column="gender" property="gender" jdbcType="INTEGER"/>
         <result column="head_url" property="headUrl" jdbcType="VARCHAR"/>
+        <result column="card_id" property="cardId" jdbcType="BIGINT"/>
         <result column="card_no" property="cardNo" jdbcType="VARCHAR"/>
         <result column="card_bank" property="cardBank" jdbcType="VARCHAR"/>
+        <result column="card_name" property="cardName" jdbcType="VARCHAR"/>
         <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
+        <result column="currency" property="currency" jdbcType="DECIMAL"/>
+        <result column="bank_icon" property="bankIcon" jdbcType="VARCHAR"/>
+        <result column="qq" property="qq" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--更新会员版本号-->
@@ -19,13 +24,17 @@
      </update>
 
     <select id="getUserInfo" resultMap="userResultVo" parameterType="java.lang.Long">
-      SELECT t_users.user_id, t_users.nickname, t_users.phone, t_users.gender, t_users.head_url,
-          t_user_cards.card_no, t_user_cards.card_bank, m_bank_types.bank_name
-        FROM t_users
-        LEFT JOIN t_user_cards ON t_user_cards.user_id = t_users.user_id
-        LEFT JOIN m_bank_types ON m_bank_types.bank_type = t_user_cards.bank_type
-        WHERE t_users.user_id = #{userId} AND
-              t_users.is_delete = 0
+      SELECT t.user_id, t.nickname, t.phone, t.gender, t.head_url,
+          t_user_cards.card_id, t_user_cards.card_no, t_user_cards.card_bank, t_user_cards.card_name,
+          m_bank_types.bank_name, m_bank_types.bank_icon,
+          kf.qq
+        FROM t_users t
+        LEFT JOIN t_user_cards ON t_user_cards.user_id = t.user_id AND t_user_cards.is_delete = 0
+        LEFT JOIN m_bank_types ON m_bank_types.bank_type = t_user_cards.bank_type AND m_bank_types.is_delete = 0
+        LEFT JOIN t_user_account ON t_user_account.user_id = t.user_id AND t_user_account.is_delete = 0
+        LEFT JOIN t_users kf ON kf.user_id = t.be_user_id
+        WHERE t.user_id = #{userId} AND
+              t.is_delete = 0
     </select>
 
 </mapper>

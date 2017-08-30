@@ -1,5 +1,6 @@
 package com.agdress.bgapi.rsp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
@@ -24,7 +25,9 @@ public class VideoRoundQueryItem {
     private int bettings;
     private float betAmount;
     private float payoutAmount;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date openTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date calcTime;
 
     public int getStatus() {

@@ -1,6 +1,7 @@
 package com.agdress.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class BaseEntity implements Serializable {
      * 数据版本号，处理乐观锁
      */
     @JsonIgnore
+    @Version
     @TableField(value = "version_no")
     private long versionNo;
 
@@ -36,11 +38,11 @@ public class BaseEntity implements Serializable {
     @TableField(value = "is_delete")
     private int isDelete;
 
-    public long getTimeStamp() {
+    public long getVersionNo() {
         return versionNo;
     }
 
-    public void setTimeStamp(long versionNo) {
+    public void setVersionNo(long versionNo) {
         this.versionNo = versionNo;
     }
 

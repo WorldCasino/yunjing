@@ -20,6 +20,7 @@
 		<property name="password" value="${redis.password}"/>
 		<property name="port" value="${redis.port}"/>
 		<property name="usePool" value="true"/>
+		<property name="poolConfig" ref="jedisPoolConfig"/>
 	</bean>
 
 	<!--消息序列化-->
@@ -63,6 +64,10 @@
 		<constructor-arg index="0" ref="jedisPoolConfig" />
 		<constructor-arg index="1" value="${redis.host}" />
 		<constructor-arg index="2" value="${redis.port}" type="int" />
+        <!--TIMEOUT-->
+        <constructor-arg index="3" value="10000" type="int"/>
+        <!--AUTH-->
+        <constructor-arg index="4" value="${redis.password}"/>
 	</bean>
 
 </beans>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.agdress.api</groupId>
-    <artifactId>com.agdress.api</artifactId>
+    <artifactId>api.agdress</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
@@ -18,7 +18,7 @@
         <jackson.version>2.5.2</jackson.version>
         <aspectj.version>1.6.12</aspectj.version>
         <cglib.version>3.1</cglib.version>
-        <mybaitsplus.version>2.0.2</mybaitsplus.version>
+        <mybaitsplus.version>2.1-gamma</mybaitsplus.version>
         <pagehelper.version>3.7.5</pagehelper.version>
         <mysql.version>5.1.32</mysql.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
@@ -305,7 +305,7 @@
             <artifactId>spring-data-mongodb</artifactId>
             <version>1.8.0.RELEASE</version>
         </dependency>
-    </dependencies>
+     </dependencies>
 
     <profiles>
         <profile>

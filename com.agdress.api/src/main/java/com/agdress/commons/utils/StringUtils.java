@@ -1,5 +1,8 @@
 package com.agdress.commons.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -74,4 +77,41 @@ public class StringUtils extends org.springframework.util.StringUtils{
     public static String getUUId() {
         return UUID.randomUUID().toString();
     }
+
+    /**
+     *
+     * @param input
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
+    public static String getMD5String(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(input.getBytes());
+            byte b[] = md.digest();
+
+            int i;
+
+            StringBuffer buf = new StringBuffer("");
+            for (int offset = 0; offset < b.length; offset++) {
+                i = b[offset];
+                if (i < 0)
+                    i += 256;
+                if (i < 16)
+                    buf.append("0");
+                buf.append(Integer.toHexString(i));
+            }
+            input = buf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return input;
+    }
+
+
+    public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        System.out.println(getMD5String("123456"));
+    }
+
 }

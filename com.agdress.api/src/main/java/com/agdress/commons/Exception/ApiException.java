@@ -1,5 +1,6 @@
 package com.agdress.commons.Exception;
 
+import com.agdress.commons.utils.SpringContextUtil;
 import com.agdress.enums.ErrorCodeEnum;
 
 /**
@@ -13,12 +14,16 @@ public class ApiException extends RuntimeException {
     public ApiException(int code,String msg){
         super(msg);
         this.code =code;
-    }
+        //bug记录
+        SpringContextUtil.getDBLoggerDao().saveDetail( "","3",code+"["+msg+"]" ,"", "","");
+     }
 
     public ApiException(ErrorCodeEnum err){
         super(err.getDesc());
         this.code =err.getCode();
-    }
+        //bug记录
+        SpringContextUtil.getDBLoggerDao().saveDetail( "","3",err.getCode()+"["+err.getDesc()+"]" ,"", "","");
+     }
 
     public int getCode() {
         return code;

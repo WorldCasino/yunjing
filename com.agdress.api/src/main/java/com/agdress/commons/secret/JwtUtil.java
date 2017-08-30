@@ -33,7 +33,7 @@ public class JwtUtil {
      * 由字符串生成加密key
      * @return
      */
-    public SecretKey    generalKey(){
+    public SecretKey generalKey(){
         String stringKey = JWT_KEY + ConstantInterface.JWT_SECRET;
         byte[] encodedKey = Base64.decodeBase64(stringKey);
         SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");

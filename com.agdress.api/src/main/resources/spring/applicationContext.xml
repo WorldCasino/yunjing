@@ -34,6 +34,17 @@
 		<property name="GAME_SN" value="${game.config.sn}"/>
 		<property name="GAME_SECRETKEY" value="${game.config.secretKey}"/>
 		<property name="GAME_ADDR" value="${game.config.addr}"/>
+        <property name="PAYMENT_API_VERSION" value="${config.payment.version}"/>
+        <property name="PAYMENT_PARTNER_ID" value="${config.payment.partner_id}"/>
+		<property name="PAYMENT_SECRET_KEY" value="${config.payment.secret_key}"/>
+		<property name="PAYMENT_REQUEST_URL" value="${config.payment.request_url}"/>
+		<property name="PAYMENT_NOTIFY_URL" value="${config.payment.notify_url}"/>
+		<property name="PAYMENT_RETURN_URL" value="${config.payment.return_url}"/>
+		<property name="FTP_HOST_URL" value="${config.ftp.host.url}"/>
+		<property name="FTP_HOST_PORT" value="${config.ftp.host.port}"/>
+		<property name="FTP_USER" value="${config.ftp.user.name}"/>
+		<property name="FTP_PWD" value="${config.ftp.user.passwd}"/>
+		<property name="FTP_ROOT_BASE_IMAGE" value="${config.ftp.root.path}"/>
 	</bean>
 
 	<!--短信实例-->

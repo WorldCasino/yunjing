@@ -5,15 +5,11 @@ package com.agdress.enums;
  * Created by Administrator on 2017/5/27.
  */
 public enum TradeTypeEnum implements CodeBaseEnum {
-    Recharge(0,"充值金币"),
-    RechargeReward(1,"充值送金币"),
-    TaskReward(2,"竞猜收入"),
-    TaskCost(3,"竞猜下注"),
-    ItemExchange(4,"商品兑换"),
-    TaskLotteryIncome(5,"发布竞猜盈利"),
-    TaskLotteryExpend(6,"发布竞猜赔付"),
-    RegisterReward(7,"新用户注册奖励"),
-    LoginReward(8,"登录奖励");
+    Recharge(10,"充值"),
+    GameLottery(20,"游戏转码"),
+    GameIncome(30,"游戏赢利"),
+    GameExpend(40,"游戏赔付"),
+    Withdraw(50,"提现");
 
     private final int code;
     private final String desc;

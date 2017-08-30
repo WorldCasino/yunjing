@@ -1,5 +1,6 @@
 package com.agdress.commons.secret;
 
+import com.agdress.commons.Exception.ApiException;
 import com.agdress.commons.utils.ConstantInterface;
 import com.agdress.enums.ErrorCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,9 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
         //如果验证token失败，并且方法注明了Authorization，返回401错误
         if (method.getAnnotation(Authorization.class) != null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            return false;
+            throw new ApiException(-1, "认证失败");
         }
         return true;
     }

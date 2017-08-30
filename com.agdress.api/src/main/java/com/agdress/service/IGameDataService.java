@@ -18,5 +18,7 @@ public interface IGameDataService {
 
     String getTrialGameUrl(JSONObject req) throws ApiException;
 
+    String getUserGameUrl(UserEntity user, JSONObject req) throws ApiException;
+
     List<BalanceTransferQueryItem> getBalanceTransfer(UserEntity user, JSONObject req) throws ApiException;
 }

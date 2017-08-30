@@ -37,6 +37,8 @@ public interface ConstantInterface {
      */
     String[] IMAGE_TYPE = new String[] { ".bmp", ".jpg", ".jpeg", ".gif", ".png" };
 
+    String[] IMAGE_CONTENT_TYPE = new String[] {"image/jpg", "image/jpeg", "image/png", "image/gif"};
+
     /**
      * 短信接口请求KEY
      */
@@ -57,7 +59,8 @@ public interface ConstantInterface {
      */
     String[] TEST_PHONES = new String[] {
             "18058159956",
-            "15901794296"
+            "15901794296",
+            "18550473963",
     };
 
     /**

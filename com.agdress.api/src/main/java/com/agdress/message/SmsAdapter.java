@@ -93,13 +93,39 @@ public class SmsAdapter {
     }
 
     /**
+     * 验证码校验
+     * @param mobile
+     * @param captcha
+     * @return 通过返回TRUE ，不通过抛出api异常
+     * @throws ApiException
+     */
+    public boolean validateCaptcha(String mobile,String captcha) throws ApiException{
+
+        if(StringUtils.isEmpty(mobile)) throw new ApiException(ErrorCodeEnum.ArgumentError);
+        if(StringUtils.isEmpty(captcha)) throw new ApiException(ErrorCodeEnum.CaptchaInvalidError);
+
+        String key = ConstantInterface.KEY_SMS_CAPTCHA + mobile;
+        String rc = jedisPool.getResource().get(key);
+        if (StringUtils.isEmpty(rc)) {
+            throw new ApiException(ErrorCodeEnum.CaptchaInvalidError);
+        }else if(!rc.equals(captcha)){
+            throw new ApiException(ErrorCodeEnum.CaptchaErrorException);
+        }
+
+        return true;
+    }
+
+    /**
      * 测试号码
      * @param mobile
      * @return
      */
     public static boolean isTestMobile(String mobile){
         List<String> list = java.util.Arrays.asList(ConstantInterface.TEST_PHONES);
-        return list.contains(mobile);
+
+        //TODO 开发阶段 全部当测试手机号，发布时去掉注释
+        //return list.contains(mobile);
+        return true;
     }
 
     /**
@@ -118,8 +144,11 @@ public class SmsAdapter {
         //获取验证码
         String captcha = this.getCaptcha(mobile);
 
+        //测试手机号不用发送验证码短信 默认8090
+        if(isTestMobile(mobile)) return "";
+
         //短信内容
-        String content = String.format(Locale.CHINA,"【签名】您正在注册逐鹿账号，验证码是%s，如非本人操作请注意账号安全。",captcha);
+        String content = String.format(Locale.CHINA,"【星河娱乐】你的验证码为：%s，请在5分钟内完成验证；为了保障账号安全，请勿转发验证码给他人。",captcha);
         if (StringUtils.isNotBlank(content)) {
             try {
                 content = URLEncoder.encode(content, Consts.UTF_8.name());

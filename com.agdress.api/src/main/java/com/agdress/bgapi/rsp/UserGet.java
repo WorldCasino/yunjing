@@ -1,5 +1,6 @@
 package com.agdress.bgapi.rsp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class UserGet {
     private int status;
     private int regType;
     private String regIp;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date loginLastUpdateTime;
     private String loginIp;
     private int loginCount;

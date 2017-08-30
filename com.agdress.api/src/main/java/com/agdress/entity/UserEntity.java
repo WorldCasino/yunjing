@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.sql.Timestamp;
 
 /**
@@ -21,6 +23,7 @@ public class UserEntity extends BaseEntity{
     @TableField(value = "login_name")
     private String loginName;
 
+    @JsonIgnore
     @TableField(value = "password")
     private String password;
 
@@ -59,6 +62,12 @@ public class UserEntity extends BaseEntity{
 
     @TableField(value = "bg_reg_type")
     private String bgRegType;
+
+    @TableField(value = "be_user_id")
+    private long beUserId;
+
+    @TableField(value = "qq")
+    private String qq;
 
     public long getUserId() {
         return userId;
@@ -178,5 +187,21 @@ public class UserEntity extends BaseEntity{
 
     public void setBgRegType(String bgRegType) {
         this.bgRegType = bgRegType;
+    }
+
+    public long getBeUserId() {
+        return beUserId;
+    }
+
+    public void setBeUserId(long beUserId) {
+        this.beUserId = beUserId;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 }

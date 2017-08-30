@@ -24,7 +24,14 @@ public enum ErrorCodeEnum implements CodeBaseEnum {
 
     //用户相关错误200-500
     UserNotFind(200,"用户不存在"),
-    BgUserCreateException(210,"用户注册失败");
+    BgUserCreateException(210,"用户注册失败"),
+
+    //支付相关错误1000-2000
+    PaymentRequestException(1000,"支付请求失败！"),
+    PaymentAmountErrorException(1001,"支付金额不正确！"),
+    BalanceNoneException(1002,"余额不足！"),
+    BgBalanceTransferException(1003,"转账申请失败！");
+
 
     private final int code;
     private final String desc;

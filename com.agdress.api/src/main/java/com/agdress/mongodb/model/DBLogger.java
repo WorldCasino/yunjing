@@ -19,7 +19,7 @@ public class DBLogger   {
 
 	private String result_parameter;//返回结果
 
-	private String errorType;//错误类型：1-请求错误类型，2-信息类型，3-bug类型,4-sql出错记录
+	private String errorType;//错误类型：1-请求错误类型（加载接口发生的错误），2-信息类型(接口内部try...catch异常)，3-bug类型(抛出ApiException异常),4-执行sql出错记录（慢查询）
 
 	private String errorContent;//错误内容
 
