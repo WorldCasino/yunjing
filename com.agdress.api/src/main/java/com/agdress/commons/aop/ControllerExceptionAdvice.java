@@ -5,9 +5,11 @@ import com.agdress.commons.utils.DateFormatUtil;
 import com.agdress.commons.utils.ResponseWrapper;
 import com.agdress.commons.utils.SpringContextUtil;
 import com.agdress.commons.utils.StringUtils;
+import com.agdress.service.IGameDataService;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -31,8 +33,26 @@ public class ControllerExceptionAdvice {
 
     Logger logger = LoggerFactory.getLogger(ControllerExceptionAdvice.class);
 
+    private IGameDataService gameDataService;
+
+    @Autowired
+    public ControllerExceptionAdvice(IGameDataService gameDataService) {
+        this.gameDataService = gameDataService;
+    }
+
     @ExceptionHandler(ApiException.class)
-    public ResponseWrapper handleApiException(ApiException e) {
+    public ResponseWrapper handleApiException(ApiException e, HttpServletRequest request) {
+
+//        if (request.getPathInfo().equals("/user/mine/game/url")) {
+//
+//            int isMobileUrl = Integer.parseInt(request.getParameter("is_mobile_url"));
+//            String returnUrl = request.getParameter("return_url");
+//
+//            StringBuffer sb = new StringBuffer();
+//
+//            return ResponseWrapper.succeed(gameDataService.getTrialGameUrl(isMobileUrl, returnUrl));
+//        }
+
         return ResponseWrapper.failed(e.getCode(), e.getMessage());
     }
 

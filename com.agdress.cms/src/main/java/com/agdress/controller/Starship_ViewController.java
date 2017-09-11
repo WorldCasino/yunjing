@@ -67,6 +67,14 @@ public class Starship_ViewController {
 		return "noLookShiro";
 	}
 
+	/**
+	 * 用户详情页
+	 * @return
+	 */
+	@RequestMapping("/ss_user/detailuser")
+	public String detailuser() {
+		return "user/detailuser";
+	}
 
 	/**
 	 * 用户管理页
@@ -76,6 +84,8 @@ public class Starship_ViewController {
 	public String manager() {
 		return "user/manager";
 	}
+
+
 
 	/**
 	 * 业务员管理页

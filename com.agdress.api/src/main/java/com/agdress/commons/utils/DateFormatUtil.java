@@ -125,6 +125,13 @@ public class DateFormatUtil {
 
     }
 
+    public static String getMin(){
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat ("M");
+        String ctime = formatter.format(new Date());
+        return ctime;
+    }
+
     public static String getHour(){
         SimpleDateFormat formatter;
         formatter = new SimpleDateFormat ("H");

@@ -68,8 +68,8 @@ public class Starship_LoginController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public ResponseEntity<Boolean> logout(){
-//		Subject subject = SecurityUtils.getSubject();
-//        subject.logout();
+		Subject subject = SecurityUtils.getSubject();
+        subject.logout();
         return ResponseEntity.ok(true);
 	}
 }

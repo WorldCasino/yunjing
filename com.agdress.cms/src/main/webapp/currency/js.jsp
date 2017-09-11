@@ -22,4 +22,7 @@
 <script src="../../dist/js/app_iframe.js"></script>
 <script src="../../dist/js/app.min.js"></script>
 <script src="../../layer/2.1/layer.js"></script>
+<script src="../../layer/2.1/extend/layer.ext.js"></script>
+
+
 

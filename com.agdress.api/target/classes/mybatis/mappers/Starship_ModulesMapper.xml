@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agdress.mapper.Starship_ModulesMapper">
+
+
+
+    <!--根据多个roles字符串查询角色对应的菜单以及子菜单-->
+    <select id="selectModulesListByRoleId" resultType="com.agdress.entity.Starship_ModulesEntity" parameterType="java.lang.String">
+        SELECT
+            c.id,
+            c.name,
+            c.open_mode,
+            c.url,
+            c.pid,
+            c.module_type,
+            c.description,
+            c.icon,
+            c.seq,
+            c.opened,
+            c.status
+         FROM
+            m_roles a JOIN m_role_modules b ON a.role_id=b.role_id
+            LEFT JOIN m_modules c ON b.module_id=c.id
+        WHERE
+          #{roleIds}  LIKE CONCAT(CONCAT('%',a.role_id),'%')
+          and module_type = '1'
+          and status='1'
+        ORDER BY c.id
+    </select>
+
+
+
+</mapper>

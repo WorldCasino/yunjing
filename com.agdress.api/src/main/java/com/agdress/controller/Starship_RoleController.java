@@ -3,6 +3,7 @@ package com.agdress.controller;
 import com.agdress.commons.utils.ResponseWrapper;
 import com.agdress.entity.Starship_RoleEntity;
 import com.agdress.entity.Starship_RoleModulesEntity;
+import com.agdress.enums.UserTypeEnum;
 import com.agdress.mapper.Starship_RoleMapper;
 import com.agdress.result.DatatablesResult;
 import com.agdress.service.Starship_IRoleModulesService;
@@ -40,8 +41,6 @@ public class Starship_RoleController extends BaseController {
 	@Autowired
 	private Starship_IRoleModulesService roleModulesService;
 
-	@Autowired
-	private Starship_RoleMapper roleMapper;
 
 
 
@@ -81,16 +80,9 @@ public class Starship_RoleController extends BaseController {
 		int draw = params.getIntValue("draw");
 		int page = (start / rows) + 1;
  		try {
-			Starship_RoleEntity r=new Starship_RoleEntity();
-			EntityWrapper<Starship_RoleEntity> wrapper = new EntityWrapper<Starship_RoleEntity>(r);
-			List<Starship_RoleEntity> roleList = this.roleService.selectList(wrapper);
-			PageInfo<Starship_RoleEntity> pageInfo = new PageInfo<Starship_RoleEntity>(roleList);
- 			DatatablesResult rdbr = new DatatablesResult<Starship_RoleEntity>();
-			rdbr.setData(roleList);
-			rdbr.setDraw(draw);
-			rdbr.setRecordsTotal((int)pageInfo.getTotal());
-			rdbr.setRecordsFiltered(rdbr.getRecordsTotal());
- 			return ResponseEntity.ok(rdbr);
+			params.put("userType", UserTypeEnum.SystemUser);
+			DatatablesResult datatablesResult = this.roleService.selectRoleVo(params, page, rows,draw );
+			return ResponseEntity.ok(datatablesResult);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -154,28 +146,28 @@ public class Starship_RoleController extends BaseController {
 
 	/**
 	 * 修改角色权限
-	 * @param role_id 角色ID
-	 * @param modulesstr 菜单集合，逗号分隔
+	 * @param roleId 角色ID
+	 * @param modulesStr 菜单集合，逗号分隔
 	 * @return
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/updateRoleModules",method = RequestMethod.POST)
-	public ResponseEntity updateRoleModules(String role_id,String modulesstr) throws IOException {
+	public ResponseEntity updateRoleModules(String roleId,String modulesStr) throws IOException {
 		ResponseWrapper result;
 		try {
 			//清空当前角色的所有权限
 			Starship_RoleModulesEntity rm = new Starship_RoleModulesEntity();
-			rm.setRoleId(Long.parseLong(role_id));
+			rm.setRoleId(Long.parseLong(roleId));
 			EntityWrapper<Starship_RoleModulesEntity> wrapper = new EntityWrapper<Starship_RoleModulesEntity>(rm);
 			roleModulesService.delete(wrapper);
 			//新增权限
- 			String[] modules=modulesstr.split(",");
+ 			String[] modules=modulesStr.split(",");
 			for (int i = 0; i <modules.length; i++) {
 				if(modules[i].equals("")){
 					continue;
 				}
 				rm = new Starship_RoleModulesEntity();
-				rm.setRoleId(Long.parseLong(role_id));
+				rm.setRoleId(Long.parseLong(roleId));
 				rm.setModuleId(Long.parseLong(modules[i]));
 				roleModulesService.insert(rm);
 				rm=null;

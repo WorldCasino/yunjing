@@ -13,20 +13,24 @@
         URL_BASE:"https://cms.caiecai.net/rest/",
         /**
          * 当前项目接口URL
+         * http://192.168.1.43:8091/cms/
+         * http://localhost:8080/cms/
          */
-        URL_BASE_CMS:"http://192.168.1.43:8091/cms/",
+        URL_BASE_CMS:"http://localhost:8080/cms/",
 
         /**
          * api项目接口URL
+         * http://192.168.1.43:8090/api/
+         * http://localhost:8090/api/
          */
-        URL_BASE_API:"http://192.168.1.43:8090/api/",
+        URL_BASE_API:"http://localhost:8090/api/",
 
         /**
          * 图片服务器URL
          */
-        URL_BASE_IMG:"https://image.caiecai.net/",
+        URL_BASE_IMG:"https://image.api.net/",
 
-        URL_BASE_IMG_TASK:"https://image.caiecai.net/task/",
+        URL_BASE_IMG_TASK:"https://image.api.net/task/",
 
         DAYS_OF_WEEK:["日","一","二","三","四","五","六"],
 

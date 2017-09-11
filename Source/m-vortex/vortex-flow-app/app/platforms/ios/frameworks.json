@@ -1,0 +1,14 @@
+{
+    "StoreKit.framework": 1,
+    "CoreTelephony.framework": 3,
+    "Security.framework": 3,
+    "SystemConfiguration.framework": 3,
+    "CoreMotion.framework": 1,
+    "CFNetwork.framework": 3,
+    "libc++.tbd": 1,
+    "libz.tbd": 1,
+    "libsqlite3.0.tbd": 1,
+    "libstdc++.6.tbd": 1,
+    "libz.dylib": 1,
+    "libsqlite3.dylib": 1
+}

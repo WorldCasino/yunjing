@@ -14,22 +14,34 @@
                 <div class="col-sm-2" >
                     <input type="text" name="userId" id="userId" class="form-control">
                 </div>
+                <label for="loginName" class="col-sm-1 control-label">账号</label>
+                <div class="col-sm-2" >
+                    <input type="text" name="loginName" id="loginName" class="form-control">
+                </div>
+                <label for="nickName" class="col-sm-1 control-label">名称</label>
+                <div class="col-sm-2" >
+                    <input type="text" name="nickName" id="nickName" class="form-control">
+                </div>
                 <label for="qq" class="col-sm-1 control-label">QQ</label>
                 <div class="col-sm-2" >
                     <input type="text" name="qq" id="qq" class="form-control">
                 </div>
-                <shiro:hasPermission name="23search">
-                    <button type="button" class="btn btn-primary btn-sm" id="btn-query">
-                        <i class="fa fa-search"></i> 查询
-                    </button>
-                    <button type="button" class="btn btn-primary btn-sm" id="btn-re">
-                        <i class="fa fa-refresh"></i> 刷新
-                    </button>
-                </shiro:hasPermission>
-
              </div>
 
          </form>
+        <div class="pull-right" style="margin-top: 5px;">
+            <div class="btn-group">
+                <shiro:hasPermission name="23search">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-query">
+                        查询
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-re">
+                         刷新
+                    </button>
+                </shiro:hasPermission>
+            </div>
+        </div>
     </div>
 
     <!--表格-->
@@ -38,6 +50,7 @@
         <tr class="info">
             <th style="width: 10%;">业务员ID</th>
             <th style="width: 10%;">账号</th>
+            <th style="width: 10%;">名称</th>
             <th style="width: 20%;">qq</th>
          </tr>
         </thead>
@@ -57,6 +70,7 @@
                 //对应上面thead里面的序列
                 [
                     {"data": "userId"},
+                    {"data": "loginName"},
                     {"data": "nickName"},
                     {"data": 'qq'}
                 ],

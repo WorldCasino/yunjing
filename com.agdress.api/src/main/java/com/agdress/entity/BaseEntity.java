@@ -18,17 +18,17 @@ public class BaseEntity implements Serializable {
     @JsonIgnore
     @Version
     @TableField(value = "version_no")
-    private long versionNo;
+    private Long versionNo;
 
     @TableField(value = "create_by")
-    private long createBy;
+    private Long createBy;
 
     @TableField(value = "create_date")
     private Timestamp createDate;
 
     @JsonIgnore
     @TableField(value = "update_by")
-    private long updateBy;
+    private Long updateBy;
 
     @JsonIgnore
     @TableField(value = "update_date")
@@ -36,21 +36,21 @@ public class BaseEntity implements Serializable {
 
     @JsonIgnore
     @TableField(value = "is_delete")
-    private int isDelete;
+    private Integer isDelete;
 
-    public long getVersionNo() {
+    public Long getVersionNo() {
         return versionNo;
     }
 
-    public void setVersionNo(long versionNo) {
+    public void setVersionNo(Long versionNo) {
         this.versionNo = versionNo;
     }
 
-    public long getCreateBy() {
+    public Long getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(long createBy) {
+    public void setCreateBy(Long createBy) {
         this.createBy = createBy;
     }
 
@@ -62,11 +62,11 @@ public class BaseEntity implements Serializable {
         this.createDate = createDate;
     }
 
-    public long getUpdateBy() {
+    public Long getUpdateBy() {
         return updateBy;
     }
 
-    public void setUpdateBy(long updateBy) {
+    public void setUpdateBy(Long updateBy) {
         this.updateBy = updateBy;
     }
 
@@ -78,11 +78,11 @@ public class BaseEntity implements Serializable {
         this.updateDate = updateDate;
     }
 
-    public int getIsDelete() {
+    public Integer getIsDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(int isDelete) {
+    public void setIsDelete(Integer isDelete) {
         this.isDelete = isDelete;
     }
 }

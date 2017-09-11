@@ -43,4 +43,9 @@ public class CommonController extends BaseController {
     public ResponseWrapper getTrialGameUrl(@RequestBody JSONObject req) {
         return ResponseWrapper.succeed(gameDataService.getTrialGameUrl(req));
     }
+
+    @RequestMapping(value = "/magic/platform", method = RequestMethod.POST)
+    public ResponseWrapper getPlatformInfo(@RequestBody JSONObject req) {
+        return ResponseWrapper.succeed(commonService.getFrontendPlatform());
+    }
 }

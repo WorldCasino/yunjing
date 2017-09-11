@@ -3,6 +3,8 @@ package com.agdress.entity.vo;
 
 
 
+import com.agdress.enums.TradeKindEnum;
+
 import java.io.Serializable;
 
 /**
@@ -10,22 +12,25 @@ import java.io.Serializable;
  */
 public class Starship_SumVo implements Serializable{
 
-    private Double summoney;
-    private Long type;//1-入金，2-出金
+    private Double sumMoney;
 
-    public Double getSummoney() {
-        return summoney;
+    private TradeKindEnum tradeKindEnum;
+
+    public Double getSumMoney() {
+        return sumMoney;
     }
 
-    public void setSummoney(Double summoney) {
-        this.summoney = summoney;
+    public void setSumMoney(Double sumMoney) {
+        this.sumMoney = sumMoney;
     }
 
-    public Long getType() {
-        return type;
+    public TradeKindEnum getTradeKindEnum() {
+        return tradeKindEnum;
     }
 
-    public void setType(Long type) {
-        this.type = type;
+    public void setTradeKindEnum(TradeKindEnum tradeKindEnum) {
+        this.tradeKindEnum = tradeKindEnum;
     }
+
+
 }

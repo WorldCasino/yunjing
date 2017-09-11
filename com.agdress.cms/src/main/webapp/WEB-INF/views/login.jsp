@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <%@ include file="../../currency/top.jsp"%>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" >
 <div class="login-box">
-    <div class="login-logo">
+    <div class="login-logo" style="color: #ffffff">
        星河娱乐管理平台
     </div><!-- /.login-logo -->
     <div class="login-box-body">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div><!-- /.col -->
-                <div class="col-xs-4">
+                <div class="col-xs-4" >
                     <button id="btn_login" type="submit" class="btn btn-primary btn-block btn-flat">登录
                     </button>
                 </div><!-- /.col -->
@@ -107,13 +107,14 @@
             	if (result.msg == "") {
             		window.location.href=agdress.CONSTS.URL_BASE_CMS+'index';
 				}else{
-					layer.msg(result.msg, { icon: 2 })
-				}
+					layer.msg(result.msg, { icon: 2 });
+					$("#btn_login").removeAttr("disabled");
+                }
             });
         });
 
         //重新启用按钮
-        $('#form_login').bootstrapValidator('disableSubmitButtons', false);
+        $('#form_login').bootstrapValidator('disableSubmitButtons', true);
 
         //验证图片点击后重新获取验证码
         $("#img_verify").on("click", function () {

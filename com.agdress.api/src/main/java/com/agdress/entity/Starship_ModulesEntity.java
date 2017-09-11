@@ -22,10 +22,10 @@ public class Starship_ModulesEntity  {
     private String url;
 
     @TableField(value = "module_type")
-    private Long module_type;
+    private Long moduleType;
 
     @TableField(value = "open_mode")
-    private String open_mode;
+    private String openMode;
 
     @TableField(value = "description")
     private String description;
@@ -71,20 +71,20 @@ public class Starship_ModulesEntity  {
         this.url = url;
     }
 
-    public Long getModule_type() {
-        return module_type;
+    public Long getModuleType() {
+        return moduleType;
     }
 
-    public void setModule_type(Long module_type) {
-        this.module_type = module_type;
+    public void setModuleType(Long moduleType) {
+        this.moduleType = moduleType;
     }
 
-    public String getOpen_mode() {
-        return open_mode;
+    public String getOpenMode() {
+        return openMode;
     }
 
-    public void setOpen_mode(String open_mode) {
-        this.open_mode = open_mode;
+    public void setOpenMode(String openMode) {
+        this.openMode = openMode;
     }
 
     public String getDescription() {

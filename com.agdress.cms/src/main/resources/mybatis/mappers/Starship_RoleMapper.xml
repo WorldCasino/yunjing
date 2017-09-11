@@ -6,7 +6,7 @@
 
     <select id="selectModulesListByRoleId" parameterType="java.lang.Long"  resultType="java.util.HashMap">
        SELECT
-            CONCAT(c.pid,c.description)  as modulstr
+            ifnull(CONCAT(c.pid,c.description),0) as modulstr
         FROM
             m_roles a JOIN m_role_modules b ON a.role_id=b.role_id
             LEFT JOIN m_modules c ON b.module_id=c.id

@@ -10,9 +10,9 @@
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
             <div class="form-group">
-                <label for="agent_id" class="col-sm-1 control-label">业务员ID</label>
+                <label for="agentId" class="col-sm-1 control-label">ID</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="agent_id" id="agent_id" class="form-control">
+                    <input type="text" name="agentId" id="agentId" class="form-control">
                 </div>
                 <label for="qq" class="col-sm-1 control-label">QQ</label>
                 <div class="col-sm-2" >
@@ -57,8 +57,8 @@
                 'queryForm',
                 //对应上面thead里面的序列
                 [
-                    {"data": "agent_id"},
-                    {"data": "agent_name"},
+                    {"data": "agentId"},
+                    {"data": "agentName"},
                     {"data": 'qq'}
                 ],
                 //行操作按钮定义

@@ -31,6 +31,28 @@ public class UserAccountDetailEntity extends BaseEntity {
     @TableField(value = "trade_status")
     private TradeStatusEnum tradeStatus;
 
+    @TableField(value = "remarks")
+    private String remarks;
+
+    @TableField(value = "flow_id")
+    private Long flowId;
+
+    public Long getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(Long flowId) {
+        this.flowId = flowId;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     public long getTradeId() {
         return tradeId;
     }

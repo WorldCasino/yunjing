@@ -1,0 +1,84 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "https://github.com/ETENG-OSP/xgpush-cordova",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "https://github.com/ETENG-OSP/xgpush-cordova",
+        "spec": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:ETENG-OSP/xgpush-cordova.git",
+          "sshUrl": "git+ssh://git@github.com/ETENG-OSP/xgpush-cordova.git",
+          "httpsUrl": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+          "gitUrl": "git://github.com/ETENG-OSP/xgpush-cordova.git",
+          "shortcut": "github:ETENG-OSP/xgpush-cordova",
+          "directUrl": "https://raw.githubusercontent.com/ETENG-OSP/xgpush-cordova/master/package.json"
+        }
+      },
+      "/Users/fmisser/work/LetsGuess/Source/m-vortex/vortex-flow/app/node_modules"
+    ]
+  ],
+  "_from": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+  "_id": "xgpush-cordova@0.2.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/xgpush-cordova",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "https://github.com/ETENG-OSP/xgpush-cordova",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "https://github.com/ETENG-OSP/xgpush-cordova",
+    "spec": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:ETENG-OSP/xgpush-cordova.git",
+      "sshUrl": "git+ssh://git@github.com/ETENG-OSP/xgpush-cordova.git",
+      "httpsUrl": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+      "gitUrl": "git://github.com/ETENG-OSP/xgpush-cordova.git",
+      "shortcut": "github:ETENG-OSP/xgpush-cordova",
+      "directUrl": "https://raw.githubusercontent.com/ETENG-OSP/xgpush-cordova/master/package.json"
+    }
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/ETENG-OSP/xgpush-cordova.git#e83f5164b2902f7f37ff85c954d8feca0ae180b5",
+  "_shasum": "ee309968524a65c232279bb32a381fdc3b0035b7",
+  "_shrinkwrap": null,
+  "_spec": "https://github.com/ETENG-OSP/xgpush-cordova",
+  "_where": "/Users/fmisser/work/LetsGuess/Source/m-vortex/vortex-flow/app/node_modules",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/gengen1988/xgpush-cordova/issues"
+  },
+  "dependencies": {
+    "es6-promise": "^3.0.2",
+    "eventemitter3": "^1.1.1"
+  },
+  "description": "腾讯信鸽推送服务：http://xg.qq.com/",
+  "devDependencies": {},
+  "gitHead": "e83f5164b2902f7f37ff85c954d8feca0ae180b5",
+  "homepage": "https://github.com/gengen1988/xgpush-cordova#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "name": "xgpush-cordova",
+  "optionalDependencies": {},
+  "readme": "# XGPush 腾讯信鸽推送 for Cordova\n\n- [170109] 升级 SDK\n- [160119] 升级 SDK\n- [151229] iOS SDK 版本更新至 2.4.5，重新规划 SDK 存储路径\n- [151015] 庆祝 20 Stars，SDK 升级\n\nSDK     | version\n------- | --------------------------------\nandroid | Xg-Push-SDK-Android-2.47\nios     | Xg-Push-SDK-iOS-2.5.0\n\n腾讯信鸽推送服务：http://xg.qq.com/\n\nCordova 版本：3.x / 4.x / 5.x\n\n这个插件支持通知与消息，同时针对混合应用的生命周期进行了处理，保证消息的抵达。\n\n## 安装方法\n\n打开控制台，进入 Cordova 项目目录，输入：\n\n```bash\ncordova plugin add https://github.com/ETENG-OSP/xgpush-cordova --save \\\n  --variable ACCESS_ID=\"Your Access ID\" \\\n  --variable ACCESS_KEY=\"Your Access Key\"\n```\n\n## 使用方法\n\n安装完成即可接收推送通知。这种用法适合于仅需要偶尔向全部用户发信息的情况。\n\n如果需要精确控制，参考以下 API 和事件。\n\n### API\n\n* __xgpush.registerPush([alias])__: 注册设备\n\n  这个方法可以手动注册设备。如果需要为接收推送的设备取别名以便有针对性的通知，需要在 `deviceready` 后注册别名：\n\n  ```js\n  // 这里的别名是可选的，不传代表没用别名\n  xgpush.registerPush('tom');\n  ```\n\n  如果需要结果，可以用 Promise 的形式获取：\n\n  ```js\n  xgpush.registerPush('tom').then(function(results) {\n    // results 里有 flag 和 data\n    alert('设备的 token 是: ' + results.data);\n  });\n  ```\n\n  可以重复注册，下一个别名会替换上一个别名。\n\n* __xgpush.unregisterPush()__: 注销设备\n\n  如果不想接收推送，使用 `xgpush.unregisterPush`：\n\n  ```js\n  xgpush.unregisterPush()\n  ```\n\n  这个方法也返回 Promise。\n\n### 事件\n\n* __textmessage__: 文本消息\n\n如果需要接受消息，直接在代码里处理，可以监听 `textmessage` 事件：\n\n```js\nxgpush.on('textmessage', function(e) {\n  // 事件处理方法\n  alert(JSON.stringify(arguments, null, 2));\n});\n```\n\n事件采用了与 Node.js 事件兼容的 eventemitter3。具体方法参考：https://nodejs.org/api/events.html\n\n## 用例\n\n如果需要推送一条信息，用户在点击该信息后进入应用，同时触发程序逻辑。可以发送一个带有自定义 URL scheme 的通知。\n\n参考这个插件：https://github.com/EddyVerbruggen/Custom-URL-scheme\n\n\n## 注意事项\n\n### armv7s 与 xcode 6\n\n如果执行 `cordova build --device --release` 不成功，请去掉 `build.js` 里的 armv7s。\n\n参考：\nhttps://issues.apache.org/jira/browse/CB-8788\n\n### 不同平台 so 文件\n\n这个插件内置了 armeabi 的库文件。如果目标平台不是 armeabi，请到 http://xg.qq.com/xg/help/ctr_help/download 下载对应版本的 SDK。\n\n以下引用 SDK 中的说明：\n\n> 1. 信鸽的 .so 支持所有的 android 平台，但考虑到平时接入一般只需要 armeabi 平台，因此 libs 目录只提供该平台的 .so，其它平台可在上层目录的 All-Platform-SO 找到。\n>\n> 2. 嵌入 .so 可能存在的问题：\n>   1. so 文件与 jar 包不匹配。\n>\n>     解决办法：在更新 jar 时同时更新对应的 so 文件；\n>\n>   2. 当前工程已有某些平台的 so，如只有 armeabi 平台，却添加信鸽所有平台导致打包时异常。\n>\n>     解决办法：只添加当前工程已有的平台的信鸽 so 文件。具体可参考网上或以下示例：\n>\n>     ```\n>     armeabi\t   ！此平台既有当前存在so又有信鸽，正常！\n>       --libCurrent.so\t\t\t当前工程已有so\n>       --libtpnsSecurity.so\t信鸽\n>       --libtpnsWatchdog.so\t信鸽\n>\n>     armeabi-v7a\t！此平台既有当前存在so又有信鸽，正常！\n>       --libCurrent.so\t\t\t当前工程已有so\n>       --libtpnsSecurity.so\t信鸽\n>       --libtpnsWatchdog.so\t信鸽\n>\n>     mips\t！！！错误，由于此平台只有信鸽，必须删掉mips目录！！！\n>       --libtpnsSecurity.so\t信鸽\n>       --libtpnsWatchdog.so\t信鸽\n>\n>     x86\t\t！！！错误，由于此平台只有信鸽，必须删掉x86目录！！！\n>       --libtpnsSecurity.so\t信鸽\n>       --libtpnsWatchdog.so\t信鸽\n>     ```\n>\n>   3. 若当前工程不存在 so 文件。\n>\n>     解决办法：可复制所有信鸽平台或只复制 armeabi 平台。\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gengen1988/xgpush-cordova.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.2.0"
+}

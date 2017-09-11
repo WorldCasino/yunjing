@@ -1,5 +1,8 @@
 package com.agdress.entity;
 
+import com.agdress.enums.GenderEnum;
+import com.agdress.enums.UserStatusEnum;
+import com.agdress.enums.UserTypeEnum;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -11,16 +14,19 @@ import java.sql.Timestamp;
  * 用户实体
  */
 @TableName(value = "t_users")
-public class Starship_UserEntity {
+public class Starship_UserEntity extends BaseEntity {
 
     @TableId(type = IdType.AUTO,value = "user_id")
     private Long userId;
 
-    private String head_url;
+    @TableField(value = "head_url")
+    private String headUrl;
 
-    private Long be_user_id;
+    @TableField(value = "be_user_id")
+    private Long beUserId;
 
-    private String nickname;
+    @TableField(value = "nickname")
+    private String nickName;
 
     @TableField(value = "login_name")
     private String loginName;
@@ -28,58 +34,28 @@ public class Starship_UserEntity {
     @TableField(value = "password")
     private String passWord;
 
-    private Long gender;
+    @TableField(value = "gender")
+    private GenderEnum gender;
 
     private String qq;
 
     private String phone;
 
-    private Long user_type;
+    @TableField(value = "user_type")
+    private UserTypeEnum userType;
 
-    private Long agent_id;
+    @TableField(value = "agent_id")
+    private Long agentId;
 
-    private Long user_status;
+    @TableField(value = "user_status")
+    private UserStatusEnum userStatus;
 
-    private Long role_id;
+    @TableField(value = "role_id")
+    private Long roleId;
 
-    private Long version_no;
-
-    private Long create_by;
-
-    private Timestamp create_date;
-
-    private Long update_by;
-
-    private Timestamp update_date;
-
-    private Integer is_delete;
 
     @TableField(exist = false)
     private String validCode;
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public Long getBe_user_id() {
-        return be_user_id;
-    }
-
-    public void setBe_user_id(Long be_user_id) {
-        this.be_user_id = be_user_id;
-    }
-
-    public Long getAgent_id() {
-        return agent_id;
-    }
-
-    public void setAgent_id(Long agent_id) {
-        this.agent_id = agent_id;
-    }
 
     public Long getUserId() {
         return userId;
@@ -89,20 +65,28 @@ public class Starship_UserEntity {
         this.userId = userId;
     }
 
-    public String getHead_url() {
-        return head_url;
+    public String getHeadUrl() {
+        return headUrl;
     }
 
-    public void setHead_url(String head_url) {
-        this.head_url = head_url;
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 
-    public String getNickname() {
-        return nickname;
+    public Long getBeUserId() {
+        return beUserId;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setBeUserId(Long beUserId) {
+        this.beUserId = beUserId;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getLoginName() {
@@ -121,12 +105,20 @@ public class Starship_UserEntity {
         this.passWord = passWord;
     }
 
-    public Long getGender() {
+    public GenderEnum getGender() {
         return gender;
     }
 
-    public void setGender(Long gender) {
+    public void setGender(GenderEnum gender) {
         this.gender = gender;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 
     public String getPhone() {
@@ -137,76 +129,36 @@ public class Starship_UserEntity {
         this.phone = phone;
     }
 
-    public Long getUser_type() {
-        return user_type;
+    public UserTypeEnum getUserType() {
+        return userType;
     }
 
-    public void setUser_type(Long user_type) {
-        this.user_type = user_type;
+    public void setUserType(UserTypeEnum userType) {
+        this.userType = userType;
     }
 
-    public Long getUser_status() {
-        return user_status;
+    public Long getAgentId() {
+        return agentId;
     }
 
-    public void setUser_status(Long user_status) {
-        this.user_status = user_status;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
     }
 
-    public Long getRole_id() {
-        return role_id;
+    public UserStatusEnum getUserStatus() {
+        return userStatus;
     }
 
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
+    public void setUserStatus(UserStatusEnum userStatus) {
+        this.userStatus = userStatus;
     }
 
-    public Long getVersion_no() {
-        return version_no;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setVersion_no(Long version_no) {
-        this.version_no = version_no;
-    }
-
-    public Long getCreate_by() {
-        return create_by;
-    }
-
-    public void setCreate_by(Long create_by) {
-        this.create_by = create_by;
-    }
-
-    public Timestamp getCreate_date() {
-        return create_date;
-    }
-
-    public void setCreate_date(Timestamp create_date) {
-        this.create_date = create_date;
-    }
-
-    public Long getUpdate_by() {
-        return update_by;
-    }
-
-    public void setUpdate_by(Long update_by) {
-        this.update_by = update_by;
-    }
-
-    public Timestamp getUpdate_date() {
-        return update_date;
-    }
-
-    public void setUpdate_date(Timestamp update_date) {
-        this.update_date = update_date;
-    }
-
-    public Integer getIs_delete() {
-        return is_delete;
-    }
-
-    public void setIs_delete(Integer is_delete) {
-        this.is_delete = is_delete;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public String getValidCode() {

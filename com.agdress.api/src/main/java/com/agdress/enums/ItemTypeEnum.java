@@ -6,7 +6,8 @@ package com.agdress.enums;
  */
 public enum ItemTypeEnum implements CodeBaseEnum {
     RechargeItem(0,"充值商品"),
-    NormalItem(1,"普通商品");
+    NormalItem(1,"普通商品"),
+    IapItem(2, "苹果内购商品");
 
     private final int code;
     private final String desc;

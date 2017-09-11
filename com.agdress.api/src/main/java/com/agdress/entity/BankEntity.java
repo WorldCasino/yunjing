@@ -30,6 +30,9 @@ public class BankEntity extends BaseEntity {
     @TableField(value = "desc_name")
     private String descName;
 
+    @TableField(value = "is_pay")
+    private int isPay;
+
     public long getBankType() {
         return bankType;
     }
@@ -76,5 +79,13 @@ public class BankEntity extends BaseEntity {
 
     public void setDescName(String descName) {
         this.descName = descName;
+    }
+
+    public int getIsPay() {
+        return isPay;
+    }
+
+    public void setIsPay(int isPay) {
+        this.isPay = isPay;
     }
 }

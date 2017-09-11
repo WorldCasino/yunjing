@@ -110,6 +110,11 @@ public class GameDataService implements IGameDataService {
         int isMobileUrl = req.getIntValue("is_mobile_url");
         String returnUrl = req.getString("return_url");
 
+        return getTrialGameUrl(isMobileUrl, returnUrl);
+    }
+
+    @Override
+    public String getTrialGameUrl(int isMobileUrl, String returnUrl) throws ApiException {
         try {
             GameRsp gameRsp = gameConnector.openVideoTrialGameUrl(isMobileUrl, returnUrl);
             if (gameRsp.getError() == null) {

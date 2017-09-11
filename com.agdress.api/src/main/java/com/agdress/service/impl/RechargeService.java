@@ -98,6 +98,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
 
         //保存支付记录
         PaymentRecordEntity record = new PaymentRecordEntity();
+        record.setUserId(user.getUserId());
         record.setOrderode(entity.getRechargeCode());
         record.setPayAmount(payAmount);
         record.setPaymentTarget(PaymentTargetEnum.RechargePay);
@@ -183,7 +184,8 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         }
         RechargeEntity rechargeEntity = list.get(0);
         if(rechargeEntity.getRechargeStatus().getCode() != RechargeStatusEnum.Paying.getCode()){
-            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s已通知，不能重复通知！",orderCode));
+//            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s已通知，不能重复通知！",orderCode));
+            return "ok";
         }
         whereMap = new HashMap<>();
         whereMap.put("order_code",orderCode);
@@ -193,9 +195,9 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         }
         PaymentRecordEntity recordEntity = tempRecord.get(0);
         if(recordEntity.getPayStatus().getCode()!=PaymentStatusEnum.Paying.getCode()){
-            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s已通知，不能重复通知！",orderCode));
+//            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s已通知，不能重复通知！",orderCode));
+            return "ok";
         }
-
 
         whereMap = new HashMap<>();
         whereMap.put("pay_id",recordEntity.getRecordId());
@@ -207,98 +209,126 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         if(code.equals("00")){
             //交易成功
             rechargeEntity.setRechargeStatus(RechargeStatusEnum.RechargeSuccess);
+            rechargeEntity.setSummery(params.toJSONString());
             boolean result = super.updateById(rechargeEntity);
-            if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+//            if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
             for (PaymentEntity payment:tempPayment) {
                 if(payment.getPaymentStatus().getCode()!=PaymentStatusEnum.Paying.getCode()) continue;
 
                 payment.setPaymentStatus(PaymentStatusEnum.PaySuccessed);
                 payment.setPaymentCode(tradeCode);
                 Integer rows = paymentMapper.updateById(payment);
-                if(rows.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+//                if(rows.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
             }
 
-            UserAccountEntity account;
-            whereMap = new HashMap<>();
-            whereMap.put("user_id",recordEntity.getUserId());
-            whereMap.put("actype",1);
-            List<UserAccountEntity> tempAccount = accountMapper.selectByMap(whereMap);
-            if(tempAccount.size()==0){
-                account = new UserAccountEntity();
-                account.setActype(1);
-                account.setBalance(rechargeEntity.getRechargeAmount());
-                account.setCurrency(CurrencyEnum.CNY);
-                account.setTotalExpend(0);
-                account.setTotalIncome(0);
-                account.setTotalLottery(0);
-                account.setCreateBy(rechargeEntity.getUserId());
-                account.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                account.setUpdateBy(rechargeEntity.getUserId());
-                account.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                account.setIsDelete(0);
-                accountMapper.insert(account);
-            }else{
-                account = tempAccount.get(0);
-                account.setBalance(account.getBalance() + rechargeEntity.getRechargeAmount());
-                account.setTotalRecharge(account.getTotalRecharge() + rechargeEntity.getRechargeAmount());
-                account.setUpdateBy(rechargeEntity.getUserId());
-                account.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                account.setIsDelete(0);
-                Integer acrow = accountMapper.updateById(account);
-                if(acrow.intValue()< 1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
-            }
+            //开始充值
+            insertBalance(rechargeEntity.getUserId(),rechargeEntity.getRechargeAmount(),rechargeEntity.getRechargeStatus().getCode(),rechargeEntity.getRechargeCode(),rechargeEntity.getRechargeId(),"");
 
-            UserAccountDetailEntity adEntity = new UserAccountDetailEntity();
-            adEntity.setAccountId(account.getAccountId());
-            adEntity.setAmount(rechargeEntity.getRechargeAmount());
-            adEntity.setNewBalance(account.getBalance());
-            adEntity.setTradeId(rechargeEntity.getRechargeId());
-            adEntity.setTradeKind(TradeKindEnum.Income);
-            adEntity.setTradeType(TradeTypeEnum.Recharge);
-            adEntity.setTradeNo(rechargeEntity.getRechargeCode());
-            adEntity.setTradeStatus(TradeStatusEnum.Complete);
-            adEntity.setUserId(rechargeEntity.getUserId());
-            adEntity.setCreateBy(rechargeEntity.getUserId());
-            adEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            adEntity.setUpdateBy(rechargeEntity.getUserId());
-            adEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-            adEntity.setIsDelete(0);
-            accountDetailMapper.insert(adEntity);
-
-            try {
-                UserEntity userEntity = userMapper.selectById(rechargeEntity.getUserId());
-                AgentEntity agentEntity = agentMapper.selectById(userEntity.getAgentId());
-                GameRsp<Float> bgBalance = gameConnector.openBalanceTransfer(agentEntity.getBgPwd(),
-                        userEntity.getBgLoginId(),
-                        String.valueOf(rechargeEntity.getRechargeAmount()),
-                        rechargeEntity.getRechargeId(), "1");
-
-                System.out.println("BG账户余额：" + bgBalance.getResult());
-            }catch (IOException e){
-                e.printStackTrace();
-                //TODO 处理失败的机制
-            }
         }else{
             //交易失败
             rechargeEntity.setRechargeStatus(RechargeStatusEnum.RechargeFailed);
             rechargeEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
             boolean result = super.updateById(rechargeEntity);
-            if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+//            if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
 
             recordEntity.setPayStatus(PaymentStatusEnum.PayFailed);
             recordEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
             Integer acrow = paymentRecordMapper.updateById(recordEntity);
-            if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+//            if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
 
             for (PaymentEntity payment:tempPayment) {
                 if(payment.getPaymentStatus().getCode()!=PaymentStatusEnum.Paying.getCode()) continue;
 
                 payment.setPaymentStatus(PaymentStatusEnum.PayFailed);
                 acrow = paymentMapper.updateById(payment);
-                if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+//                if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
             }
         }
 
         return "ok";
     }
+
+    //充值通用接口
+    @Override
+    public void saveMoneyForUser(long userId,double addAmount,long recharge_status,String recharge_code,long recharge_id,String remarks) {
+        insertBalance(  userId,  addAmount,  recharge_status,  recharge_code,  recharge_id,  remarks);
+    }
+
+
+    /**
+     * 充值通用接口
+     * @param userId
+     * @param addAmount
+     * @param recharge_status
+     * @param recharge_code
+     * @param recharge_id
+     */
+    public void insertBalance(long userId,double addAmount,long recharge_status,String recharge_code,long recharge_id,String remarks){
+        UserAccountEntity account;
+        Map<String,Object> whereMap = new HashMap<>();
+        whereMap.put("user_id",userId);
+        List<UserAccountEntity> tempAccount = accountMapper.selectByMap(whereMap);
+        if(tempAccount.size()==0){
+            account = new UserAccountEntity();
+            account.setUserId(userId);
+            account.setActype(1);
+            account.setBalance(addAmount);
+            account.setCurrency(CurrencyEnum.CNY);
+            account.setTotalRecharge(addAmount);
+            account.setTotalExpend(0);
+            account.setTotalIncome(0);
+            account.setTotalLottery(0);
+            account.setCreateBy(userId);
+            account.setCreateDate(new Timestamp(System.currentTimeMillis()));
+            account.setUpdateBy(userId);
+            account.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+            account.setIsDelete(0);
+            accountMapper.insert(account);
+        }else{
+            account = tempAccount.get(0);
+            account.setBalance(account.getBalance() + addAmount);
+            account.setTotalRecharge(account.getTotalRecharge() + addAmount);
+            account.setUpdateBy(userId);
+            account.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+            account.setIsDelete(0);
+            Integer acrow = accountMapper.updateById(account);
+//                if(acrow.intValue()< 1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+        }
+
+        UserAccountDetailEntity adEntity = new UserAccountDetailEntity();
+        adEntity.setAccountId(account.getAccountId());
+        adEntity.setAmount(addAmount);
+        adEntity.setNewBalance(account.getBalance());
+        if(recharge_id != 99999999){//99999999表示平台支付
+            adEntity.setTradeId(recharge_id);
+         }
+        adEntity.setTradeKind(TradeKindEnum.Income);
+        adEntity.setTradeType(TradeTypeEnum.Recharge);
+        adEntity.setTradeNo(recharge_code);
+        adEntity.setTradeStatus(TradeStatusEnum.Complete);
+        adEntity.setUserId(userId);
+        adEntity.setCreateBy(userId);
+        adEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+        adEntity.setUpdateBy(userId);
+        adEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+        adEntity.setRemarks(remarks);
+        adEntity.setIsDelete(0);
+        accountDetailMapper.insert(adEntity);
+
+        try {
+            UserEntity userEntity = userMapper.selectById(userId);
+            AgentEntity agentEntity = agentMapper.selectById(userEntity.getAgentId());
+            GameRsp<Float> bgBalance = gameConnector.openBalanceTransfer(agentEntity.getBgPwd(),
+                    userEntity.getBgLoginId(),
+                    String.valueOf(addAmount),
+                    recharge_id, "1");
+
+            System.out.println("BG账户余额：" + bgBalance.getResult());
+        }catch (IOException e){
+            e.printStackTrace();
+            //TODO 处理失败的机制
+        }
+    }
+
+
 }

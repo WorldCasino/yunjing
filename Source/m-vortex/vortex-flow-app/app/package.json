@@ -1,0 +1,45 @@
+{
+    "name": "com.caiyicai.quiz",
+    "displayName": "quiz",
+    "version": "1.0.0",
+    "description": "A sample Apache Cordova application that responds to the deviceready event.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Apache Cordova Team",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "cordova-ios": "^4.4.0",
+        "cordova-plugin-alipay-v2": "0.0.3",
+        "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-inapppurchase": "^1.1.0",
+        "cordova-plugin-offbye-alipay": "git+https://github.com/offbye/cordova-plugin-alipay.git",
+        "cordova-plugin-statusbar": "^2.2.3",
+        "cordova-plugin-wechat": "^2.0.0",
+        "cordova-plugin-whitelist": "^1.3.2",
+        "xgpush-cordova": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+        "cordova-plugin-xgpush": "https://github.com/ETENG-OSP/xgpush-cordova"
+    },
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-inapppurchase": {},
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-alipay-v2": {
+                "APP_ID": "2017070607661325"
+            },
+            "cordova-plugin-wechat": {
+                "WECHATAPPID": "wx90bb3475e4e8850a"
+            },
+            "cordova-plugin-console": {},
+            "cordova-plugin-xgpush": {
+                "ACCESS_ID": "1627738298",
+                "ACCESS_KEY": "1253930144"
+            }
+        },
+        "platforms": [
+            "ios"
+        ]
+    }
+}

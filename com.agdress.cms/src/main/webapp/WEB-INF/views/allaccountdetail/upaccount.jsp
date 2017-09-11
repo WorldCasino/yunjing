@@ -10,35 +10,35 @@
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
             <div class="form-group">
-                <label for="user_id" class="col-sm-1 control-label">用户ID</label>
+                <label for="userId" class="col-sm-1 control-label">用户ID</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="user_id" id="user_id" class="form-control">
-                </div>
-                  <div class="col-sm-2" >
-                        <shiro:hasPermission name="5search">
-                            <button type="button" class="btn btn-primary btn-sm" id="btn-query">
-                                <i class="fa fa-search"></i> 查询
-                            </button>
-                            <button type="button" class="btn btn-primary btn-sm" id="btn-re">
-                                <i class="fa fa-refresh"></i> 刷新
-                            </button>
-                        </shiro:hasPermission>
-
+                    <input type="text" name="userId" id="userId" class="form-control">
                 </div>
               </div>
          </form>
+        <div class="pull-right" style="margin-top: 5px;">
+            <div class="btn-group">
+                <shiro:hasPermission name="5search">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-query">
+                        <i class="fa fa-search"></i> 查询
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-re">
+                        <i class="fa fa-refresh"></i> 刷新
+                    </button>
+                </shiro:hasPermission>
+            </div>
+        </div>
     </div>
 
     <!--表格-->
     <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed" align="center">
         <thead>
         <tr class="info">
-            <th style="width: 10%;">编号</th>
             <th style="width: 10%;">用户ID</th>
             <th style="width: 10%;">昵称</th>
             <th style="width: 10%;">手机号</th>
             <th style="width: 10%;">打款金额</th>
-            <th style="width: 20%;">银行卡</th>
+            <th style="width: 10%;">银行卡</th>
             <th style="width: 10%;">持卡人</th>
             <th style="width: 10%;">开户行</th>
             <th style="width: 10%;">操作</th>
@@ -63,33 +63,39 @@
 
             <div class="modal-body" style=" width: 100%; ">
                 <form role="form" class="form-horizontal" id="detailForm" style=" width: 100%; ">
-                    <input type="hidden"  class="trade_id" value="">
+                    <input type="hidden"  class="tradeId" value="">
                     <input type="hidden"  class="phone" value="">
                      <%--账户信息--%>
-                    <div class="form-group" id="divAnswerRight">
-                        <label class="col-sm-1 control-label" ></label>
-                        <div class="col-sm-8">
-                            <span style="display: block;width:100%;font-size: 18px;">已经给用户打款，提醒用户打款进度</span>
-                            <span style="display: block;width:100%;font-size: 16px;">持卡人：<span class="card_name"></span></span>
-                            <span style="display: block;width:100%;font-size: 16px;">金额：<span class="amount"></span></span>
+                     <div class="form-group"  >
+                        <label class="col-sm-7 control-label" >已经给用户打款，提醒用户打款进度</label>
+                    </div>
+                    <div class="form-group"  >
+                        <label class="col-sm-2 control-label">持卡人</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control cardName"  disabled >
                         </div>
                     </div>
+                    <div class="form-group"  >
+                        <label class="col-sm-2 control-label">金额</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control amount"  disabled >
+                        </div>
+                    </div>
+                 </form>
 
-                     <div class="from-group text-center">
-                        <shiro:hasPermission name="8mademoney">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm" id="okOne">
-                                    确认
-                                </button>
-                            </div>
-                        </shiro:hasPermission>
+
+                <div class="text-center" style="margin-top: 50px">
+                    <shiro:hasPermission name="8mademoney">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" id="btnCancel">
-                                 取消
+                            <button type="button" class="btn btn-primary btn-lg" id="okOne">
+                               确认打款
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </shiro:hasPermission>
+                    <button type="button" class="btn btn-default btn-lg" id="btnCancel">
+                               返回列表
+                    </button>
+                </div>
             </div>
          </div>
     </div>
@@ -112,7 +118,7 @@
         var str = "";
         <shiro:hasPermission name="8mademoney">
         str+= "<div class='btn-group'>" +
-            "<button   class='btn btn-danger btn-sm audit' type='button'><i class='fa fa-edit'></i> 打款</button>" +
+            "<button   class='btn btn-danger btn-sm audit' type='button'> 打款</button>" +
             "</div>"
         </shiro:hasPermission>
 
@@ -124,22 +130,23 @@
                 'queryForm',
                 //对应上面thead里面的序列
                 [
-                    {"data": "trade_id"},
-                    {"data": "user_id"},
-                    {"data": "nickname"},
+                    {"data": "bgLoginId"},
+                    {"data": "nickName"},
                     {"data": "phone"},
                     {"data": 'amount'},
-                    {"data": 'card_no'},
-                    {"data": 'card_name'},
-                    {"data": 'card_bank'},
-                    {"data": 'columnDefs'}
+                    {"data": 'cardNo'},
+                    {"data": 'cardName'},
+                    {"data": 'cardBank'},
+                    {
+                        "data": 'tradeStatusEnum',
+                        "render": function (data, type, full, callback) {
+                            return data.code == 3 ? str:'已通知'
+                        }
+                    }
                 ],
                 //行操作按钮定义
                 [
-                    {
-                        targets: -1,
-                        defaultContent: str
-                    }
+
                 ],
                 // 在每次table被draw完后回调函数
                 function () {
@@ -172,11 +179,11 @@
         //查看
         $("#dataTable tbody").on("click", ".audit", function () {
             var data = tables.api().row($(this).parents("tr")).data();
-            $("#myModalLabel").html(data.nickname+"的打款确认");
+            $("#myModalLabel").html(data.nickName+"的打款确认");
 
-            $(".amount").html(data.amount);
-            $(".card_name").html(data.card_name);
-            $(".trade_id").val(data.trade_id);
+            $(".amount").val(data.amount);
+            $(".cardName").val(data.cardName);
+            $(".tradeId").val(data.tradeId);
             $(".phone").val(data.phone);
 
             $("#editModal").modal("show");
@@ -185,7 +192,7 @@
 
 
 
-        //审核通过按钮
+        //打款通过按钮
         $("#okOne").on("click", function () {
             layer.confirm('<span style="color:red">确定打款了吗？</span>', {
                 title:"警告",
@@ -195,18 +202,19 @@
                     type: "POST",
                     url: agdress.CONSTS.URL_BASE_API+"ss_ac_detail/updateAccountDetailInfor",
                     data: {
-                        "trade_id":$(".trade_id").val(),
-                        "is_notification":"1",
-                        "phone":$(".phone").val()
+                        "tradeId":$(".tradeId").val(),
+                        "playMoeny":"true",
+                        "phone":$(".phone").val(),
+                        "updateBy"  : <shiro:principal property="id"/>
                     },
                     async: false,
                     success: function (data) {
                         if (data.data == true) {
                             $("#okOne").hide();
                             $("#errorOne").hide();
-                            layer.msg('审核处理成功！');
+                            layer.msg('打款成功！');
                         } else {
-                            layer.msg('审核处理失败！');
+                            layer.msg("打款失败", {icon: 2});
                         }
                     }
                 });

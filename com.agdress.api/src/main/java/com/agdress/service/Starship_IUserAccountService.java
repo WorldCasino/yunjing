@@ -11,5 +11,6 @@ import com.baomidou.mybatisplus.service.IService;
 
 public interface Starship_IUserAccountService extends IService<Starship_UserAccountEntity> {
 
+        void updateUserBalance(String addbalance,String userId,String remarks);
 
 }

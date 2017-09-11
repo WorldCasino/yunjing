@@ -10,71 +10,37 @@ import java.sql.Timestamp;
 public class Starship_UserlistVo implements Serializable{
 
 	private Long userId;
-
-	private String login_name;
-
-	private String nickName;
-
-	private String passWord;
-
-	private String phone;
-
-	private String agentName;
+	private String bgLoginId;
+ 	private String loginName;
+ 	private String nickName;
+ 	private String passWord;
+ 	private String phone;
+ 	private String agentName;
 
 	private Double balance;
 
 	private Long cardNumber;
 
 	private Timestamp createDate;
-
-	private Timestamp updateDate;
+ 	private Timestamp updateDate;
 
 	private String ywName;
 
 	private String qq;
 
-	private String role_name;
+	private String roleName;
+ 	private Long roleId;
 
-	private Long role_id;
+	private Timestamp registerStartTime ;
 
-	public Long getRole_id() {
-		return role_id;
+	private Timestamp registerEndtime;
+
+	public String getBgLoginId() {
+		return bgLoginId;
 	}
 
-	public void setRole_id(Long role_id) {
-		this.role_id = role_id;
-	}
-
-	public String getRole_name() {
-		return role_name;
-	}
-
-	public void setRole_name(String role_name) {
-		this.role_name = role_name;
-	}
-
-	public String getLogin_name() {
-		return login_name;
-	}
-
-	public void setLogin_name(String login_name) {
-		this.login_name = login_name;
-	}
-
-	public String getQq() {
-		return qq;
-	}
-
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
-
-	public String getYwName() {
-		return ywName;
-	}
-
-	public void setYwName(String ywName) {
-		this.ywName = ywName;
+	public void setBgLoginId(String bgLoginId) {
+		this.bgLoginId = bgLoginId;
 	}
 
 	public Long getUserId() {
@@ -83,6 +49,14 @@ public class Starship_UserlistVo implements Serializable{
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
 
 	public String getNickName() {
@@ -149,7 +123,37 @@ public class Starship_UserlistVo implements Serializable{
 		this.updateDate = updateDate;
 	}
 
+	public String getYwName() {
+		return ywName;
+	}
 
+	public void setYwName(String ywName) {
+		this.ywName = ywName;
+	}
+
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
 
 	public Timestamp getRegisterStartTime() {
 		return registerStartTime;
@@ -166,11 +170,4 @@ public class Starship_UserlistVo implements Serializable{
 	public void setRegisterEndtime(Timestamp registerEndtime) {
 		this.registerEndtime = registerEndtime;
 	}
-
-	private Timestamp registerStartTime ;
-
-	private Timestamp registerEndtime;
-
-
-
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.TaskAnswerMapper">
+
+    <!--指定正确答案-->
+    <update id="resetRightAnswer" parameterType="java.util.Map">
+        UPDATE t_task_answers
+        SET is_right = 1
+        WHERE task_id =#{taskId} and answer_id = #{answerId}
+    </update>
+
+    <!--指定错误答案-->
+    <update id="resetWrongAnswer" parameterType="java.util.Map">
+        UPDATE t_task_answers
+        SET is_right = 0
+        WHERE task_id =#{taskId} and answer_id = #{answerId}
+    </update>
+</mapper>

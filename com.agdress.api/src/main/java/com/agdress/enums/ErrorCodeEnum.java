@@ -10,11 +10,14 @@ public enum ErrorCodeEnum implements CodeBaseEnum {
     ArgumentError(-102,"参数异常 >_<"),
     NetWorkError(-103,"网络走神了，请稍后再试！"),
 
+
     InvalidTokenException(10,"无效TOKEN"),
     CreateTokenException(11,"TOKEN生成失败"),
     AuthenticationException(20,"用户登录超时，请重新登录！"),
     RepetitiveException(30,"后台小二正在努力处理中，请稍候 :)"),
     ExpiredDataException(40,"数据已过期，请刷新后重试！"),
+    InvalidOrderException(50,"无效订单"),
+    InvalidRoleException(60,"无当前数据审核权限"),
 
     //短信相关100-200
     InvalidPhoneFormatException(100,"手机号格式错误！"),

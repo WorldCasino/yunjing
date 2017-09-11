@@ -39,4 +39,9 @@ public class CommonService implements ICommonService {
                     return n;
                 }).collect(Collectors.toList());
     }
+
+    @Override
+    public int getFrontendPlatform() throws ApiException {
+        return systemConfig.getFRONTEND_PLATFORM();
+    }
 }

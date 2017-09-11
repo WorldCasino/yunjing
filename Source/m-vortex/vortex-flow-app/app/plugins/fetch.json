@@ -1,0 +1,75 @@
+{
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-inapppurchase": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inapppurchase"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-statusbar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-statusbar@2.2.3"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-offbye-alipay": {
+        "source": {
+            "type": "registry",
+            "id": "https://github.com/offbye/cordova-plugin-alipay.git"
+        },
+        "is_top_level": true,
+        "variables": {
+            "PARTNER_ID": "xyz"
+        }
+    },
+    "cordova-plugin-alipay-v2": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-alipay-v2"
+        },
+        "is_top_level": true,
+        "variables": {
+            "APP_ID": "2017070607661325"
+        }
+    },
+    "cordova-plugin-wechat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-wechat@2.0.0"
+        },
+        "is_top_level": true,
+        "variables": {
+            "WECHATAPPID": "wx90bb3475e4e8850a"
+        }
+    },
+    "cordova-plugin-console": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-console"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-xgpush": {
+        "source": {
+            "type": "registry",
+            "id": "https://github.com/ETENG-OSP/xgpush-cordova"
+        },
+        "is_top_level": true,
+        "variables": {
+            "ACCESS_ID": "1627738298",
+            "ACCESS_KEY": "1253930144"
+        }
+    }
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.MarqueeQueueMapper">
+
+    <resultMap id="marqueeVoResultMap" type="com.cicada.pojo.vo.MarqueeVo">
+        <id column="roll_id" property="rollId" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="period_start" property="periodStart" jdbcType="TIMESTAMP"/>
+        <result column="period_end" property="periodEnd" jdbcType="TIMESTAMP"/>
+        <result column="roll_level" property="rollLevel" jdbcType="INTEGER"/>
+        <result column="roll_times" property="rollTimes" jdbcType="INTEGER"/>
+        <result column="marquee_type" property="marqueeType" jdbcType="INTEGER"/>
+        <result column="link_url" property="linkUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--跑马灯消息-->
+    <select id="selectEffectiveMarquee" resultMap="marqueeVoResultMap" >
+        SELECT roll_id,
+               title,
+               content,
+               period_start,
+               period_end,
+               roll_level,
+               roll_times,
+               marquee_type,
+               link_url
+        FROM t_marquee_queue
+        WHERE is_delete = 0
+        <![CDATA[ AND period_start <= current_timestamp ]]>
+        <![CDATA[ AND period_end > current_timestamp ]]>
+        ORDER BY roll_level DESC
+    </select>
+
+</mapper>

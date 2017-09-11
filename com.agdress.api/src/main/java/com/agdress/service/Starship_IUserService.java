@@ -16,6 +16,8 @@ import com.baomidou.mybatisplus.service.IService;
 
 public interface Starship_IUserService extends IService<Starship_UserEntity> {
 
+     void  updateUserSomeInfor(Starship_UserVo userVo);
+
      Starship_UserVo selectByUserId(Long userId);
 
      Starship_UserEntity selectByLoginName(Starship_UserVo userVo);

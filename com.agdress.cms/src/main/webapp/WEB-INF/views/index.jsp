@@ -8,7 +8,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="#" class="logo">
+        <a href="#" class="logo" >
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">星河娱乐</span>
             <!-- logo for regular state and mobile devices -->
@@ -80,7 +80,7 @@
 
 
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
+    <aside class="main-sidebar" >
         <!-- 左侧边栏 -->
         <section class="sidebar">
             <ul class="sidebar-menu">
@@ -93,7 +93,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" id="content-wrapper" style="min-height: 421px;" >
         <!--bootstrap tab风格 多标签页-->
-        <div class="content-tabs" style="display: none;">
+        <div class="content-tabs">
             <button class="roll-nav roll-left tabLeft" onclick="scrollTabLeft()">
                 <i class="fa fa-backward"></i>
             </button>

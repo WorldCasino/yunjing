@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface ICommonService {
     List<BankEntity> getBankInfo() throws ApiException;
+
+    int getFrontendPlatform() throws ApiException;
 }

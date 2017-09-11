@@ -8,6 +8,7 @@ import com.agdress.entity.*;
 import com.agdress.enums.*;
 import com.agdress.mapper.*;
 import com.agdress.message.SmsAdapter;
+import com.agdress.service.IAuditTemplateStepService;
 import com.agdress.service.IUserAccountDetailService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -41,6 +42,8 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
     private UserAccountMapper accountMapper;
     @Autowired
     private UserAccountDetailMapper accountDetailMapper;
+    @Autowired
+    private IAuditTemplateStepService auditTemplateStepService;
 
     /**
      * 查询交易记录
@@ -81,7 +84,7 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
         AgentEntity agent = agentMapper.selectById(user.getAgentId());
 
         try {
-            GameRsp<Float> resp = gameConnector.openBalanceGet(agent.getBgPwd(),user.getLoginName());
+            GameRsp<Float> resp = gameConnector.openBalanceGet(agent.getBgPwd(),user.getBgLoginId());
             bgBalance = new Double(resp.getResult());
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,6 +112,19 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
         }else {
             accountEntity = temp.get(0);
         }
+        //获取审核步骤的flowid
+        long flowId=0;
+        AuditTemplateStepEntity auditTemplateStepEntity=new AuditTemplateStepEntity();
+        auditTemplateStepEntity.setTempId((long)AuditTemplateEnum.WithdrawAudit.getCode());
+        auditTemplateStepEntity.setStep(1);
+        EntityWrapper<AuditTemplateStepEntity> wrapper = new EntityWrapper<AuditTemplateStepEntity>(auditTemplateStepEntity);
+        List<AuditTemplateStepEntity> selectList = auditTemplateStepService.selectList(wrapper);
+        if(selectList.size() >0){
+            auditTemplateStepEntity=selectList.get(0);
+            flowId=auditTemplateStepEntity.getFlowId();
+        }
+
+        //新增记录
         UserAccountDetailEntity withdraw = new UserAccountDetailEntity();
         withdraw.setUserId(user.getUserId());
         withdraw.setTradeStatus(TradeStatusEnum.Auditing);
@@ -118,10 +134,11 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
         withdraw.setTradeNo(CodeFactory.generateWithdrawCode());
         withdraw.setAccountId(accountEntity.getAccountId());
         withdraw.setCreateBy(user.getUserId());
-        withdraw.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+        withdraw.setCreateDate(new Timestamp(System.currentTimeMillis()));
         withdraw.setUpdateBy(user.getUserId());
         withdraw.setUpdateDate(new Timestamp(System.currentTimeMillis()));
         withdraw.setIsDelete(0);
+        withdraw.setFlowId(flowId);
         accountDetailMapper.insert(withdraw);
 
         GameRsp<Float> newBalance;
@@ -137,6 +154,8 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
         accountEntity.setUpdateBy(user.getUserId());
         accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
         accountMapper.updateById(accountEntity);
+
+
 
         return true;
     }

@@ -123,9 +123,7 @@ public class SmsAdapter {
     public static boolean isTestMobile(String mobile){
         List<String> list = java.util.Arrays.asList(ConstantInterface.TEST_PHONES);
 
-        //TODO 开发阶段 全部当测试手机号，发布时去掉注释
-        //return list.contains(mobile);
-        return true;
+        return list.contains(mobile);
     }
 
     /**

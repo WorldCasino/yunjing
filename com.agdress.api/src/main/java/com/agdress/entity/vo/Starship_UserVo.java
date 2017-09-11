@@ -1,6 +1,7 @@
 package com.agdress.entity.vo;
 
 
+import com.agdress.entity.BankEntity;
 import com.agdress.entity.Starship_UserEntity;
 
 import java.io.Serializable;
@@ -10,128 +11,87 @@ import java.util.List;
 
 public class Starship_UserVo implements Serializable{
 
-	private Long user_id;
-	private String loginnumber;//登录账号
- 	private String password;//密码
- 	private String head_url;
- 	private String nickname;
+	private Long userId;
+ 	private String loginNumber;//登录账号
+ 	private String passWord;//密码
+ 	private String headUrl;
+ 	private String nickName;
 	private String phone;
-	private Long  agent_id;
+	private Long  agentId;
 	private String ywName;
-	private Long be_user_id;
+	private Long beUserId;
+	private String bgLoginId;
+
+	private Long updateBy;
 
 
-	private String agent_name;
-	private Long card_id;//卡片id
- 	private String card_bank;//开户行
-	private String card_no;//银行卡号
-	private String card_name;//持卡人
- 	private Timestamp create_date;
- 	private Timestamp update_date;
- 	private Long account_id;
+	private String agentName;
+	private Long cardId;//卡片id
+ 	private String cardBank;//开户行
+	private String bankType;
+	private String cardNo;//银行卡号
+	private String cardName;//持卡人
+ 	private Timestamp createDate;
+ 	private Timestamp updateDate;
+ 	private Long accountId;
 	private Double balance;
-	private Double total_recharge;//充值总额
-	private Double total_expend;//指出总额
-	private Double total_income;//收入总额
-	private Double total_withdraw;//提现总额
-	private Double total_lottery;//转码总额
-	private Double action_totle;//合计输赢收入
-	private List<Starship_UserEntity> beuserlist;
+	private Double totalRecharge;//充值总额
+	private Double totalExpend;//指出总额
+	private Double totalIncome;//收入总额
+	private Double totalWithdraw;//提现总额
+	private Double totalLottery;//转码总额
+	private Double actionTotle;//合计输赢收入
 
-	public String getYwName() {
-		return ywName;
+	public String getBgLoginId() {
+		return bgLoginId;
 	}
 
-	public void setYwName(String ywName) {
-		this.ywName = ywName;
+	public void setBgLoginId(String bgLoginId) {
+		this.bgLoginId = bgLoginId;
 	}
 
-	public Long getBe_user_id() {
-		return be_user_id;
+	private List<Starship_UserEntity> beuserList;//业务员集合
+
+	private List<BankEntity> bankEntityList;//银行卡类型集合
+
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setBe_user_id(Long be_user_id) {
-		this.be_user_id = be_user_id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public List<Starship_UserEntity> getBeuserlist() {
-		return beuserlist;
+	public String getLoginNumber() {
+		return loginNumber;
 	}
 
-	public void setBeuserlist(List<Starship_UserEntity> beuserlist) {
-		this.beuserlist = beuserlist;
+	public void setLoginNumber(String loginNumber) {
+		this.loginNumber = loginNumber;
 	}
 
-	public Long getAccount_id() {
-		return account_id;
+	public String getPassWord() {
+		return passWord;
 	}
 
-	public void setAccount_id(Long account_id) {
-		this.account_id = account_id;
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
 	}
 
-	public Long getCard_id() {
-		return card_id;
+	public String getHeadUrl() {
+		return headUrl;
 	}
 
-	public void setCard_id(Long card_id) {
-		this.card_id = card_id;
+	public void setHeadUrl(String headUrl) {
+		this.headUrl = headUrl;
 	}
 
-	public Long getAgent_id() {
-		return agent_id;
+	public String getNickName() {
+		return nickName;
 	}
 
-	public void setAgent_id(Long agent_id) {
-		this.agent_id = agent_id;
-	}
-
-	public String getAgent_name() {
-		return agent_name;
-	}
-
-	public void setAgent_name(String agent_name) {
-		this.agent_name = agent_name;
-	}
-
-	public Long getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
-	}
-
-	public String getLoginnumber() {
-		return loginnumber;
-	}
-
-	public void setLoginnumber(String loginnumber) {
-		this.loginnumber = loginnumber;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getHead_url() {
-		return head_url;
-	}
-
-	public void setHead_url(String head_url) {
-		this.head_url = head_url;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 	public String getPhone() {
@@ -142,44 +102,108 @@ public class Starship_UserVo implements Serializable{
 		this.phone = phone;
 	}
 
-	public String getCard_bank() {
-		return card_bank;
+	public Long getAgentId() {
+		return agentId;
 	}
 
-	public void setCard_bank(String card_bank) {
-		this.card_bank = card_bank;
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
 	}
 
-	public String getCard_no() {
-		return card_no;
+	public String getYwName() {
+		return ywName;
 	}
 
-	public void setCard_no(String card_no) {
-		this.card_no = card_no;
+	public void setYwName(String ywName) {
+		this.ywName = ywName;
 	}
 
-	public String getCard_name() {
-		return card_name;
+	public Long getBeUserId() {
+		return beUserId;
 	}
 
-	public void setCard_name(String card_name) {
-		this.card_name = card_name;
+	public void setBeUserId(Long beUserId) {
+		this.beUserId = beUserId;
 	}
 
-	public Timestamp getCreate_date() {
-		return create_date;
+	public Long getUpdateBy() {
+		return updateBy;
 	}
 
-	public void setCreate_date(Timestamp create_date) {
-		this.create_date = create_date;
+	public void setUpdateBy(Long updateBy) {
+		this.updateBy = updateBy;
 	}
 
-	public Timestamp getUpdate_date() {
-		return update_date;
+	public String getAgentName() {
+		return agentName;
 	}
 
-	public void setUpdate_date(Timestamp update_date) {
-		this.update_date = update_date;
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+
+	public Long getCardId() {
+		return cardId;
+	}
+
+	public void setCardId(Long cardId) {
+		this.cardId = cardId;
+	}
+
+	public String getCardBank() {
+		return cardBank;
+	}
+
+	public void setCardBank(String cardBank) {
+		this.cardBank = cardBank;
+	}
+
+	public String getBankType() {
+		return bankType;
+	}
+
+	public void setBankType(String bankType) {
+		this.bankType = bankType;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public String getCardName() {
+		return cardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
+	}
+
+	public Timestamp getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+	public Timestamp getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Timestamp updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Long getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 
 	public Double getBalance() {
@@ -190,52 +214,68 @@ public class Starship_UserVo implements Serializable{
 		this.balance = balance;
 	}
 
-	public Double getTotal_recharge() {
-		return total_recharge;
+	public Double getTotalRecharge() {
+		return totalRecharge;
 	}
 
-	public void setTotal_recharge(Double total_recharge) {
-		this.total_recharge = total_recharge;
+	public void setTotalRecharge(Double totalRecharge) {
+		this.totalRecharge = totalRecharge;
 	}
 
-	public Double getTotal_expend() {
-		return total_expend;
+	public Double getTotalExpend() {
+		return totalExpend;
 	}
 
-	public void setTotal_expend(Double total_expend) {
-		this.total_expend = total_expend;
+	public void setTotalExpend(Double totalExpend) {
+		this.totalExpend = totalExpend;
 	}
 
-	public Double getTotal_income() {
-		return total_income;
+	public Double getTotalIncome() {
+		return totalIncome;
 	}
 
-	public void setTotal_income(Double total_income) {
-		this.total_income = total_income;
+	public void setTotalIncome(Double totalIncome) {
+		this.totalIncome = totalIncome;
 	}
 
-	public Double getTotal_withdraw() {
-		return total_withdraw;
+	public Double getTotalWithdraw() {
+		return totalWithdraw;
 	}
 
-	public void setTotal_withdraw(Double total_withdraw) {
-		this.total_withdraw = total_withdraw;
+	public void setTotalWithdraw(Double totalWithdraw) {
+		this.totalWithdraw = totalWithdraw;
 	}
 
-	public Double getTotal_lottery() {
-		return total_lottery;
+	public Double getTotalLottery() {
+		return totalLottery;
 	}
 
-	public void setTotal_lottery(Double total_lottery) {
-		this.total_lottery = total_lottery;
+	public void setTotalLottery(Double totalLottery) {
+		this.totalLottery = totalLottery;
 	}
 
-	public Double getAction_totle() {
-		return action_totle;
+	public Double getActionTotle() {
+		return actionTotle;
 	}
 
-	public void setAction_totle(Double action_totle) {
-		this.action_totle = action_totle;
+	public void setActionTotle(Double actionTotle) {
+		this.actionTotle = actionTotle;
+	}
+
+	public List<Starship_UserEntity> getBeuserList() {
+		return beuserList;
+	}
+
+	public void setBeuserList(List<Starship_UserEntity> beuserList) {
+		this.beuserList = beuserList;
+	}
+
+	public List<BankEntity> getBankEntityList() {
+		return bankEntityList;
+	}
+
+	public void setBankEntityList(List<BankEntity> bankEntityList) {
+		this.bankEntityList = bankEntityList;
 	}
 
 	/**
@@ -248,10 +288,10 @@ public class Starship_UserVo implements Serializable{
 			return false;
 		}
 		Long userId = user.getUserId();
-		if (user_id == null || userId == null) {
+		if (userId == null || userId == null) {
 			return false;
 		}
-		return user_id.equals(userId);
+		return userId.equals(userId);
 	}
 	
 }

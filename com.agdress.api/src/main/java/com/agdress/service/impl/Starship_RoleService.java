@@ -2,11 +2,17 @@ package com.agdress.service.impl;
 
 
 import com.agdress.commons.utils.StringUtils;
+import com.agdress.commons.utils.cmsUtil;
 import com.agdress.entity.Starship_RoleEntity;
+import com.agdress.entity.vo.Starship_UserlistVo;
 import com.agdress.mapper.Starship_RoleMapper;
 import com.agdress.mapper.Starship_UserMapper;
+import com.agdress.result.DatatablesResult;
 import com.agdress.service.Starship_IRoleService;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +53,29 @@ public class Starship_RoleService extends ServiceImpl<Starship_RoleMapper, Stars
 		resourceMap.put("mods", modSet);
 		resourceMap.put("roles", roles);
 		return resourceMap;
+	}
+
+
+	/**
+	 * 获取角色列表
+	 * @param params
+	 * @param page
+	 * @param rows
+	 * @param draw
+	 * @return
+	 */
+	@Override
+	public DatatablesResult<Starship_RoleEntity> selectRoleVo(JSONObject params, Integer page, Integer rows, Integer draw) {
+		PageHelper.startPage(page, rows);
+		Map<String,String> whereMap = cmsUtil.toHashMap(params);
+		List<Starship_RoleEntity> rolelistVos = this.roleMapper.selectRoleListVoPage(whereMap);
+		PageInfo<Starship_RoleEntity> pageInfo = new PageInfo<Starship_RoleEntity>(rolelistVos);
+		DatatablesResult pageResult = new DatatablesResult<Starship_UserlistVo>();
+		pageResult.setData(rolelistVos);
+		pageResult.setDraw(draw);
+		pageResult.setRecordsTotal((int)pageInfo.getTotal());
+		pageResult.setRecordsFiltered(pageResult.getRecordsTotal());
+		return pageResult;
 	}
 
 }

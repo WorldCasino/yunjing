@@ -55,7 +55,7 @@ public class Starship_ModulesController extends BaseController {
 			tree.setText(modules.getName());
 			tree.setIconCls(modules.getIcon());
 			tree.setAttributes(modules.getUrl());
-			tree.setOpenMode(modules.getOpen_mode());
+			tree.setOpenMode(modules.getOpenMode());
 			tree.setState(String.valueOf(modules.getStatus()));
 			if (modules.getPid()!=null) {
 				tree.setTargetType("iframe-tab");

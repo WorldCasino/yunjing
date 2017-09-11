@@ -1,0 +1,37 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        },
+        "cordova-plugin-inapppurchase": {
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        },
+        "cordova-plugin-alipay-v2": {
+            "APP_ID": "2017070607661325",
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        },
+        "cordova-plugin-wechat": {
+            "WECHATAPPID": "wx90bb3475e4e8850a",
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        },
+        "cordova-plugin-xgpush": {
+            "ACCESS_ID": "1627738298",
+            "ACCESS_KEY": "1253930144",
+            "PACKAGE_NAME": "com.caiyicai.quiz"
+        }
+    },
+    "dependent_plugins": {}
+}

@@ -13,7 +13,7 @@
         <result column="card_bank" property="cardBank" jdbcType="VARCHAR"/>
         <result column="card_name" property="cardName" jdbcType="VARCHAR"/>
         <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
-        <result column="currency" property="currency" jdbcType="DECIMAL"/>
+        <result column="balance" property="balance" jdbcType="DECIMAL"/>
         <result column="bank_icon" property="bankIcon" jdbcType="VARCHAR"/>
         <result column="qq" property="qq" jdbcType="VARCHAR"/>
     </resultMap>
@@ -27,14 +27,15 @@
       SELECT t.user_id, t.nickname, t.phone, t.gender, t.head_url,
           t_user_cards.card_id, t_user_cards.card_no, t_user_cards.card_bank, t_user_cards.card_name,
           m_bank_types.bank_name, m_bank_types.bank_icon,
+          t_user_account.balance,
           kf.qq
         FROM t_users t
         LEFT JOIN t_user_cards ON t_user_cards.user_id = t.user_id AND t_user_cards.is_delete = 0
         LEFT JOIN m_bank_types ON m_bank_types.bank_type = t_user_cards.bank_type AND m_bank_types.is_delete = 0
         LEFT JOIN t_user_account ON t_user_account.user_id = t.user_id AND t_user_account.is_delete = 0
         LEFT JOIN t_users kf ON kf.user_id = t.be_user_id
-        WHERE t.user_id = #{userId} AND
-              t.is_delete = 0
+        WHERE t.user_id = #{userId}
+            AND t.is_delete = 0
     </select>
 
 </mapper>

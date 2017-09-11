@@ -10,18 +10,7 @@
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
             <div class="form-group">
-                <label for="login_name" class="col-sm-1 control-label">账号</label>
-                <div class="col-sm-2" >
-                    <input type="text" name="login_name" id="login_name" class="form-control">
-                </div>
-                <label for="role_id" class="col-sm-1 control-label">角色</label>
-                <div class="col-sm-2">
-                    <select id ="role_id" name="role_id" class="form-control">
-                      </select>
-                </div>
-             </div>
-            <div class="form-group">
-                 <label for="date1" class="col-sm-1 control-label">注册时间</label>
+                <label for="date1" class="col-sm-1 control-label">注册时间</label>
                 <div class="col-sm-2" >
                     <input type="text" name="date1" id="date1" class="form-control" style="width: 100%;">
                     <input type="text" id = "registerStartTime" name="registerStartTime" class="form-control" style="display: none"/>
@@ -33,33 +22,41 @@
                     <input type="text" id = "loginStartTime" name="loginStartTime" class="form-control" style="display: none"/>
                     <input type="text" id = "loginEndTime" name="loginEndTime" class="form-control" style="display: none;"/>
                 </div>
+                <label for="loginName" class="col-sm-1 control-label">账号</label>
                 <div class="col-sm-2" >
-                        <shiro:hasPermission name="13search">
-                            <button type="button" class="btn btn-primary btn-sm" id="btn-query">
-                                <i class="fa fa-search"></i> 查询
-                            </button>
-                            <button type="button" class="btn btn-primary btn-sm" id="btn-re">
-                                刷新
-                            </button>
-                        </shiro:hasPermission>
-                        <shiro:hasPermission name="13add">
-                            <button type="button" class="btn btn-primary btn-sm toadd">
-                                 添加
-                            </button>
-                        </shiro:hasPermission>
-
+                    <input type="text" name="loginName" id="loginName" class="form-control">
                 </div>
-              </div>
+                <label for="roleId" class="col-sm-1 control-label">角色</label>
+                <div class="col-sm-2">
+                    <select id ="roleId" name="roleId" class="form-control">
+                      </select>
+                </div>
+             </div>
          </form>
+        <div class="pull-right" style="margin-top: 5px;">
+             <div class="btn-group">
+                <shiro:hasPermission name="13search">
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-query">
+                        <i class="fa fa-search"></i> 查询
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-re">
+                        刷新
+                    </button>
+                </shiro:hasPermission>
+            </div>
+            <shiro:hasPermission name="13add">
+                <button type="button" class="btn btn-primary btn-sm toadd">
+                    添加
+                </button>
+            </shiro:hasPermission>
+        </div>
     </div>
 
     <!--表格-->
     <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed" align="center">
         <thead>
         <tr class="info">
-            <th style="width: 10%;">用户编号</th>
             <th style="width: 10%;">账号</th>
-            <%--<th style="width: 10%;">密码</th>--%>
             <th style="width: 20%;">QQ</th>
             <th style="width: 20%;">角色</th>
              <th style="width: 10%;">注册时间</th>
@@ -88,53 +85,51 @@
                     <input type="hidden"  class="userId" value="">
                     <div class="form-group"  >
                         <label class="col-sm-3 control-label" >角色</label>
-                        <div class="col-sm-4">
-                            <select  name="role_id" class="form-control role_id">
+                        <div class="col-sm-6">
+                            <select  name="roleId" class="form-control roleId">
 
                             </select>
                         </div>
                     </div>
                      <div class="form-group" >
                         <label class="col-sm-3 control-label" >账号</label>
-                        <div class="col-sm-4">
-                            <input type="text" name="login_name" class="login_name" class="form-control">
+                        <div class="col-sm-6">
+                            <input type="text" name="loginName"  class="form-control loginName" onkeyup="value=value.replace(/[^\0-9\a-z\A-Z]/g,'')">
                         </div>
                     </div>
                     <div class="form-group" >
                         <label class="col-sm-3 control-label" >密码</label>
-                        <div class="col-sm-4">
-                            <input type="text" name="password" class="password" class="form-control">
+                        <div class="col-sm-6">
+                            <input type="text" name="passWord"  class="form-control passWord" onkeyup="value=value.replace(/[^\0-9\a-z\A-Z]/g,'')">
                         </div>
                     </div>
                     <div class="form-group" >
                         <label class="col-sm-3 control-label" >QQ</label>
-                        <div class="col-sm-4">
-                            <input type="text" name="qq" class="qq" class="form-control">
+                        <div class="col-sm-6">
+                            <input type="number" name="qq"  class="form-control qq">
                         </div>
                     </div>
+                 </form>
 
-                    <div class="from-group text-center">
-                        <shiro:hasPermission name="13add">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm" id="okAdd">
-                                   添加
-                                </button>
-                            </div>
-                        </shiro:hasPermission>
-                        <shiro:hasPermission name="13update">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm" id="okUpdate">
-                                   修改
-                                </button>
-                            </div>
-                        </shiro:hasPermission>
+                <div class="text-center" style="margin-top: 50px">
+                    <shiro:hasPermission name="13add">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" id="btnCancel">
-                                取消
+                            <button type="button" class="btn btn-primary btn-lg" id="okAdd">
+                                确认新增
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="13update">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-lg" id="okUpdate">
+                                确认修改
+                            </button>
+                        </div>
+                    </shiro:hasPermission>
+                    <button type="button" class="btn btn-default btn-lg" id="btnCancel">
+                               返回列表
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -175,11 +170,9 @@
                 'queryForm',
                 //对应上面thead里面的序列
                 [
-                    {"data": "userId"},
-                    {"data": "login_name"},
-//                    {"data": "passWord"},
+                    {"data": "loginName"},
                     {"data": 'qq'},
-                    {"data": 'role_name'},
+                    {"data": 'roleName'},
                     {
                         "data": 'createDate',
                         "render": function (data, type, full, callback) {
@@ -225,13 +218,13 @@
 
         //取消
         $("#btnCancel").on("click", function () {
-            $("#editModal").modal("hide");
+             window.location.reload();
         });
 
         //添加
         $(".toadd").on("click", function () {
-            $(".login_name").val("");
-            $(".password").val("");
+            $(".loginName").val("");
+            $(".passWord").val("");
              $(".qq").val("");
             $(".userId").val("");
             $("#editModal").modal("show");
@@ -242,11 +235,11 @@
         //修改
         $("#dataTable tbody").on("click", ".toupdate", function () {
             var data = tables.api().row($(this).parents("tr")).data();
-            $(".login_name").val(data.login_name);
+            $(".loginName").val(data.loginName);
 //            $(".password").val(data.passWord);
-            $(".role_id").find("option").each(function(n,obj){
-                 if($(obj).html() == data.role_name){
-                     $(".role_id").val($(obj).val());
+            $(".roleId").find("option").each(function(n,obj){
+                 if($(obj).html() == data.roleName){
+                     $(".roleId").val($(obj).val());
                  }
             });
              $(".qq").val(data.qq);
@@ -258,22 +251,28 @@
 
         //新增
         $("#okAdd").on("click", function () {
+            if($(".loginName").val() == ""){
+                layer.msg("登录账号不能为空！", {icon: 2});
+            }
+            if($(".passWord").val() == ""){
+                layer.msg("密码不能为空！", {icon: 2});
+            }
             $.ajax({
                 type: "POST",
                 url: agdress.CONSTS.URL_BASE_API+"ss_user/addUserForXt",
                 data: {
-                    "role_id":$(".role_id").val(),
-                    "passWord":$(".password").val(),
-                    "loginName":$(".login_name").val(),
+                    "roleId":$(".roleId").val(),
+                    "passWord":$(".passWord").val(),
+                    "loginName":$(".loginName").val(),
                     "qq":$(".qq").val()
                 },
                 async: false,
                  success: function (data) {
                     if (data.data == true) {
                         layer.msg('新增成功！');
-                        window.location.reload();
+                         $("#okAdd").hide();
                     } else {
-                        alert("新增失败")
+                        layer.msg("操作失败！", {icon: 2});
                     }
                 }
             });
@@ -281,23 +280,29 @@
 
         //修改
         $("#okUpdate").on("click", function () {
+            if($(".loginName").val() == ""){
+                layer.msg("登录账号不能为空！", {icon: 2});
+            }
+            if($(".passWord").val() == ""){
+                layer.msg("密码不能为空！", {icon: 2});
+            }
             $.ajax({
                 type: "POST",
                 url: agdress.CONSTS.URL_BASE_API+"ss_user/updateUserForXt",
                 data: {
                         "userId":$(".userId").val(),
-                        "role_id":$(".role_id").val(),
-                        "passWord":$(".password").val(),
-                        "loginName":$(".login_name").val(),
+                        "roleId":$(".roleId").val(),
+                        "passWord":$(".passWord").val(),
+                        "loginName":$(".loginName").val(),
                         "qq":$(".qq").val()
                 },
                 async: false,
                 success: function (data) {
                     if (data.data == true) {
                         layer.msg('修改成功！');
-                        window.location.reload();
+                        $("#okUpdate").hide();
                     } else {
-                        alert("修改失败")
+                        layer.msg("操作失败！", {icon: 2});
                     }
                 }
             });
@@ -311,12 +316,12 @@
                 async: false,
                 success: function (data) {
                     var roleList=data.data;
-                    $(".role_id").empty();
-                    $("#role_id").empty();
-                    $("#role_id").append("<option value=''>全部</option>");
+                    $(".roleId").empty();
+                    $("#roleId").empty();
+                    $("#roleId").append("<option value=''>全部</option>");
                     for(var i=0 ; i <roleList.length ;i++){
-                        $(".role_id").append("<option value='"+roleList[i].roleId+"'>"+roleList[i].roleName+"</option>");
-                        $("#role_id").append("<option value='"+roleList[i].roleId+"'>"+roleList[i].roleName+"</option>");
+                        $(".roleId").append("<option value='"+roleList[i].roleId+"'>"+roleList[i].roleName+"</option>");
+                        $("#roleId").append("<option value='"+roleList[i].roleId+"'>"+roleList[i].roleName+"</option>");
                     }
                 }
             });

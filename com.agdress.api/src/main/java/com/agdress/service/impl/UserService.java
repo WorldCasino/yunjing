@@ -235,7 +235,7 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
             GameRsp rsp = gameConnector.openBalanceGet(agentEntity.getBgPwd(), userEntity.getBgLoginId());
             if (rsp.getError() == null) {
                 Float balance = (Float) rsp.getResult();
-                int ret = userAccountMapper.updateBalance(userEntity.getBgUserId(), balance);
+                int ret = userAccountMapper.updateBalance(userEntity.getUserId(), balance);
                 if (ret > 0) {
                     logger.info("更新余额成功！");
                 } else {

@@ -33,4 +33,9 @@ public class ItemController extends BaseController {
 
         return ResponseEntity.ok(result);
     }
+
+    @RequestMapping(value = "/recharge/iap/list", method = RequestMethod.POST)
+    public ResponseWrapper getIapItemList(@RequestBody JSONObject params) {
+        return ResponseWrapper.succeed(itemService.getIapItemList());
+    }
 }

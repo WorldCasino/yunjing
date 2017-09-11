@@ -17,7 +17,6 @@ public class SystemConfig {
     private String GAME_API;
     private String GAME_SN;
     private String GAME_SECRETKEY;
-    private String GAME_ADDR;
 
     private String PAYMENT_API_VERSION;
     private String PAYMENT_PARTNER_ID;
@@ -31,6 +30,8 @@ public class SystemConfig {
     private String FTP_USER;
     private String FTP_PWD;
     private String FTP_ROOT_BASE_IMAGE;
+
+    private int FRONTEND_PLATFORM;
 
     /**
      * 获取系统参数配置的实例
@@ -74,14 +75,6 @@ public class SystemConfig {
 
     public void setGAME_SECRETKEY(String GAME_SECRETKEY) {
         this.GAME_SECRETKEY = GAME_SECRETKEY;
-    }
-
-    public String getGAME_ADDR() {
-        return GAME_ADDR;
-    }
-
-    public void setGAME_ADDR(String GAME_ADDR) {
-        this.GAME_ADDR = GAME_ADDR;
     }
 
     public String getPAYMENT_API_VERSION() {
@@ -170,6 +163,14 @@ public class SystemConfig {
 
     public void setFTP_ROOT_BASE_IMAGE(String FTP_ROOT_BASE_IMAGE) {
         this.FTP_ROOT_BASE_IMAGE = FTP_ROOT_BASE_IMAGE;
+    }
+
+    public int getFRONTEND_PLATFORM() {
+        return FRONTEND_PLATFORM;
+    }
+
+    public void setFRONTEND_PLATFORM(int FRONTEND_PLATFORM) {
+        this.FRONTEND_PLATFORM = FRONTEND_PLATFORM;
     }
 
     // </editor-fold>

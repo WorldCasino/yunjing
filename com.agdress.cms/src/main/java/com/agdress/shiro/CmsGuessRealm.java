@@ -65,7 +65,7 @@ public class CmsGuessRealm extends AuthorizingRealm {
 						if (StringUtils.isNotBlank(map.get("modulstr"))) {
 							modSet.add(map.get("modulstr"));
 						}
-					}
+ 					}
 				}
 				Starship_RoleEntity role = roleMapper.selectById(roleId);
 				if (role != null) {

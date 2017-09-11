@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.ActivityMapper">
+
+    <resultMap id="activityVoResultMap" type="com.cicada.pojo.vo.ActivityVo">
+        <id column="activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="activity_type" property="activityType" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="banner_url" property="bannerUrl" jdbcType="VARCHAR"/>
+        <result column="amount_up" property="amountUp" jdbcType="INTEGER"/>
+        <result column="recharge_coins" property="rechargeCoins" jdbcType="INTEGER"/>
+        <result column="return_type" property="returnType" jdbcType="INTEGER"/>
+        <result column="return_value" property="returnValue" jdbcType="INTEGER"/>
+        <result column="validity_start" property="validityStart" jdbcType="TIMESTAMP"/>
+        <result column="validity_end" property="validityEnd" jdbcType="TIMESTAMP"/>
+        <result column="iap_product" property="iapProduct" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--获取有效的活动列表-->
+    <select id="selectActivityVo" resultMap="activityVoResultMap" parameterType="java.lang.Integer">
+        SELECT t.activity_id,
+        t.activity_type,
+        t.title,
+        t.banner_url,
+        t.amount_up,
+        t.recharge_coins,
+        t.return_type,
+        t.return_value,
+        t.validity_start,
+        t.validity_end,
+        t.iap_product
+        FROM t_activitys t
+        <where>
+            t.is_delete = 0
+            AND t.activity_type = #{activity_type}
+            <![CDATA[ AND t.validity_start <= current_timestamp ]]>
+            <![CDATA[ AND t.validity_end > current_timestamp ]]>
+        </where>
+    </select>
+</mapper>

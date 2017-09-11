@@ -18,6 +18,8 @@ public interface Starship_IAccountDetailService extends IService<Starship_UserAc
 
      Starship_AccountDetaillistVo selectByTradeId(Long trade_id);
 
+     void UpdateAccountDetail(String tradeId,String examine,String playMoney,String updateBy,String remarks);
+
      DatatablesResult<Starship_AccountDetaillistVo> selectAccountDetailListVoPage(Map<String, String> whereMap, Integer page, Integer rows, Integer draw);
 
 }

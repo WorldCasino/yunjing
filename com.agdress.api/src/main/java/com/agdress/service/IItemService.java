@@ -17,4 +17,6 @@ public interface IItemService extends IService<ItemEntity> {
      * @throws ApiException
      */
     List<ItemEntity> getRechargeItemsList() throws ApiException;
+
+    List<ItemEntity> getIapItemList() throws ApiException;
 }

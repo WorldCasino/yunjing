@@ -31,4 +31,8 @@ public interface IRechargeService extends IService<RechargeEntity> {
      * @throws ApiException
      */
     String notifyProccess(JSONObject params) throws ApiException;
+
+
+    void saveMoneyForUser(long userId,double addAmount,long recharge_status,String recharge_code,long recharge_id,String remarks);
+ 
 }

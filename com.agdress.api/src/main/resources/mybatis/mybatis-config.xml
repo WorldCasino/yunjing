@@ -43,6 +43,10 @@
                      javaType="com.agdress.enums.TradeKindEnum"/>
         <typeHandler handler="com.agdress.commons.handler.EnumTypeHandler"
                      javaType="com.agdress.enums.CurrencyEnum"/>
+        <typeHandler handler="com.agdress.commons.handler.EnumTypeHandler"
+                     javaType="com.agdress.enums.RoleTypeEnum"/>
+        <typeHandler handler="com.agdress.commons.handler.EnumTypeHandler"
+                     javaType="com.agdress.enums.AuditTemplateEnum"/>
     </typeHandlers>
 
     <plugins>

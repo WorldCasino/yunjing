@@ -2,7 +2,9 @@ package com.agdress.commons.secret;
 
 import com.agdress.commons.Exception.ApiException;
 import com.agdress.commons.utils.ConstantInterface;
+import com.agdress.commons.utils.ResponseWrapper;
 import com.agdress.enums.ErrorCodeEnum;
+import com.agdress.service.IGameDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -44,7 +46,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (method.getAnnotation(Authorization.class) != null) {
 //            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 //            return false;
-            throw new ApiException(-1, "认证失败");
+            throw new ApiException(ErrorCodeEnum.InvalidTokenException);
         }
         return true;
     }

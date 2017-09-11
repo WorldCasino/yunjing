@@ -50,16 +50,20 @@ public class DBLoggerDaoImpl implements DBLoggerDao {
      */
     @Override
     public void saveDetail( String path, String errorType, String errorContent, String use_millisecinds,  String request_parameter, String result_parameter) {
-        DBLogger logger=new DBLogger();
-        logger.setId( StringUtils.getUUId() );
-        logger.setErrorType(errorType);
-        logger.setPath(path);
-        logger.setResult_parameter(result_parameter);
-        logger.setRequest_parameter(request_parameter);
-        logger.setCreatetime( DateFormatUtil.Now() );
-        logger.setUse_millisecinds(use_millisecinds);
-        logger.setErrorContent(errorContent);
-        this.mongoTemplate.insert(logger);
+        try{
+            DBLogger logger=new DBLogger();
+            logger.setId( StringUtils.getUUId() );
+            logger.setErrorType(errorType);
+            logger.setPath(path);
+            logger.setResult_parameter(result_parameter);
+            logger.setRequest_parameter(request_parameter);
+            logger.setCreatetime( DateFormatUtil.Now() );
+            logger.setUse_millisecinds(use_millisecinds);
+            logger.setErrorContent(errorContent);
+            this.mongoTemplate.insert(logger);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

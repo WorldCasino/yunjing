@@ -1,0 +1,102 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-alipay-v2",
+        "scope": null,
+        "escapedName": "cordova-plugin-alipay-v2",
+        "name": "cordova-plugin-alipay-v2",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/fmisser/work/LetsGuess/Source/m-vortex/vortex-flow/app/node_modules"
+    ]
+  ],
+  "_cnpm_publish_time": 1483687410544,
+  "_from": "cordova-plugin-alipay-v2@latest",
+  "_hasShrinkwrap": false,
+  "_id": "cordova-plugin-alipay-v2@0.0.3",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/cordova-plugin-alipay-v2",
+  "_nodeVersion": "6.7.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-alipay-v2-0.0.3.tgz_1483687410272_0.8574964792933315"
+  },
+  "_npmUser": {
+    "name": "hhjjj1010",
+    "email": "hhjjj1010@qq.com"
+  },
+  "_npmVersion": "3.10.7",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-alipay-v2",
+    "scope": null,
+    "escapedName": "cordova-plugin-alipay-v2",
+    "name": "cordova-plugin-alipay-v2",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/cordova-plugin-alipay-v2/download/cordova-plugin-alipay-v2-0.0.3.tgz",
+  "_shasum": "308bbb73eeb8e4e437d3cc810f6797d556a1f87c",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-alipay-v2",
+  "_where": "/Users/fmisser/work/LetsGuess/Source/m-vortex/vortex-flow/app/node_modules",
+  "author": {
+    "name": "hhjjj1010"
+  },
+  "bugs": {
+    "url": "https://github.com/hhjjj1010/cordova-plugin-alipay-v2/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-alipay-v2",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "a cordova plugin, a JS version of Alipay SDK",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "308bbb73eeb8e4e437d3cc810f6797d556a1f87c",
+    "size": 4148822,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/cordova-plugin-alipay-v2/download/cordova-plugin-alipay-v2-0.0.3.tgz"
+  },
+  "gitHead": "6949aeffc99a0db29619584bb8c1216c2bd775f9",
+  "homepage": "https://github.com/hhjjj1010/cordova-plugin-alipay-v2#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "alipay",
+    "cordova-plugin-alipay",
+    "cordova-plugin-alipay-v2"
+  ],
+  "license": "ISC",
+  "maintainers": [
+    {
+      "name": "hhjjj1010",
+      "email": "hhjjj1010@qq.com"
+    }
+  ],
+  "name": "cordova-plugin-alipay-v2",
+  "optionalDependencies": {},
+  "publish_time": 1483687410544,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hhjjj1010/cordova-plugin-alipay-v2.git"
+  },
+  "scripts": {},
+  "version": "0.0.3"
+}

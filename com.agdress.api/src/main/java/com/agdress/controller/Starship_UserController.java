@@ -1,13 +1,15 @@
 package com.agdress.controller;
 
+import com.agdress.commons.utils.DateFormatUtil;
 import com.agdress.commons.utils.ResponseWrapper;
 import com.agdress.commons.utils.StringUtils;
-import com.agdress.entity.Starship_UserAccountEntity;
-import com.agdress.entity.Starship_UserCardEntity;
-import com.agdress.entity.Starship_UserEntity;
+import com.agdress.entity.*;
 import com.agdress.entity.vo.Starship_UserVo;
+import com.agdress.enums.*;
+import com.agdress.mapper.BankMapper;
 import com.agdress.mapper.Starship_RoleMapper;
 import com.agdress.result.DatatablesResult;
+import com.agdress.service.Starship_IAccountDetailService;
 import com.agdress.service.Starship_IUserAccountService;
 import com.agdress.service.Starship_IUserCardService;
 import com.agdress.service.Starship_IUserService;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.*;
 
 
 /**
@@ -37,12 +39,14 @@ public class Starship_UserController extends BaseController {
 	@Autowired
 	private Starship_IUserService userService;
 
-	@Autowired
-	private Starship_IUserCardService userCardService;
 
 	@Autowired
 	private Starship_IUserAccountService userAccountService;
 
+
+
+	@Autowired
+	private Starship_IAccountDetailService starship_iAccountDetailService;
 
 	@RequestMapping(value = "/dataGrid", method = RequestMethod.POST)
 	public ResponseEntity<DatatablesResult> dataGrid(@RequestBody JSONObject params) {
@@ -51,7 +55,7 @@ public class Starship_UserController extends BaseController {
 		int draw = params.getIntValue("draw");
 		int page = (start / rows) + 1;
 		try {
-			params.put("user_type","1");
+			params.put("userType", UserTypeEnum.Client.getCode());
 			DatatablesResult datatablesResult = this.userService.selectUserVo(params, page, rows,draw );
 			return ResponseEntity.ok(datatablesResult);
 		} catch (Exception e) {
@@ -63,93 +67,61 @@ public class Starship_UserController extends BaseController {
 
 	/**
 	 * 获取用户详情
-	 * @param userId
+	 * @param params
 	 * @return
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/findById",method = RequestMethod.POST)
-	public ResponseEntity findById(String userId) throws IOException{
+	public ResponseEntity findById(@RequestBody JSONObject params) throws IOException{
 		ResponseWrapper result;
 		try {
-			Starship_UserVo us=new Starship_UserVo();
-			us=userService.selectByUserId(Long.parseLong(userId));
-			result = ResponseWrapper.succeed(us);
+ 			Starship_UserVo us=new Starship_UserVo();
+			us=userService.selectByUserId(Long.parseLong(params.getString("userId")));
+
+
+ 			result = ResponseWrapper.succeed(us);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 修改会员信息:电话号码，业务员
-	 * @param user
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/updateUserInfor",method = RequestMethod.POST)
-	public ResponseEntity updateUserInfor(Starship_UserEntity user) throws IOException{
-		ResponseWrapper result;
-		try {
- 			boolean n=userService.updateById(user);
-			result = ResponseWrapper.succeed(n);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-		}
-		return ResponseEntity.ok(result);
+ 		return ResponseEntity.ok(result);
 	}
 
 
 
 	/**
-	 * 修改会员银行卡信息
-	 * @param userCardEntity
+	 * 修改会员信息:电话号码，昵称，业务员，银行卡
+	 * @param userVo
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/updateUserBank",method = RequestMethod.POST)
-	public ResponseEntity updateUserBank(Starship_UserCardEntity userCardEntity) throws IOException{
+	@RequestMapping(value = "/updateUserSomeInfor",method = RequestMethod.POST)
+	public ResponseEntity updateUserSomeInfor(Starship_UserVo userVo) throws IOException{
 		ResponseWrapper result;
 		try {
-			boolean n=this.userCardService.updateById(userCardEntity);
-			result = ResponseWrapper.succeed(n);
+			userService.updateUserSomeInfor(userVo);
+			result = ResponseWrapper.succeed(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 		return ResponseEntity.ok(result);
 	}
-
 
 	/**
 	 * 充值会员余额
-	 * @param account_id
 	 * @param addbalance
+	 * @param userId
+	 * @param remarks
 	 * @return
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/updateUserBalance",method = RequestMethod.POST)
-	public ResponseEntity updateUserBalance(String account_id,String addbalance,String update_by) throws IOException{
+	public ResponseEntity updateUserBalance(String addbalance,String userId,String remarks) throws IOException{
 		ResponseWrapper result;
 		try {
-			boolean n=false;
-			if(!account_id.equals("")){
-				Starship_UserAccountEntity ua=userAccountService.selectById(Long.parseLong(account_id));
-				if(ua != null){
-					double nowmoney=ua.getBalance()+Double.parseDouble(addbalance);
-					ua=new Starship_UserAccountEntity();
-					ua.setAccount_id(Long.parseLong(account_id));
-					ua.setBalance(nowmoney);
-					if(update_by == null){
-						update_by="1";
-					}
-					ua.setUpdate_by(Long.parseLong(update_by));
-					n=this.userAccountService.updateById(ua);
-				}
-			}
- 			result = ResponseWrapper.succeed(n);
+			userAccountService.updateUserBalance(addbalance,userId,remarks);
+  			result = ResponseWrapper.succeed(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -169,8 +141,8 @@ public class Starship_UserController extends BaseController {
 		int draw = params.getIntValue("draw");
 		int page = (start / rows) + 1;
 		try {
-			params.put("role_id","3");
-			params.put("user_type","0");
+			params.put("roleId", RoleTypeEnum.Salesman.getCode());
+			params.put("userType",UserTypeEnum.SystemUser.getCode());
 			DatatablesResult datatablesResult = this.userService.selectUserVo(params, page, rows,draw );
 			return ResponseEntity.ok(datatablesResult);
 		} catch (Exception e) {
@@ -192,8 +164,7 @@ public class Starship_UserController extends BaseController {
 		int draw = params.getIntValue("draw");
 		int page = (start / rows) + 1;
 		try {
-			params.put("user_type","0");
-//			System.out.println(params.toString());
+			params.put("userType",UserTypeEnum.SystemUser.getCode());
 			DatatablesResult datatablesResult = this.userService.selectUserVo(params, page, rows,draw );
  			return ResponseEntity.ok(datatablesResult);
 		} catch (Exception e) {
@@ -212,8 +183,9 @@ public class Starship_UserController extends BaseController {
 	public ResponseEntity addUserForXt(Starship_UserEntity userEntity) throws IOException{
 		ResponseWrapper result;
 		try {
-			userEntity.setCreate_date( new Timestamp(new Date().getTime()));
+			userEntity.setCreateDate( new Timestamp(new Date().getTime()));
 			userEntity.setPassWord(StringUtils.getMD5String(userEntity.getPassWord()));
+			userEntity.setNickName(userEntity.getLoginName());
 			boolean n=userService.insert(userEntity);
 			result = ResponseWrapper.succeed(n);
 		} catch (Exception e) {

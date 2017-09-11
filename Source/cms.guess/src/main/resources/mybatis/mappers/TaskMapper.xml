@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.TaskMapper">
+
+    <resultMap id="taskVoResultMap" type="com.cicada.pojo.vo.TaskVo">
+        <id column="task_id" property="taskId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="phonenumber" property="userPhone" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickName" jdbcType="VARCHAR"/>
+        <result column="task_title" property="taskTitle" jdbcType="VARCHAR"/>
+        <result column="task_content" property="taskContent" jdbcType="VARCHAR"/>
+        <result column="task_type" property="taskType" jdbcType="INTEGER" javaType="com.cicada.enums.TaskTypeEnum"/>
+        <result column="task_status" property="taskStatus" jdbcType="INTEGER" javaType="com.cicada.enums.TaskStatusEnum"/>
+        <result column="hot" property="isHot" jdbcType="VARCHAR"/>
+        <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <result column="sale_price" property="salePrice" jdbcType="INTEGER"/>
+        <result column="sale_amount" property="saleAmount" jdbcType="INTEGER"/>
+        <result column="lock_time" property="lockTime" jdbcType="TIMESTAMP"/>
+        <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP"/>
+        <result column="settle_coins" property="settleCoins" jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+
+        <collection property="answerVoList" ofType="com.cicada.pojo.vo.TaskAnswerVo">
+            <id column="answer_id" property="answerId" jdbcType="BIGINT"/>
+            <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+            <result column="answer" property="answer" jdbcType="VARCHAR"/>
+            <result column="odds" property="odds" jdbcType="DECIMAL"/>
+            <result column="is_right" property="isRight" jdbcType="DECIMAL"/>
+        </collection>
+        <collection property="footballVoList" ofType="com.cicada.pojo.vo.TaskFootballVo">
+            <id column="tfb_id" property="tfbId" jdbcType="BIGINT"/>
+            <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+            <result column="team_name" property="teamName" jdbcType="VARCHAR"/>
+            <result column="court_type" property="courtType" jdbcType="INTEGER" javaType="com.cicada.enums.CourtTypeEnum"/>
+        </collection>
+        <collection property="picturesVoList" ofType="com.cicada.pojo.vo.TaskPicturesVo">
+            <id column="pic_id" property="picId" jdbcType="BIGINT"/>
+            <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+            <result column="pic_url" property="picUrl" jdbcType="VARCHAR"/>
+            <result column="pic_type" property="picType" jdbcType="INTEGER" javaType="com.cicada.enums.TaskPicTypeEnum"/>
+        </collection>
+        <collection property="orderVoList" ofType="com.cicada.pojo.vo.TaskOrderVo">
+            <id column="answerUserId" property="userId" jdbcType="BIGINT"/>
+            <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+            <result column="userName" property="userName" jdbcType="VARCHAR"/>
+            <collection property="answerVoList" ofType="com.cicada.pojo.vo.TaskAnswerVo">
+                <id column="userAnswer" property="answerId" jdbcType="BIGINT"/>
+                <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+                <result column="userAnswerName" property="answer" jdbcType="VARCHAR"/>
+                <result column="odds" property="odds" jdbcType="DECIMAL"/>
+                <result column="total" property="quantity" jdbcType="BIGINT"/>
+                <result column="answer_right" property="isRight" jdbcType="DECIMAL"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!--根据TaskId查询竞猜项目-->
+    <select id="selectTaskVo" resultMap="taskVoResultMap" parameterType="java.util.Map">
+        SELECT t.task_id,t.user_id,u.phonenumber,u.nickname,
+        t.task_title,t.task_content,t.task_type,t.task_status,
+        t.personal,t.like_peas,t.lottery_type,t.hot,
+        t.quantity,t.sale_price,t.sale_amount,t.lock_time,
+        t.settle_coins,t.settle_time,t.create_date,
+        a2.answer_id,a2.answer,a2.odds,a2.is_right,
+        f.tfb_id,f.team_name,f.court_type,
+        p.pic_id,p.pic_url,p.pic_type,
+        o.user_id answerUserId,u2.nickname userName,o.answer_id userAnswer,a.answer userAnswerName,a.is_right answer_right,o.total
+        FROM t_tasks t
+        JOIN m_users u on t.user_id = u.user_id
+        LEFT JOIN t_task_football f on f.task_id = t.task_id and f.is_delete = 0
+        LEFT JOIN t_task_pictures p on p.task_id = t.task_id and p.is_delete = 0
+        LEFT JOIN (SELECT user_id,task_id,answer_id,COUNT(1) total FROM t_task_orders GROUP BY user_id,task_id,answer_id) o on o.task_id = t.task_id
+        LEFT JOIN m_users u2 on u2.user_id = o.user_id
+        LEFT JOIN t_task_answers a on a.answer_id = o.answer_id and a.is_delete = 0
+        LEFT JOIN t_task_answers a2 on a2.task_id = t.task_id
+        WHERE t.is_delete = 0
+              AND t.task_id = #{taskId}
+
+    </select>
+
+    <!--selectTaskVoById-->
+    <select id="selectTaskVoById" resultMap="taskVoResultMap"  parameterType="java.lang.Long">
+        SELECT t.task_id,t.user_id,u.phonenumber,u.nickname,
+               t.task_title,t.task_content,t.task_type,t.task_status,
+               t.personal,t.like_peas,t.lottery_type,t.hot,
+               t.quantity,t.sale_price,t.sale_amount,t.lock_time,
+               t.settle_coins,t.settle_time,t.create_date,
+               a.answer_id,a.answer,a.odds,
+               f.tfb_id,f.team_name,f.court_type,
+               p.pic_id,p.pic_url,p.pic_type
+        FROM t_tasks t
+        JOIN m_users u on t.user_id = u.user_id
+        LEFT JOIN t_task_answers a on a.task_id = t.task_id and a.is_delete = 0
+        LEFT JOIN t_task_football f on f.task_id = t.task_id and f.is_delete = 0
+        LEFT JOIN t_task_pictures p on p.task_id = t.task_id and p.is_delete = 0
+        WHERE t.is_delete = 0
+         AND t.task_id = #{taskId}
+    </select>
+
+    <!--获取竞猜类型-->
+    <select id="selectLotteryType" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT lottery_type
+        FROM t_tasks
+        WHERE is_delete = 0
+        AND task_id = #{taskId}
+    </select>
+
+    <!--获取竞猜项目列表-->
+    <select id="selectTaskVoByPage" resultMap="taskVoResultMap" parameterType="java.util.Map">
+        <bind name="taskContent" value="'%'+_parameter.task_content+'%'"/>
+        SELECT t.task_id,t.user_id,u.phonenumber,u.nickname,
+        t.task_title,t.task_content,t.task_type,t.task_status,t.hot,
+        t.quantity,t.sale_price,t.sale_amount,t.lock_time,
+        t.settle_coins,t.settle_time,t.create_date,
+        a.answer_id,a.answer,a.odds,
+        f.tfb_id,f.team_name,f.court_type,
+        p.pic_id,p.pic_url,p.pic_type
+        FROM ( SELECT * FROM t_tasks
+                <where>
+                    is_delete = 0
+                    <if test=" task_content != null and task_content != '' ">
+                        AND task_content LIKE #{taskContent}
+                    </if>
+                    <if test=" task_status != null and task_status != '' ">
+                        AND task_status = #{task_status}
+                    </if>
+                    <if test=" startTime != null and startTime != '' ">
+                        <![CDATA[ AND create_date >= #{startTime} ]]>
+                    </if>
+                    <if test=" endTime != null and endTime != '' ">
+                        <![CDATA[ AND create_date <= #{endTime} ]]>
+                    </if>
+                    <if test="lookType != null and lookType =='1'.toString()">
+                        and  user_id=#{userId}
+                    </if>
+                </where>
+               ORDER BY task_id DESC limit #{limit} offset #{offset}
+             ) t
+        JOIN m_users u on t.user_id = u.user_id
+        LEFT JOIN t_task_answers a on a.task_id = t.task_id and a.is_delete = 0
+        LEFT JOIN t_task_football f on f.task_id = t.task_id and f.is_delete = 0
+        LEFT JOIN t_task_pictures p on p.task_id = t.task_id and p.is_delete = 0
+        <if test="lookType != null and lookType =='2'.toString()">
+             JOIN t_task_orders g on g.task_id = t.task_id and g.is_delete = 0 and g.user_id=#{userId}
+        </if>
+        ORDER BY t.task_id DESC,p.pic_type DESC
+    </select>
+
+    <!--竞猜项目总数-->
+    <select id="selectTaskTotal" parameterType="java.util.Map" resultType="java.lang.Long" >
+       select count(1) cnt from t_tasks
+        <where>
+            is_delete = 0
+            <if test=" task_content != null and task_content != '' ">
+                AND task_content LIKE #{name}
+            </if>
+            <if test=" task_status != null and task_status != '' ">
+                AND task_status = #{task_status}
+            </if>
+            <if test=" startTime != null and startTime != '' ">
+                <![CDATA[ AND create_date >= #{startTime} ]]>
+            </if>
+            <if test=" endTime != null  and endTime != '' ">
+                <![CDATA[ AND create_date <= #{endTime} ]]>
+            </if>
+        </where>
+    </select>
+
+    <!--更新竞猜项目状态-->
+    <update id="updateTaskStatus" parameterType="com.cicada.pojo.Task">
+        UPDATE t_tasks
+        SET task_status = #{taskStatus},
+            update_by = #{updateBy},
+            update_date = #{updateDate}
+        WHERE task_id =#{taskId}
+    </update>
+
+    <!--开奖处理 更新竞猜状态-->
+    <update id ="updateLotteryComplete" parameterType="com.cicada.pojo.Task">
+        UPDATE t_tasks
+        SET task_status = #{taskStatus},
+            settle_time = #{settleTime},
+            settle_time = #{settleTime},
+            settle_coins = #{settleCoins},
+            lottery_result = #{lotteryResult},
+            update_by = #{updateBy},
+            update_date = #{updateDate}
+        WHERE task_id =#{taskId}
+    </update>
+
+    <!-- 锁定竞猜项目 -->
+    <update id ="updateTaskLocked" parameterType="java.lang.Long">
+        UPDATE t_tasks
+        SET lock_time = current_timestamp,
+        update_date = current_timestamp
+        WHERE task_id =#{taskId}
+    </update>
+
+    <!--倒计时已到 未开奖项目-->
+    <select id="selectWattingLotteryTasks" resultMap="taskVoResultMap">
+       SELECT t.task_id,t.user_id,u.phonenumber,u.nickname,
+        t.task_title,t.task_content,t.task_type,t.task_status,t.hot,
+        t.quantity,t.sale_price,t.sale_amount,t.lock_time,
+        t.settle_coins,t.settle_time,t.create_date,
+        a.answer_id,a.answer,a.odds,
+        f.tfb_id,f.team_name,f.court_type,
+        p.pic_id,p.pic_url,p.pic_type
+        FROM t_tasks t
+        JOIN m_users u on t.user_id = u.user_id
+        LEFT JOIN t_task_answers a on a.task_id = t.task_id and a.is_delete = 0
+        LEFT JOIN t_task_football f on f.task_id = t.task_id and f.is_delete = 0
+        LEFT JOIN t_task_pictures p on p.task_id = t.task_id and p.is_delete = 0
+        LEFT JOIN (select task_id, sum(quantity) qty from t_task_orders where is_delete =0 group by task_id) od on od.task_id = t.task_id
+        WHERE t.is_delete = 0 AND t.task_status = 20
+    <!--AND exists(select 1 from t_task_answers ans where ans.task_id = t.task_id and ans.is_right = 1)-->
+  <![CDATA[ AND (t.settle_time < current_timestamp  or od.qty = t.quantity) ]]>
+</select>
+
+<!--根据TaskId查询竞猜项目-->
+    <!--<select id="selectTaskVo" resultMap="taskVoResultMap" parameterType="java.util.Map">-->
+    <!--SELECT t.task_id,t.user_id,u.user_name,-->
+    <!--t.task_title,t.task_content,t.task_type,t.task_status,t.hot,-->
+    <!--t.quantity,t.sale_price,t.sale_amount,t.settle_coins-->
+    <!--FROM t_tasks t-->
+    <!--JOIN m_users u on t.user_id = u.user_id-->
+    <!--WHERE t.is_delete = 0-->
+    <!--AND t.task_id = #{taskId}-->
+    <!--</select>-->
+</mapper>

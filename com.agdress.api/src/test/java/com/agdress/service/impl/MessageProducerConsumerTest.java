@@ -10,8 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.jms.Destination;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Administrator on 2017/8/9.
  */
@@ -23,7 +21,7 @@ public class MessageProducerConsumerTest {
     private IMessageProducerService producerService;
 
     @Autowired
-    @Qualifier("queueDestination")
+    @Qualifier("payNotifyQueueDestination")
     private Destination destination;
 
     @Test

@@ -33,13 +33,18 @@ public class MessageProducerService implements IMessageProducerService{
      * @param destination 消息目的地
      * @param message 消息内容
      */
-    public void sendMessage(Destination destination, final String message) {
-        System.out.println("---------------生产者发送消息-----------------");
-        System.out.println("---------------生产者发了一个消息：" + message);
-        jmsTemplate.send(destination, new MessageCreator() {
-            public Message createMessage(Session session) throws JMSException {
-                return session.createTextMessage(message);
-            }
-        });
+    public boolean sendMessage(Destination destination, final String message) {
+        try {
+            jmsTemplate.send(destination, new MessageCreator() {
+                public Message createMessage(Session session) throws JMSException {
+                    return session.createTextMessage(message);
+                }
+            });
+
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

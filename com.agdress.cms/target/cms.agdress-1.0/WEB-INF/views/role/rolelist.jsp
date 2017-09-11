@@ -9,26 +9,36 @@
     <!-- 查询、添加、批量删除、导出、刷新 -->
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
-            <div class="form-group">
+             <div class="form-group">
+                <label for="roleName" class="col-sm-1 control-label">角色名称</label>
                 <div class="col-sm-2" >
-                    <shiro:hasPermission name="17add">
-                        <button type="button" class="btn btn-primary btn-sm toadd">
-                            添加
-                        </button>
-                    </shiro:hasPermission>
-                    <button type="button" class="btn btn-primary btn-sm" id="btn-re">
-                        刷新
-                    </button>
+                    <input type="text" name="roleName" id="roleName" class="form-control">
                 </div>
             </div>
-        </form>
+         </form>
+        <div class="pull-right" style="margin-top: 5px;">
+              <div class="btn-group">
+                 <shiro:hasPermission name="17search">
+                     <button type="button" class="btn btn-primary btn-sm" id="btn-query">
+                         查询
+                     </button>
+                     <button type="button" class="btn btn-primary btn-sm" id="btn-re">
+                         刷新
+                     </button>
+                 </shiro:hasPermission>
+             </div>
+            <shiro:hasPermission name="17add">
+                <button type="button" class="btn btn-primary btn-sm toadd">
+                    添加
+                </button>
+            </shiro:hasPermission>
+        </div>
     </div>
 
     <!--表格-->
     <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed" align="center">
         <thead>
         <tr class="info">
-            <th style="width: 10%;">序号</th>
             <th style="width: 10%;">角色名称</th>
             <th style="width: 10%;">创建时间</th>
             <th style="width: 10%;">操作</th>
@@ -55,25 +65,23 @@
                     <div class="form-group" >
                         <label class="col-sm-3 control-label" >角色名称</label>
                         <div class="col-sm-4">
-                            <input type="text" name="role_name" class="role_name" class="form-control">
+                            <input type="text" name="roleName" class="roleName" class="form-control">
                         </div>
                     </div>
+                  </form>
 
-                    <div class="from-group text-center">
-                        <shiro:hasPermission name="17add">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm" id="okAdd">
-                                    添加
-                                </button>
-                            </div>
-                        </shiro:hasPermission>
+                <div class="text-center" style="margin-top: 50px">
+                    <shiro:hasPermission name="17add">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm btnCancel" >
-                                取消
+                            <button type="button" class="btn btn-primary btn-lg" id="okAdd">
+                                添加角色
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </shiro:hasPermission>
+                    <button type="button" class="btn btn-default btn-lg btnCancel" >
+                               返回列表
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -97,7 +105,7 @@
                     <div class="form-group"  >
                         <label class="col-sm-3 control-label" >角色</label>
                         <div class="col-sm-4">
-                            <select  name="role_id" class="form-control role_id" onchange="showDetailUpdate(this.value)">
+                            <select  name="roleId" class="form-control roleId" onchange="showDetailUpdate(this.value)">
 
                             </select>
                         </div>
@@ -165,21 +173,19 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="from-group text-center">
-                        <shiro:hasPermission name="17update">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm" id="okUpdate">
-                                    修改
-                                </button>
-                            </div>
-                        </shiro:hasPermission>
+                </form>
+                <div class="text-center" style="margin-top: 50px">
+                    <shiro:hasPermission name="17update">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm btnCancel" >
-                                取消
+                            <button type="button" class="btn btn-primary btn-lg" id="okUpdate">
+                                确认修改
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </shiro:hasPermission>
+                     <button type="button" class="btn btn-default btn-lg btnCancel" >
+                                返回列表
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -206,7 +212,6 @@
                 'queryForm',
                 //对应上面thead里面的序列
                 [
-                    {"data": "roleId"},
                     {"data": "roleName"},
                     {
                         "data": 'createDate',
@@ -247,13 +252,12 @@
 
         //取消
         $(".btnCancel").on("click", function () {
-            $("#editModal1").modal("hide");
-            $("#editModal2").modal("hide");
+            window.location.reload();
         });
 
         //添加
         $(".toadd").on("click", function () {
-            $(".role_name").val("");
+            $(".roleName").val("");
             $("#editModal1").modal("show");
             $("#editModal2").modal("hide");
         });
@@ -263,16 +267,16 @@
                 type: "POST",
                 url: agdress.CONSTS.URL_BASE_API+"ss_role/addRole",
                 data: {
-                    "roleName":$(".role_name").val()
+                    "roleName":$(".roleName").val()
                 },
                 async: false,
                 success: function (data) {
                     if (data.data == true) {
                         layer.msg('新增成功！');
-                        window.location.reload();
+                        $("#okAdd").hide();
                     } else {
-                        alert("新增失败")
-                    }
+                        ayer.msg('新增失败！');
+                     }
                 }
             });
         });
@@ -280,7 +284,7 @@
         //修改权限
         $("#dataTable tbody").on("click", ".toupdate", function () {
             var data = tables.api().row($(this).parents("tr")).data();
-            $(".role_id").val(data.roleId);
+            $(".roleId").val(data.roleId);
             //操作选中-所有checkbox指定一个class循环
             showDetailUpdate(data.roleId);
             $("#editModal2").modal("show");
@@ -294,25 +298,25 @@
         //修改
         $("#okUpdate").on("click", function () {
             //获取所有的菜单选中的ID
-            var modulesstr="";
+            var modulesStr="";
             $(".cd").each(function(){
                 if ($(this).is(":checked")) {
-                    modulesstr+=$(this).val()+",";
+                    modulesStr+=$(this).val()+",";
                 }
             });
             $.ajax({
                 type: "POST",
                 url: agdress.CONSTS.URL_BASE_API+"ss_role/updateRoleModules",
                 data: {
-                    "role_id":$(".role_id").val(),
-                    "modulesstr":modulesstr
+                    "roleId":$(".roleId").val(),
+                    "modulesStr":modulesStr
                 },
                 async: false,
                 success: function (data) {
                     if (data.data == true) {
                         layer.msg('修改成功！');
                     } else {
-                        alert("修改失败")
+                        layer.msg('修改失败！');
                     }
                 }
             });
@@ -328,9 +332,9 @@
                 async: false,
                 success: function (data) {
                     var roleList=data.data;
-                    $(".role_id").empty();
+                    $(".roleId").empty();
                     for(var i=0 ; i <roleList.length ;i++){
-                        $(".role_id").append("<option value='"+roleList[i].roleId+"'>"+roleList[i].roleName+"</option>");
+                        $(".roleId").append("<option value='"+roleList[i].roleId+"'>"+roleList[i].roleName+"</option>");
                     }
                 }
             });

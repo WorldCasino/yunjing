@@ -18,13 +18,12 @@
     folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="../../../plugins/datatables/jquery.dataTables.css">
     <link rel="stylesheet" href="../../../plugins/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
     <!-- Pace -->
     <link rel="stylesheet" href="../../../plugins/pace-master/themes/blue/pace-theme-flash.css">
     <!-- jvectormap -->
     <link rel="stylesheet" href="../../../plugins/jvectormap/jquery-jvectormap-1.2.2.css">
 </head>
-
-
 
 
 
