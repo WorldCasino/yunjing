@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.ClientAccountMapper">
+
+    <!--更新冻结金币-->
+    <update id ="updateAccountCoins" parameterType="com.cicada.pojo.ClientAccountEntity">
+        UPDATE t_user_account
+        SET coin_locked = #{coinLocked},
+        coin_balance = #{coinBalance},
+        coin_income = #{coinIncome},
+        coin_expend = #{coinExpend},
+        update_by = #{updateBy},
+        update_date = #{updateDate}
+        WHERE account_id = #{accountId}
+    </update>
+</mapper>

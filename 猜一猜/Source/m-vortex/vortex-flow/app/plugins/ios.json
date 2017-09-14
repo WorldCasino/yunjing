@@ -1,0 +1,36 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        },
+        "cordova-plugin-inapppurchase": {
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        },
+        "cordova-plugin-xgpush": {
+            "ACCESS_ID": "1627738298",
+            "ACCESS_KEY": "1253930144",
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        },
+        "cordova-plugin-wechat": {
+            "WECHATAPPID": "wx90bb3475e4e8850a",
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        },
+        "cordova-hot-code-push-plugin": {
+            "PACKAGE_NAME": "com.caiyicai.guess"
+        }
+    },
+    "dependent_plugins": {}
+}

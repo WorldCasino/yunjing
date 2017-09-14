@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <settings>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="SLF4J" />
+    </settings>
+
+    <typeHandlers>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.GenderEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.ErrorCodeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.OperaterTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.UserTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.TaskTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.TaskStatusEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.MessageTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.MessageStatusEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.ActivityTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.ActivityReturnTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.RechargeStatusEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.TaskPicTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.CourtTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.TradeTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.MarqueeTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.DeviceTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.UserStatusEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.OrderTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.OrderStatusEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.ActiveTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.CurrencyTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.MatchesStatusEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.MatchesTypeEnum"/>
+        <typeHandler handler="com.cicada.commons.handler.EnumTypeHandler"
+                     javaType="com.cicada.enums.MatchesPlayTypeEnum"/>
+    </typeHandlers>
+
+    <plugins>
+        <!-- 配置分页插件 -->
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->        
+            <property name="dialect" value="mysql"/>
+        </plugin>
+        <!-- 配置拦截器 -->
+        <plugin interceptor="com.cicada.commons.interceptor.MapF2FInterceptor"/>
+        <plugin interceptor="com.cicada.commons.interceptor.SlowQueryTimeInterceptor">
+            <!--超过这个时间打印慢查询日志，单位毫秒-->
+            <property name="slowMilliSecond" value="500"/>
+        </plugin>
+    </plugins>
+</configuration>
+

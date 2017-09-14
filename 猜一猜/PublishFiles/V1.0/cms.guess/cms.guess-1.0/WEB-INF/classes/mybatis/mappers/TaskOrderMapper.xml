@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.TaskOrderMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        tord_id, task_id, answer_id, quantity, create_by, create_date, update_by, update_date, is_delete
+    </sql>
+
+    <select id="selectOrdersByTaskId" resultType="com.cicada.pojo.TaskOrder" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_task_orders t
+        WHERE is_delete = 0
+          AND task_id = #{taskId}
+    </select>
+
+    <select id="selectOrdersTotalByTaskId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT sum(quantity) as totalQty
+        FROM t_task_orders
+        WHERE is_delete = 0 and task_id = #{taskId}
+    </select>
+</mapper>

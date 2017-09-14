@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agdress.mapper.Starship_AccountDetailMapper">
+
+    <sql id="search">
+        a.is_delete = 0
+        <if test=" userId != null and userId != '' ">
+            and   a.user_id = #{userId}
+        </if>
+        <if test=" bgLoginId != null and bgLoginId != '' ">
+            and   a.bg_login_id = #{bgLoginId}
+        </if>
+         <if test=" tradeKind != null and tradeKind != '' ">
+            and   a.trade_kind = #{tradeKind}
+        </if>
+        <if test=" tradeType != null and tradeType != '' ">
+            and   #{tradeType} LIKE CONCAT('%',CONCAT(a.trade_type,'%') )
+        </if>
+         <if test=" tradeStatus != null and tradeStatus != '' ">
+            and   a.trade_status = #{tradeStatus}
+        </if>
+        <if test=" createStartTime != null and createStartTime != '' ">
+            <![CDATA[ and TO_DAYS(a.create_date)  >= TO_DAYS( #{createStartTime}) ]]>
+        </if>
+        <if test=" createEndTime != null and createEndTime != '' ">
+            <![CDATA[ and TO_DAYS(a.create_date) <= TO_DAYS( #{createEndTime})]]>
+        </if>
+    </sql>
+
+
+    <resultMap id="accountResultMap" type="com.agdress.entity.vo.Starship_AccountDetaillistVo">
+        <id column="trade_id" property="tradeId" jdbcType="BIGINT"/>
+        <result column="trade_kind" property="tradeKindEnum" jdbcType="INTEGER" javaType="com.agdress.enums.TradeKindEnum"/>
+        <result column="trade_status" property="tradeStatusEnum" jdbcType="INTEGER" javaType="com.agdress.enums.TradeStatusEnum"/>
+        <result column="trade_type" property="tradeTypeEnum" jdbcType="INTEGER" javaType="com.agdress.enums.TradeTypeEnum"/>
+        <result column="trade_currency" property="tradeCurrency" jdbcType="INTEGER"/>
+        <result column="amount" property="amount" jdbcType="FLOAT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="bg_login_id" property="bgLoginId" jdbcType="VARCHAR"/>
+        <result column="agent_id" property="agentId" jdbcType="BIGINT"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickName" jdbcType="VARCHAR"/>
+        <result column="card_name" property="cardName" jdbcType="VARCHAR"/>
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR"/>
+        <result column="card_bank" property="cardBank" jdbcType="VARCHAR"/>
+         <result column="balance" property="balance" jdbcType="FLOAT"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+
+
+
+    <!--查询流水的分页查询-->
+    <select id="selectAccountDetailListVoPage" parameterType="java.util.Map"   resultMap="accountResultMap">
+        SELECT
+            a.trade_id,
+            a.trade_kind,
+            a.trade_type,
+            a.trade_status,
+            a.trade_currency,
+            a.amount,
+            a.create_date,
+            b.user_id,
+            b.bg_login_id,
+            b.nickname,
+            b.phone,
+            c.account_id,
+            c.balance,
+            d.card_bank,
+            d.card_no,
+            d.card_name,
+            ifnull(e.role_id,'9999') as role_id
+         from
+            t_user_account_detail a
+            LEFT JOIN t_users b on a.user_id=b.user_id
+            LEFT JOIN t_user_account c on a.account_id=c.account_id
+            LEFT JOIN t_user_cards d on a.user_id=d.user_id
+            LEFT JOIN t_audit_template_step e on e.flow_id=a.flow_id
+        where
+            <include refid="search"/>
+        order by a.update_date desc
+     </select>
+
+
+    <!--查询账单的详情 -->
+    <select id="selectByTradeId" parameterType="java.lang.Long"   resultMap="accountResultMap">
+        SELECT
+            a.trade_id,
+            a.trade_kind,
+            a.trade_type,
+            a.trade_status,
+            a.trade_currency,
+            a.amount,
+            a.create_date,
+            b.user_id,
+            b.bg_login_id,
+            b.login_name,
+            b.nickname,
+            b.agent_id,
+            b.phone,
+            c.account_id,
+            c.balance,
+            d.card_bank,
+            d.card_no,
+            d.card_name,
+            ifnull(e.role_id,'9999') as role_id
+         from
+            t_user_account_detail a
+            LEFT JOIN t_users b on a.user_id=b.user_id
+            LEFT JOIN t_user_account c on a.account_id=c.account_id
+            LEFT JOIN t_user_cards d on a.user_id=d.user_id
+            LEFT JOIN t_audit_template_step e on e.flow_id=a.flow_id
+          WHERE
+             a.trade_id = #{trade_id}
+       limit 1
+    </select>
+
+
+    <resultMap id="accountSumResultMap" type="com.agdress.entity.vo.Starship_SumVo">
+         <result column="trade_kind" property="tradeKindEnum" jdbcType="INTEGER" javaType="com.agdress.enums.TradeKindEnum"/>
+         <result column="summoney" property="sumMoney" jdbcType="FLOAT"/>
+     </resultMap>
+    <!--  统计收入 -->
+    <select id="sumMoneyForType" parameterType="java.util.Map"   resultMap="accountSumResultMap">
+        SELECT
+          sum(a.amount) as summoney,
+          a.trade_kind
+        from
+            t_user_account_detail a
+        where
+           <include refid="search"/>
+        GROUP  BY a.trade_kind
+    </select>
+
+
+</mapper>

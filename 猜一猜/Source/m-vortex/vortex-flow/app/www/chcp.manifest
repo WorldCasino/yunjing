@@ -1,0 +1,594 @@
+[
+  {
+    "file": "audio/bet.mp3",
+    "hash": "0e52caf9cb5fc03b02dc0e17a095ef26"
+  },
+  {
+    "file": "css/app.1bd3784bc042fb72c51a732f8b059b0a.css",
+    "hash": "f5976be88df60e01e9d679137f6b0998"
+  },
+  {
+    "file": "css/app.1bd3784bc042fb72c51a732f8b059b0a.css.map",
+    "hash": "e8374798fb575b92d89f9ae540606998"
+  },
+  {
+    "file": "guess/calendar.png",
+    "hash": "5637580203df84d7aeb3e4a43ea0dd94"
+  },
+  {
+    "file": "guess/Check.png",
+    "hash": "42708289b061b2689d481634c6eb9d49"
+  },
+  {
+    "file": "guess/fabu_beijing.png",
+    "hash": "1cf5f9bf81cb3bb82ead0315ea4b2906"
+  },
+  {
+    "file": "guess/fabu_button01.png",
+    "hash": "3edc06e836c8b13b54b12fb33ac90aab"
+  },
+  {
+    "file": "guess/fabu_button02.png",
+    "hash": "5c755fdf97fd0750ee834c88f7fb8af9"
+  },
+  {
+    "file": "guess/fabu_chonggong.png",
+    "hash": "8dd337d74b785d0a5e4cc6d0586f7bbc"
+  },
+  {
+    "file": "guess/fabu_cuowu.png",
+    "hash": "68edde715cabe83a9aa71b07566b8a8d"
+  },
+  {
+    "file": "guess/fabu_guanbi.png",
+    "hash": "dda6644745bc7f4b30f61dd87a265d99"
+  },
+  {
+    "file": "guess/fabu_jia-1.png",
+    "hash": "adc666befce83b3158a3a81081159fba"
+  },
+  {
+    "file": "guess/fabu_jia-2.png",
+    "hash": "8f9a5523fa67faab57ba3cf3a219101a"
+  },
+  {
+    "file": "guess/fabu_jia.png",
+    "hash": "c67797e629978d294a147cae30317119"
+  },
+  {
+    "file": "guess/fabu_jian-1.png",
+    "hash": "dfbd17ad05a9e492a3313c1ad5b7f391"
+  },
+  {
+    "file": "guess/fabu_jian-2.png",
+    "hash": "26abbf86a11bab6d9709e6b9ae4e7cb1"
+  },
+  {
+    "file": "guess/fabu_jian.png",
+    "hash": "710d1382068684a7e56bec95f8097b36"
+  },
+  {
+    "file": "guess/fabu_jisuanqi.png",
+    "hash": "c9ce66e4b9fa86c48aab425d944a8211"
+  },
+  {
+    "file": "guess/fabu_mengban.png",
+    "hash": "89a103bf579ff182b8f24ea4a57d2076"
+  },
+  {
+    "file": "guess/fabu_mengbananniu.png",
+    "hash": "1d03d308309e11307b4b57be263812dd"
+  },
+  {
+    "file": "guess/fabu_pengyouquan.png",
+    "hash": "e8ebaef03d68ea28b1ec1125af598a6d"
+  },
+  {
+    "file": "guess/fabu_weixin.png",
+    "hash": "534d0a997bcee1bce4cd87601f5c9e18"
+  },
+  {
+    "file": "guess/fabu_zhengque.png",
+    "hash": "b4260c53800e94c93606d07d20568c84"
+  },
+  {
+    "file": "guess/fabu_zhushu.png",
+    "hash": "c4369a08c6cc70eddfac15f19f6dd475"
+  },
+  {
+    "file": "guess/fabu-danzhujiange.png",
+    "hash": "67e687d4fef9d6f9fd3097fbaf5b7e8d"
+  },
+  {
+    "file": "guess/ic_add_disable.png",
+    "hash": "adc666befce83b3158a3a81081159fba"
+  },
+  {
+    "file": "guess/ic_add_enable.png",
+    "hash": "8f9a5523fa67faab57ba3cf3a219101a"
+  },
+  {
+    "file": "guess/ic_dec_disable.png",
+    "hash": "dfbd17ad05a9e492a3313c1ad5b7f391"
+  },
+  {
+    "file": "guess/ic_dec_enable.png",
+    "hash": "26abbf86a11bab6d9709e6b9ae4e7cb1"
+  },
+  {
+    "file": "homepage/bet_amount_bean.png",
+    "hash": "014d56e7567e0c23f9d2d083f568722e"
+  },
+  {
+    "file": "homepage/bet_amount_coin.png",
+    "hash": "21f67143826dcabae94c035a12dccb46"
+  },
+  {
+    "file": "homepage/bet_amount_hybrid.png",
+    "hash": "06428e2899d776bac87642187a80b0ae"
+  },
+  {
+    "file": "homepage/bet_amount.png",
+    "hash": "21f67143826dcabae94c035a12dccb46"
+  },
+  {
+    "file": "homepage/Circle.png",
+    "hash": "94ae700b73cc91af64ef6fed5013ab36"
+  },
+  {
+    "file": "homepage/default_header.png",
+    "hash": "edf244e3422936e495929829dde2fc9a"
+  },
+  {
+    "file": "homepage/Forward_disable.png",
+    "hash": "4592b7a9e3177f6943041a50d1772aad"
+  },
+  {
+    "file": "homepage/Forward.png",
+    "hash": "67b12fa18c05d6ea0956a3aa07050074"
+  },
+  {
+    "file": "homepage/guanbi.png",
+    "hash": "58fade866f4d3b574df844c025cdf89b"
+  },
+  {
+    "file": "homepage/homepass_correct.png",
+    "hash": "5ade40bf3c25666fb8d3701d93b9b75b"
+  },
+  {
+    "file": "homepage/homepass_gongzhonghao.png",
+    "hash": "2c77b6887afbf75706789a8e8c6ba1e2"
+  },
+  {
+    "file": "homepage/homepass_paihangbang.png",
+    "hash": "7565ab7238db496a3e5328b8cec1f464"
+  },
+  {
+    "file": "homepage/homepass_taikuang02.png",
+    "hash": "aa06e0b34aa571c6a2644f600e0ee358"
+  },
+  {
+    "file": "homepage/kaijaing.png",
+    "hash": "5eb7440943d80f263ddced8c679fd2be"
+  },
+  {
+    "file": "homepage/Report.png",
+    "hash": "973bfb1e6f989a51ade4e9fa53d3dc8d"
+  },
+  {
+    "file": "homepage/WeChat.png",
+    "hash": "4130eeaadaf2414451db6531466c46ce"
+  },
+  {
+    "file": "img/a.396843d.jpg",
+    "hash": "396843d7655946980e9e0d914df96491"
+  },
+  {
+    "file": "img/b.0110442.jpg",
+    "hash": "0110442fc3109e5ed9e7f4ad9018106d"
+  },
+  {
+    "file": "img/basketball.6abadde.png",
+    "hash": "6abadde4125ec916a11d89f352937a40"
+  },
+  {
+    "file": "img/fabu_mengban.89a103b.png",
+    "hash": "89a103bf579ff182b8f24ea4a57d2076"
+  },
+  {
+    "file": "img/football.0e4ca21.png",
+    "hash": "0e4ca214de03b0e11cec06df45b9d89c"
+  },
+  {
+    "file": "img/ic_mine_gold.906f088.png",
+    "hash": "906f088f64b821dba43c1dc8f11ae435"
+  },
+  {
+    "file": "img/player_bg.96654ab.jpg",
+    "hash": "96654abd6123d4ec6f3147c5e16865f7"
+  },
+  {
+    "file": "img/register_baoxiang02.ca2435e.png",
+    "hash": "ca2435e3d05a401b8a1f90b286be2431"
+  },
+  {
+    "file": "img/register_beijing.d58782d.png",
+    "hash": "d58782d4b50f654f4013fd79cd3e69d5"
+  },
+  {
+    "file": "index.html",
+    "hash": "1095e041f349705821879f08750c894a"
+  },
+  {
+    "file": "js/app.203c920adf1c68f126e7.js",
+    "hash": "98045c2c26ca6205c8fff5b9364f01ca"
+  },
+  {
+    "file": "js/app.203c920adf1c68f126e7.js.map",
+    "hash": "e1cfbc68493bcde952801965ff727063"
+  },
+  {
+    "file": "js/manifest.d6383d5e5a84c0b04ca6.js",
+    "hash": "2f407f9fa2e4cd4ad245999cb4d6a5b5"
+  },
+  {
+    "file": "js/manifest.d6383d5e5a84c0b04ca6.js.map",
+    "hash": "cdd0166c0e531536b0c7064ec8641c3d"
+  },
+  {
+    "file": "js/vendor.38a444ac65789b2b8695.js",
+    "hash": "a8e2dfb30006cd17a1420d7ec70ebc7a"
+  },
+  {
+    "file": "js/vendor.38a444ac65789b2b8695.js.map",
+    "hash": "03fda802bec3c97891b799b734b5d08d"
+  },
+  {
+    "file": "mine/customer_service-.png",
+    "hash": "0efe23ab476086f3ab5eebd56d17783b"
+  },
+  {
+    "file": "mine/wode_anniu.png",
+    "hash": "151b9207e6b64a386df7cb24090b3eed"
+  },
+  {
+    "file": "mine/wode_cai.png",
+    "hash": "6b0266218efe5c2dc853a07de9296c9c"
+  },
+  {
+    "file": "mine/wode_duigou.png",
+    "hash": "3c0a6ac9ca457c59965b4ae5367881d9"
+  },
+  {
+    "file": "mine/wode_edit.png",
+    "hash": "482dbc305919c9ca69046b9aef333f05"
+  },
+  {
+    "file": "mine/wode_logo.png",
+    "hash": "0a50977f90998ef4e438dee4f7af4f79"
+  },
+  {
+    "file": "mine/wode_moren.png",
+    "hash": "dcddcf764eb3358907092cdf2d6ae27c"
+  },
+  {
+    "file": "mine/wode_nan.png",
+    "hash": "fd61ed885d33efb409f2d5f59a17442d"
+  },
+  {
+    "file": "mine/wode_nv.png",
+    "hash": "be97631f1869d606ea4cc4f40b1863a1"
+  },
+  {
+    "file": "rank/homepass_jinpai.png",
+    "hash": "a9075d84076f916e0c2b9de9aace71d1"
+  },
+  {
+    "file": "rank/homepass_tongpai.png",
+    "hash": "7ffc0b9cf147bd23fd6e9ba456d71214"
+  },
+  {
+    "file": "rank/homepass_yinpai.png",
+    "hash": "7cc757728241032d1ff85b16e0ae9fc4"
+  },
+  {
+    "file": "rank/wode_gold.png",
+    "hash": "e266b45612161c39c087bc526700ba19"
+  },
+  {
+    "file": "register/register_anniu.png",
+    "hash": "8ac6ed503b0b82350629d9ca27f7d936"
+  },
+  {
+    "file": "register/register_baoxiang01.png",
+    "hash": "c51ab5a4e34f53c8efc35063351597cd"
+  },
+  {
+    "file": "register/register_baoxiang02.png",
+    "hash": "ca2435e3d05a401b8a1f90b286be2431"
+  },
+  {
+    "file": "register/register_baoxiang03.png",
+    "hash": "b00f5e7d9674ed1a339b2698ca48f254"
+  },
+  {
+    "file": "register/register_beijing.png",
+    "hash": "d58782d4b50f654f4013fd79cd3e69d5"
+  },
+  {
+    "file": "register/register_beijing1.png",
+    "hash": "fce776090177045ee52783b99d2d769c"
+  },
+  {
+    "file": "register/register_dian01.png",
+    "hash": "46af9a8916e7182f71d57762a0ced134"
+  },
+  {
+    "file": "register/register_guanbi.png",
+    "hash": "41d39e68daad7ccc06e44b2d8bc43d92"
+  },
+  {
+    "file": "register/register_nan.png",
+    "hash": "20e8387b455c071b8b6e5ca8a5d5e0fc"
+  },
+  {
+    "file": "register/register_nicheng.png",
+    "hash": "6b6fa55951a3927cc1e85111fa5783fa"
+  },
+  {
+    "file": "register/register_nv.png",
+    "hash": "b9eeb620aeeb18465d53e932ef21e82e"
+  },
+  {
+    "file": "register/register_shouji.png",
+    "hash": "fd1d150d14730350f72b02d945c65ed0"
+  },
+  {
+    "file": "register/register_weixin.png",
+    "hash": "6c1bc9a924b0478532772458ff1e21b8"
+  },
+  {
+    "file": "register/register_xingbie.png",
+    "hash": "a7611aa6ac14fdd73875ced2577fc10f"
+  },
+  {
+    "file": "sports/a.jpg",
+    "hash": "396843d7655946980e9e0d914df96491"
+  },
+  {
+    "file": "sports/b.jpg",
+    "hash": "0110442fc3109e5ed9e7f4ad9018106d"
+  },
+  {
+    "file": "tabbar/homepass_tabdi.png",
+    "hash": "4b8a09e4fd2074a3d7d227171d46debc"
+  },
+  {
+    "file": "tabbar/tab_icon1-2.png",
+    "hash": "b6f1bed46d6d2b19b1ae669bcc1da0aa"
+  },
+  {
+    "file": "tabbar/tab_icon1.png",
+    "hash": "5505dde0a63e9a91a7a8487bedb4fa53"
+  },
+  {
+    "file": "tabbar/tab_icon2-2.png",
+    "hash": "11de9f5c3b12d62ac0486a39a7999f8f"
+  },
+  {
+    "file": "tabbar/tab_icon2-3.png",
+    "hash": "05d41010accd4af16caf9ba11f6a5652"
+  },
+  {
+    "file": "tabbar/tab_icon2.png",
+    "hash": "0a1308c174238efb2e4e57cf0998ed35"
+  },
+  {
+    "file": "tabbar/tab_icon3.png",
+    "hash": "7b67ab132d7d2160660c9c5ad00abf32"
+  },
+  {
+    "file": "tabbar/tab_icon4-2.png",
+    "hash": "9fdc5308caeba00b4db93a2074df0b95"
+  },
+  {
+    "file": "tabbar/tab_icon4.png",
+    "hash": "adab4796df1828fa3b9302d2d76c9ac9"
+  },
+  {
+    "file": "tabbar/tab_icon5-2.png",
+    "hash": "00e98ffef61de7204ccc96a2b7bd518e"
+  },
+  {
+    "file": "tabbar/tab_icon5.png",
+    "hash": "4645dd687e92b1b87dff3a424fb58793"
+  },
+  {
+    "file": "task/ashen-box.png",
+    "hash": "f014a0aab0995ddd4bcb2f1108a8bec9"
+  },
+  {
+    "file": "task/ashen-light-box.gif",
+    "hash": "1e66f2da64c6b06c9b6ae7da17642c7d"
+  },
+  {
+    "file": "task/ashen-light-box.png",
+    "hash": "5ce60f749d5f81c77cc6adf5e7dae5f7"
+  },
+  {
+    "file": "task/background.png",
+    "hash": "c62b60ae54e840bf22c91f5d8f3dc003"
+  },
+  {
+    "file": "task/box1-1.png",
+    "hash": "5ce60f749d5f81c77cc6adf5e7dae5f7"
+  },
+  {
+    "file": "task/box1-2.png",
+    "hash": "ab86b52e732bf5099af80855e6b35dfe"
+  },
+  {
+    "file": "task/box1.png",
+    "hash": "f014a0aab0995ddd4bcb2f1108a8bec9"
+  },
+  {
+    "file": "task/box2-1.png",
+    "hash": "5db26aa7064c0964cd6ccba7298d9b31"
+  },
+  {
+    "file": "task/box2-2.png",
+    "hash": "c073121d8423fb78163f1ea4c968b804"
+  },
+  {
+    "file": "task/box2.png",
+    "hash": "e62ab958c0d5a446f6da34145275f83f"
+  },
+  {
+    "file": "task/box3-1.png",
+    "hash": "7c0e35d20070877bcbf6f7ac9dd0f5e3"
+  },
+  {
+    "file": "task/box3-2.png",
+    "hash": "00f4a35f3014498c37d44812d0860b33"
+  },
+  {
+    "file": "task/box3.png",
+    "hash": "25ec37ff27d33b78944024865901c05c"
+  },
+  {
+    "file": "task/chengzhang_01.png",
+    "hash": "3e7efd714aaf62060ea5b2e3ce7b7834"
+  },
+  {
+    "file": "task/chengzhang.png",
+    "hash": "7864fed78bab3c5c8e0ccad13177098f"
+  },
+  {
+    "file": "task/di.png",
+    "hash": "6498ae364c6771ccb38c93597d133a7a"
+  },
+  {
+    "file": "task/gold-box.png",
+    "hash": "25ec37ff27d33b78944024865901c05c"
+  },
+  {
+    "file": "task/gold-light-box.gif",
+    "hash": "1ffbfe32c13be6efca296e0f65bdd6e1"
+  },
+  {
+    "file": "task/gold-light-box.png",
+    "hash": "7c0e35d20070877bcbf6f7ac9dd0f5e3"
+  },
+  {
+    "file": "task/gray-box.png",
+    "hash": "ab86b52e732bf5099af80855e6b35dfe"
+  },
+  {
+    "file": "task/gray2-box.png",
+    "hash": "00f4a35f3014498c37d44812d0860b33"
+  },
+  {
+    "file": "task/gray2-white-box.png",
+    "hash": "c073121d8423fb78163f1ea4c968b804"
+  },
+  {
+    "file": "task/jindou.png",
+    "hash": "b669f12211e9d91512912c9d07200e12"
+  },
+  {
+    "file": "task/jindu_1.png",
+    "hash": "9c236166f41b1323e793c882f09c84f8"
+  },
+  {
+    "file": "task/jindu.png",
+    "hash": "fdb1a8240d151ba95804d9ef2ebd1c3a"
+  },
+  {
+    "file": "task/purple-box.png",
+    "hash": "e62ab958c0d5a446f6da34145275f83f"
+  },
+  {
+    "file": "task/purple-light-box.gif",
+    "hash": "4814e6cd177de75939184c71dddc2b05"
+  },
+  {
+    "file": "task/purple-light-box.png",
+    "hash": "5db26aa7064c0964cd6ccba7298d9b31"
+  },
+  {
+    "file": "task/richang_01.png",
+    "hash": "4de69e6ecab5eda868e88674d6dfacd5"
+  },
+  {
+    "file": "task/richang.png",
+    "hash": "c941486cfa9cc59f7f02b7f2ce627168"
+  },
+  {
+    "file": "task/task_01.png",
+    "hash": "727ffc30069e80df40c81760f90fc84b"
+  },
+  {
+    "file": "task/task_02.png",
+    "hash": "015d8106fa799ce828eac1245018b766"
+  },
+  {
+    "file": "task/task_03.png",
+    "hash": "476df089867caa40ec3eb23922f0172d"
+  },
+  {
+    "file": "task/Title_01.png",
+    "hash": "4d08b179a96c118e3eb83ee6a5eb5140"
+  },
+  {
+    "file": "task/Title_02.png",
+    "hash": "1f79b872dd05ed00f2584c75f64ffff7"
+  },
+  {
+    "file": "task/zhongdi.png",
+    "hash": "879bc6cfa2a2239719db83973ee39d9a"
+  },
+  {
+    "file": "task/zhuangshi.png",
+    "hash": "708a66d9c5dd743f3cb558d90c530ad9"
+  },
+  {
+    "file": "task2/box1-1.png",
+    "hash": "5ce60f749d5f81c77cc6adf5e7dae5f7"
+  },
+  {
+    "file": "task2/box1-2.png",
+    "hash": "ab86b52e732bf5099af80855e6b35dfe"
+  },
+  {
+    "file": "task2/box1.png",
+    "hash": "f014a0aab0995ddd4bcb2f1108a8bec9"
+  },
+  {
+    "file": "task2/box2-1.png",
+    "hash": "5db26aa7064c0964cd6ccba7298d9b31"
+  },
+  {
+    "file": "task2/box2-2.png",
+    "hash": "c073121d8423fb78163f1ea4c968b804"
+  },
+  {
+    "file": "task2/box2.png",
+    "hash": "e62ab958c0d5a446f6da34145275f83f"
+  },
+  {
+    "file": "task2/box3-1.png",
+    "hash": "7c0e35d20070877bcbf6f7ac9dd0f5e3"
+  },
+  {
+    "file": "task2/box3-2.png",
+    "hash": "00f4a35f3014498c37d44812d0860b33"
+  },
+  {
+    "file": "task2/box3.png",
+    "hash": "25ec37ff27d33b78944024865901c05c"
+  },
+  {
+    "file": "task2/jindu.png",
+    "hash": "e2938f62f94b1bfacdf303da1646b008"
+  }
+]

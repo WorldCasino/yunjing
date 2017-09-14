@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Document</title>
+    <style type="text/css">
+        body{
+          padding: 0;
+          margin: 0;
+          font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        }
+        header{
+          height: 44px;
+          background: #fd0;
+          font-size: 17px;
+          line-height: 44px;
+          color: #000;
+          text-align: center;
+        }
+        .logo-wrapper{
+            margin-top:40px;
+        }
+
+        .logo{
+            display: block;
+            width:82px;
+            height:82px;
+            margin:0 auto;
+        }
+
+        .version{
+            margin-top: 14px;
+            color:#666;
+            text-align: center;
+        }
+
+        .content1{
+          width: 300px;
+          margin: 40px auto 0;
+          font-size: 14px;
+          color:#333;
+          text-align: left;
+        }
+
+        .content2{
+          width: 300px;
+          margin: 20px auto 0;
+          font-size: 14px;
+          color:#333;
+          text-align: left;
+        }
+
+        .content3{
+          width: 300px;
+          margin: 20px auto 0;
+          font-size: 14px;
+          color:#333;
+          text-align: left;
+        }
+
+        .content3-title{
+          font-size: 16px;
+          line-height: 26px;
+        }
+
+        .footer1{
+          color:#666;
+          margin: 33px 0 2px 0;
+        }
+
+        .footer2{
+          color:#666;
+          line-height: 14px;
+          padding-bottom: 6px;
+        }
+        .agreement{
+          margin-top:10px;
+          padding-bottom:30px;
+          width:100%;
+          text-align: center;
+          color: #666;
+        }
+        .email{font-size: 14px;}
+        .footer1, .footer2{text-align: center;}
+    </style>
+</head>
+<body>
+
+    <header>关于猜一猜</header>
+
+    <div class="main">
+        <div class="content-wrapper">
+          <div class="logo-wrapper">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAMAAAC8EZcfAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAMmaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjYtYzEzOCA3OS4xNTk4MjQsIDIwMTYvMDkvMTQtMDE6MDk6MDEgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyQzY0OEVFMDI4QkYxMUU3QTUxMjg3NDBGNUY5RDFBRiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoyQzY0OEVFMTI4QkYxMUU3QTUxMjg3NDBGNUY5RDFBRiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJDNjQ4RURFMjhCRjExRTdBNTEyODc0MEY1RjlEMUFGIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNjQ4RURGMjhCRjExRTdBNTEyODc0MEY1RjlEMUFGIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+EGWcqQAAABl0RVh0U29mdHdhcmUAQWRv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" class="logo">
+          </div>
+          <div class="version">版本号：1.0.0</div>
+        <div class="content1">
+          猜一猜是一个娱乐竞猜平台，你可以在平台上发布个性的娱乐竞猜项目
+        </div>
+        <div class="content2">
+          猜一猜团队提供公平简单的竞猜娱乐，平台严禁任何形式的赌博行为
+        </div>
+        <div class="content3">
+          <div class="content3-title">商务合作</div>
+          <div class="email">邮件: 1627738298@qq.com</div>
+          <div class="qq">Q Q: 1627738298</div>
+          <div class="qq">手机: 15355046527</div>
+        </div>
+        <div class="footer1">猜一猜团队 版权所有</div>
+        <div class="footer2">
+          Copyright &copy 2017 Caiecai<br/>
+          All Rights Reserved
+        </div>
+        <!-- <div class="agreement" @click="agreementText">《猜一猜用户协议》</div> -->
+        <!-- <div href="/user-agreement/" class="agreement">《猜一猜用户协议》</div> -->
+        </div>
+    </div>
+</body>
+</html>

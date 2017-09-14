@@ -1,0 +1,82 @@
+{
+  "_from": "git+https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+  "_id": "cordova-plugin-inapppurchase@1.1.0",
+  "_inBundle": false,
+  "_integrity": "sha1-IsHtr1cuRdBXwFzN6JEBWgQV+F0=",
+  "_location": "/cordova-plugin-inapppurchase",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+    "rawSpec": "https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+    "saveSpec": "git+https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+    "fetchSpec": "https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+    "gitCommittish": "master"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/AlexDisler/cordova-plugin-inapppurchase.git#67463dc4baa5bd7f44970e7d9f4ede9985cb05b9",
+  "_spec": "https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+  "_where": "/Users/homepaasserver/work/guess/LetsGuess/Source/m-vortex/vortex-flow/app/node_modules",
+  "author": {
+    "name": "Alex Disler",
+    "email": "alexdisler@gmail.com",
+    "url": "alexdisler.com"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexDisler/cordova-plugin-inapppurchase/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A lightweight cordova plugin for in app purchases on iOS and Android with a simple promise based API.",
+  "devDependencies": {
+    "babel-core": "6.5.2",
+    "babel-plugin-syntax-async-functions": "6.5.0",
+    "babel-plugin-transform-regenerator": "6.5.2",
+    "babel-polyfill": "6.5.0",
+    "babel-preset-es2015": "6.5.0",
+    "gulp": "3.9.1",
+    "gulp-add-src": "^0.2.0",
+    "gulp-babel": "6.1.2",
+    "gulp-concat": "2.6.0",
+    "gulp-plumber": "1.1.0",
+    "gulp-util": "^3.0.7",
+    "mocha": "^2.4.5",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "homepage": "https://github.com/AlexDisler/cordova-plugin-inapppurchase",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "purchase",
+    "purchases",
+    "cordova-android",
+    "cordova-ios",
+    "payments",
+    "in",
+    "app",
+    "promise",
+    "promises",
+    "android",
+    "ios",
+    "itunes",
+    "google",
+    "play",
+    "ionic"
+  ],
+  "license": "MIT",
+  "main": "www/index-ios.js",
+  "name": "cordova-plugin-inapppurchase",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AlexDisler/cordova-plugin-inapppurchase.git"
+  },
+  "scripts": {
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "test": "mocha --compilers js:babel-core/register --require babel-polyfill test/*",
+    "watch": "mocha --watch --compilers js:babel-core/register --require babel-polyfill test/*"
+  },
+  "version": "1.1.0"
+}

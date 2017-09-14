@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agdress.mapper.Starship_RoleMapper">
+
+
+
+    <select id="selectModulesListByRoleId" parameterType="java.lang.Long"  resultType="java.util.HashMap">
+       SELECT
+            CONCAT(c.pid,c.description)  as modulstr
+        FROM
+            m_roles a JOIN m_role_modules b ON a.role_id=b.role_id
+            LEFT JOIN m_modules c ON b.module_id=c.id
+        WHERE
+          a.role_id=#{id}
+    </select>
+
+
+    <!--查询会员的分页查询-->
+    <select id="selectRoleListVoPage"  parameterType="java.util.Map"   resultType="com.agdress.entity.Starship_RoleEntity">
+        SELECT
+             role_id as roleId,
+             role_name as roleName
+        FROM
+           m_roles
+        where
+             is_delete = 0
+            <if test=" roleId != null and roleId != '' ">
+                and    role_id  LIKE CONCAT('%',CONCAT(#{roleId},'%') )
+            </if>
+            <if test=" roleName != null and roleName != '' ">
+                and    role_name LIKE CONCAT('%',CONCAT(#{roleName},'%') )
+            </if>
+      </select>
+
+
+</mapper>
