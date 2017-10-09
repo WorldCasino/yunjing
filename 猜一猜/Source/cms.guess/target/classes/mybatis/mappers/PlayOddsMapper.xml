@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.PlayOddsMapper">
+
+
+
+    <!--获取竞猜项目列表-->
+    <select id="getMatchOddsList" parameterType="java.util.Map" resultType="com.cicada.pojo.PlayOddsEntity" >
+        SELECT
+            a.odds_id as oddsId,
+            a.play_id as playId,
+            a.ball_number as ballNumber,
+            a.concede_points_show as concedePointsShow,
+            a.his_odds as hisOdds,
+            a.win_odds as winOdds,
+            a.tie_odds as tieOdds,
+            a.big_ball_odds as bigBallOdds,
+            a.small_ball_odds as smallBallOdds,
+            a.match_id as matchId  ,
+            b.id as concedeId,
+            b.is_default as isDefault
+        FROM
+            t_play_odds  a
+            LEFT JOIN t_concede_points b on a.play_id=b.play_type and a.ball_number=b.concede_points
+        WHERE
+            a.match_id=#{matchId}
+            and a.play_id=#{playId}
+        order by a.ball_number
+    </select>
+
+    <!--获取竞猜项目列表-->
+    <select id="countDefault" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        SELECT
+            COUNT(1)
+        FROM t_play_odds  a LEFT JOIN t_concede_points b on a.play_id=b.play_type and a.ball_number=b.concede_points
+        WHERE
+            a.match_id=#{matchId}
+            and a.play_id=#{playId}
+            and b.is_default=1
+    </select>
+
+
+</mapper>

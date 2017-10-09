@@ -15,7 +15,7 @@
       <img v-else-if="index === 2" src="./../../static/rank/homepass_tongpai.png" style="width: 22px;height: 29px"/>
       <div v-else class="tag">{{index+1}}</div>
       <div class="head-pic" v-if="header" :style="{backgroundImage:'url('+ header +')'}"></div>
-      <div class="head-pic" v-else :style="{backgroundImage:'url(./static/homepage/default_header.png)'}"></div>
+      <div class="head-pic head-default-img" v-else></div>
       <p style="font-size: medium;margin-left: 10px">{{name}}</p>
       <!--<img :src="getSexImg()" style="width: 13px;height: 13px;margin-left: 10px"/>-->
       <img v-if="gender === 0" src="./../../static/mine/wode_nan.png" style="width: 13px;height: 13px;margin-left: 10px"/>
@@ -66,6 +66,9 @@
 </script>
 
 <style scoped>
+  .head-default-img{
+    background: url(../../static/homepage/default_header.png);
+  }
   .rank-item {
     width: 100%;
     height: 60px;

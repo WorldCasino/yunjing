@@ -34,7 +34,7 @@ public class MarqueeQueueServiceImpl extends ServiceImpl<MarqueeQueueMapper,Marq
         marqueue.setTitle(marqueeType.getDesc());
         marqueue.setMarqueeType(marqueeType);
         marqueue.setPeriodStart(new Timestamp(System.currentTimeMillis()));
-        marqueue.setPeriodEnd(new Timestamp(System.currentTimeMillis() + 5L*60L*1000L));
+        marqueue.setPeriodEnd(new Timestamp(System.currentTimeMillis() + 15L*60L*1000L));
         marqueue.setRollLevel(marqueeType.getCode());
         marqueue.setRollTimes(0);//0 表示播放次数无限制
         if(taskId>0) {

@@ -20,12 +20,10 @@
 		<!-- 配置资源文件 -->
 		<property name="locations">
 			<list>
-				<value>classpath:sysconfig.properties</value>
 				<value>classpath:aliyun-mns.properties</value>
-				<value>classpath:jdbc.properties</value>
-				<value>classpath:redis.properties</value>
 				<value>classpath:log4j.properties</value>
 				<value>classpath:weixin4j.properties</value>
+				<value>classpath:environment/env-test.properties</value>
 			</list>
 		</property>
 	</bean>

@@ -1,8 +1,8 @@
 <template>
     <div class="task-reward-item">
-      <img src="/static/task/task_01.png" v-if='type == 1'/>
-      <img src="/static/task/task_02.png" v-if='type == 2'/>
-      <img src="/static/task/task_03.png" v-if='type == 3'/>
+      <img src="../../../static/task/task_01.png" v-if='type == 1'/>
+      <img src="../../../static/task/task_02.png" v-if='type == 2'/>
+      <img src="../../../static/task/task_03.png" v-if='type == 3'/>
       <div class="task-reward-block" :class="{color999:type==3}">
         <div class="task-reward-title">
           <span class="task-title-strong">{{title}}</span>
@@ -45,7 +45,11 @@
         this.getTaskReward({
           taskId,
           success: (data) => {
-            this.getTaskData(this.active_type)
+            if (this.active_type === 0) {
+              this.getTaskDailyData()
+            } else {
+              this.getTaskGrowData()
+            }
             this.$store.state.task.rewardTaskNum--
             var str = ''
             if (coinType === 0) {
@@ -73,7 +77,7 @@
           }
         })
       },
-      ...mapActions(['getTaskReward', 'getTaskData', 'loginDaily']),
+      ...mapActions(['getTaskReward', 'getTaskDailyData', 'getTaskGrowData', 'loginDaily']),
       goPage (operateType) {
         if (this.token === null) {
           this.$f7.popup('#login-choose')

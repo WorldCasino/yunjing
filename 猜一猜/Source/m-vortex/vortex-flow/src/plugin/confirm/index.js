@@ -17,7 +17,8 @@ var MyMsg = (options = {}) => {
       mes: options.mes || '请填写mes',
       isChecked: typeof options.checked === 'boolean' ? options.checked : 'noChecked', // 传入Boolean，默认状态是否勾选  :可选可不选
       btnType: options.btnType || 'default',  // 可选可不选，添加了'bet'的样式
-      btnText: options.btnText || '确定'  // 按钮文案
+      btnText: options.btnText || '确定',  // 按钮文案
+      textAlign: options.textAlign || 'center'
     },
     methods: {
       confirmCb: options.confirmCb || function () {}, // 可选可不选

@@ -5,6 +5,7 @@ import com.agdress.bgapi.rsp.*;
 import com.agdress.commons.utils.JacksonSerializer;
 import com.agdress.commons.utils.SystemConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -134,7 +135,7 @@ public class GameConnectorImpl implements IGameConnector {
     @SuppressWarnings("unchecked")
     @Override
     public GameRsp<OrderQuery> openOrderQuery(List<Long> userIds, List<String> loginIds,
-                                              long agentId, String agentLoginId, Date startTime, Date endTime, int moduleId,
+                                              long agentId, String agentLoginId, String startTime, String endTime, int moduleId,
                                               int gameId, int issueId, String playerId, int pageIndex, int pageSize, String etag) throws IOException {
         String random = UUID.randomUUID().toString();
 

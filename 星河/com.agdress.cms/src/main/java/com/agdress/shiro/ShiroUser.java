@@ -6,6 +6,9 @@ import java.util.Set;
 public class ShiroUser implements Serializable {
 
 	private Long id;
+	private String phone;
+	private String limitAgentId;
+	private String limitBeUserId;
 	private String loginName;
 	private String name ;
 	private Set<String> modulesSet;
@@ -19,6 +22,29 @@ public class ShiroUser implements Serializable {
 		this.modulesSet = modulesSet;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getLimitAgentId() {
+		return limitAgentId;
+	}
+
+	public void setLimitAgentId(String limitAgentId) {
+		this.limitAgentId = limitAgentId;
+	}
+
+	public String getLimitBeUserId() {
+		return limitBeUserId;
+	}
+
+	public void setLimitBeUserId(String limitBeUserId) {
+		this.limitBeUserId = limitBeUserId;
+	}
 
 	public Long getId() {
 		return id;

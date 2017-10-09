@@ -84,11 +84,11 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
                 userMapper.update(user, wrapper);
             }
 
+
             //BG平台注册
-            if(user.getBgUserId() == 0){
-                Map<String,Object> whereMap = new HashMap<>();
-                whereMap.put("is_delete",0);
-                AgentEntity agentEntity = agentMapper.selectByMap(whereMap).get(0);
+            if(user.getBgUserId() ==null || user.getBgUserId() == 0){
+
+                AgentEntity agentEntity=agentMapper.selectById(user.getAgentId());
 
                 if(agentEntity.getBgAgentId()==0){
                     GameRsp<Long> agentResp = gameConnector.openAgentCreate(agentEntity.getBgLoginId(),agentEntity.getBgPwd());
@@ -113,8 +113,8 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
                 user.setBgLoginId(loginId);
                 user.setBgRegType(resp.getResult().getRegType());
                 user.setAgentId(agentEntity.getAgentId());
-            userMapper.updateById(user);
-        }
+                userMapper.updateById(user);
+            }
 
             //7天过期，登录成功会自动续期
             token = tokenManager.createToken(user.getUserId(),user.getBgUserId(),user.getBgLoginId()).getToken();
@@ -137,7 +137,7 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
      * @throws ApiException
      */
     @Override
-    public LoginResultVo fastLogin(String phone, String code) throws ApiException {
+    public LoginResultVo fastLogin(String phone, String code,String agent_id) throws ApiException {
         String key = ConstantInterface.KEY_SMS_CAPTCHA + phone;
 
         String captcha = jedisPool.getResource().get(key);
@@ -147,15 +147,16 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
             throw new ApiException(ErrorCodeEnum.CaptchaErrorException);
         }
 
-
         LoginResultVo resultVo = new LoginResultVo();
         Map<String, Object> map = new HashMap<>();
         map.put("login_name", phone);
+        map.put("user_type",UserTypeEnum.Client.getCode());
 
         List<UserEntity> list = userMapper.selectByMap(map);
         if(list.size()==0){
             map = new HashMap<>();
             map.put("phone",phone);
+            map.put("user_type",UserTypeEnum.Client.getCode());
             list = userMapper.selectByMap(map);
         }
 
@@ -172,21 +173,43 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
 
             // related to customer service
             Map<String, Object> customerServiceMap = new HashMap<>();
-            customerServiceMap.put("role_id", 3);
+            customerServiceMap.put("role_id", RoleTypeEnum.Salesman.getCode());
             List<UserEntity> customerServiceList = userMapper.selectByMap(customerServiceMap);
             if (customerServiceList.size() == 0) {
                 logger.error("没有一个客服角色可供使用!");
+            }else{
+                long customerServiceUserId = customerServiceList.get(new Random().nextInt(customerServiceList.size())).getUserId();
+                user.setBeUserId(customerServiceUserId);
             }
-            long customerServiceUserId = customerServiceList.get(new Random().nextInt(customerServiceList.size())).getUserId();
-            user.setBeUserId(customerServiceUserId);
-
         }else {
             user = list.get(0);
         }
 
+        AgentEntity agentEntity=null;
+        if(!StringUtils.isEmpty(agent_id)){
+            agentEntity=agentMapper.selectById(Long.parseLong(agent_id));
+        }
+        if(agentEntity == null){
+            Map<String,Object> whereMap = new HashMap<>();
+            whereMap.put("is_delete",0);
+            whereMap.put("bg_login","ix00_601134");
+            List<AgentEntity> temp= agentMapper.selectByMap(whereMap);
+            if(temp==null||temp.size()==0){
+                whereMap = new HashMap<>();
+                whereMap.put("is_delete",0);
+                whereMap.put("bg_login","agdress");
+                temp= agentMapper.selectByMap(whereMap);
+            }
+            agentEntity = temp.get(0);
+            agent_id=String.valueOf(agentEntity.getAgentId());
+        }
+        if(user.getAgentId() == null){
+            user.setAgentId(Long.parseLong(agent_id));
+        }
         String token = this.doLogin(user);
         resultVo.setUserId(user.getUserId());
         resultVo.setToken(token);
+        resultVo.setAgent_id(agent_id);
 
         return resultVo;
     }
@@ -217,55 +240,34 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
      * @return
      * @throws ApiException
      */
-    public LoginResultVo visitorLogin(String device) throws ApiException{
+    public LoginResultVo visitorLogin(String device,String agent_id) throws ApiException{
         LoginResultVo resultVo = new LoginResultVo();
 
         //TODO 游客登录
         resultVo.setUserId(0);
+
+        //判断是否存在当前代理商
+        AgentEntity agentEntity=null;
+        if(agent_id != null){
+            agentEntity=agentMapper.selectById(Long.parseLong(agent_id));
+        }
+        if(agentEntity == null){
+            Map<String,Object> whereMap = new HashMap<>();
+            whereMap.put("is_delete",0);
+            whereMap.put("bg_login","ix00_601134");
+            agentEntity = agentMapper.selectByMap(whereMap).get(0);
+            agent_id=String.valueOf(agentEntity.getAgentId());
+        }
+        resultVo.setAgent_id(agent_id);
+
         resultVo.setToken("what's the fuck~");
         return resultVo;
     }
 
     @Override
     public UserResultVo getUserInfo(UserEntity userEntity) throws ApiException {
-
-        // 如果更新余额失败，其他数据正常处理，不认为是失败
-        AgentEntity agentEntity = agentMapper.selectById(userEntity.getAgentId());
-        try {
-            GameRsp rsp = gameConnector.openBalanceGet(agentEntity.getBgPwd(), userEntity.getBgLoginId());
-            if (rsp.getError() == null) {
-                Float balance = (Float) rsp.getResult();
-                Map<String,Object> whereMap = new HashMap<>();
-                whereMap.put("user_id",userEntity.getUserId());
-                whereMap.put("is_delete",0);
-                List<UserAccountEntity> temp = userAccountMapper.selectByMap(whereMap);
-                UserAccountEntity accountEntity;
-                if(temp==null||temp.size()==0){
-                    accountEntity = new UserAccountEntity();
-                    accountEntity.setUserId(userEntity.getUserId());
-                    accountEntity.setBalance(balance);
-                    accountEntity.setCurrency(CurrencyEnum.CNY);
-                    accountEntity.setActype(1);
-                    accountEntity.setCreateBy(userEntity.getUserId());
-                    accountEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                    accountEntity.setUpdateBy(userEntity.getUserId());
-                    accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                    accountEntity.setIsDelete(0);
-                    userAccountMapper.insert(accountEntity);
-                }else {
-                    accountEntity = temp.get(0);
-                    int ret = userAccountMapper.updateById(accountEntity);
-                    if (ret < 1) {
-                        logger.error("更新余额失败！");
-                    }
-                }
-            } else {
-                //logger.error("获取余额失败！");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("获取余额数据异常！");
-        }
+        //获取最新账户余额
+        Float balance = this.refreshUserBalance(userEntity.getUserId());
 
         UserResultVo vo = userMapper.getUserInfo(userEntity.getUserId());
         if (vo.getHeadUrl() != null) {
@@ -275,6 +277,58 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
             vo.setBankIcon(systemConfig.getURL_BASE_IMG() + vo.getBankIcon());
         }
         return vo;
+    }
+
+    /**
+     * 获取账户余额
+     * @param userId
+     * @return
+     */
+    public Float refreshUserBalance(long userId){
+        Float balance;
+        UserEntity user = userMapper.selectById(userId);
+        // 如果更新余额失败，其他数据正常处理，不认为是失败
+        AgentEntity agentEntity = agentMapper.selectById(user.getAgentId());
+        try {
+            GameRsp rsp = gameConnector.openBalanceGet(agentEntity.getBgPwd(), user.getBgLoginId());
+            if (rsp.getError() == null) {
+                balance = (Float) rsp.getResult();
+                Map<String,Object> whereMap = new HashMap<>();
+                whereMap.put("user_id",user.getUserId());
+                whereMap.put("is_delete",0);
+                List<UserAccountEntity> temp = userAccountMapper.selectByMap(whereMap);
+                UserAccountEntity accountEntity;
+                if(temp==null||temp.size()==0){
+                    accountEntity = new UserAccountEntity();
+                    accountEntity.setUserId(user.getUserId());
+                    accountEntity.setBalance(balance);
+                    accountEntity.setCurrency(CurrencyEnum.CNY);
+                    accountEntity.setActype(1);
+                    accountEntity.setCreateBy(user.getUserId());
+                    accountEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    accountEntity.setUpdateBy(user.getUserId());
+                    accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    accountEntity.setIsDelete(0);
+                    userAccountMapper.insert(accountEntity);
+                }else {
+                    accountEntity = temp.get(0);
+                    accountEntity.setBalance(balance);
+                    int ret = userAccountMapper.updateById(accountEntity);
+                    if (ret < 1) {
+                        logger.error("更新余额失败！");
+                    }
+                }
+            } else {
+                logger.error("获取余额失败！");
+                balance = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("获取余额数据异常！");
+            balance = null;
+        }
+
+        return balance;
     }
 
     @Override

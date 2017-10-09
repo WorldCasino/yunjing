@@ -30,10 +30,13 @@ module.exports = function (req, res, next) {
         match_id = parseInt(req.body.match_id),//比赛id
         match_type = parseInt(req.body.match_type),//体育类：1-足球，2-篮球
         play_type = parseInt(req.body.play_type),//足球类玩法：1-标准盘，2-让球，3-大小球
-        concede_points = parseInt(req.body.concede_points),//让球数或盘口
+        concede_points_show = req.body.concede_points_show,//让球数或盘口
+        concede_points = 0,
 
         home = req.body.home,
         visit = req.body.visit,
+        home_logo = req.body.home_logo,
+        visit_logo = req.body.visit_logo,
         odds_home = parseFloat(req.body.odds_home),
         odds_tie = parseFloat(req.body.odds_tie),
         odds_visit = parseFloat(req.body.odds_visit),
@@ -42,18 +45,22 @@ module.exports = function (req, res, next) {
         lock_time = req.body.lock_time;
 
     if(!odds_tie){
-        odds_tie=0
+        //让球或大小球，平球退本金，赔率统一为1
+        odds_tie=1;
     }
 
     var operate_time=new Date();
     var taskId;
+
+    res.pkg.data = {}
+
     Q.fcall(function () {
         // 检查传入参数
         pd.checkArgument(!!(req.body.content), '参数content不能为空');
         pd.checkArgument(!!req.body.price, '参数price必须设置');
         pd.checkArgument(!!req.body.quantity, '参数quantity必须设置');
 
-        pd.checkArgument(!!match_id, '参数match_type不能为空')
+        pd.checkArgument(!!match_id, '参数match_id不能为空')
         pd.checkArgument(!!match_type, '参数match_type不能为空');
         pd.checkArgument(!!play_type, '参数play_type不能为空');
 
@@ -62,8 +69,14 @@ module.exports = function (req, res, next) {
         pd.checkArgument(!!odds_home, '参数odds_home不能为空');
         pd.checkArgument(!!odds_visit, '参数odds_visit不能为空');
         //足球(平局)
+
         if(match_type==1 && (play_type==1 || play_type==2)){
             pd.checkArgument(!!odds_tie, '参数odds_tie不能为空');
+        }
+
+        //体育类竞猜开赛前半小时不能下注(锁定)
+        if((task_type==1 || task_type==2) && new Date(lock_time).getTime()<operate_time.getTime()){
+            pd.checkArgument(false, '体育类竞猜开赛前半小时不能下注');
         }
 
 
@@ -108,6 +121,14 @@ module.exports = function (req, res, next) {
                 personal = 1;
             }
         });
+    }).then(function(){
+        //根据concede_points_show得到concede_points
+        return Q.ninvoke(mysql, 'query', {
+            sql: 'select concede_points from t_concede_points WHERE concede_points_show = ?',
+            values: [concede_points_show]
+        }).then(function (result) {
+            concede_points = parseFloat(result[0][0].concede_points);
+        });
     }).then(function () {
         // 插入到mysql
         var content = req.body.content,
@@ -125,6 +146,7 @@ module.exports = function (req, res, next) {
                     match_id: match_id,
                     match_type: match_type,
                     play_type: play_type,
+                    concede_points_show: concede_points_show,
                     concede_points: concede_points,
                     task_content: content,
                     task_status: 20,
@@ -140,6 +162,7 @@ module.exports = function (req, res, next) {
                 }
             }).then(function (results) {
                 taskId = results[0].insertId;
+                res.pkg.data.task_id = taskId;
                 return taskId;
             });
         }).then(function (taskId) {// 插入答案t_task_answers
@@ -172,6 +195,13 @@ module.exports = function (req, res, next) {
                     create_by: user_id
                 }, {
                     task_id: taskId,
+                    answer: '平',
+                    is_right: 0,
+                    //大小球，平球退本金
+                    odds: odds_tie,
+                    create_by: user_id
+                }, {
+                    task_id: taskId,
                     answer: '小球',
                     is_right: 0,
                     odds: odds_visit,
@@ -193,39 +223,50 @@ module.exports = function (req, res, next) {
                 }];
             }
 
+            // //报错不影响代码执行，服务器node版本低，不支持此方式
+            // var f = async function () {
+            //     for (var i  =0; i< answers.length; i++) {
+            //         await Q.ninvoke(mysql, 'query', {
+            //             sql: 'INSERT INTO t_task_answers SET ?',
+            //             values: answers[i]
+            //         });
+            //     }
+            // }
+            // f ();
 
-            if(new Date().getSeconds()%2 ==0){
-                answers.reverse();
-            }
-            var fns = answers.map(function (p1, p2, p3) {
-                return Q.ninvoke(mysql, 'query', {
+            // 体育类竞猜不要倒序
+            return Q.fcall(function () {
+                // 插入第一个答案
+                return Q.ninvoke(mysql,'query',{
                     sql: 'INSERT INTO t_task_answers SET ?',
-                    values: p1
+                    values: answers[0]
                 });
+            }).then(function () {
+                // 插入第二个答案
+                return Q.ninvoke(mysql,'query',{
+                    sql: 'INSERT INTO t_task_answers SET ?',
+                    values: answers[1]
+                });
+            }).then(function () {
+                // 插入第三个答案
+                if(answers[2]){
+                    return Q.ninvoke(mysql,'query',{
+                        sql: 'INSERT INTO t_task_answers SET ?',
+                        values: answers[2]
+                    });
+                }
             });
-
-            // TODO  可以加入答案id等
-            return Q.all(fns);
-            // // all 不是按顺序执行
-            // return Q.all(fns).then(function (results) {
-            //     var answerIds = answers.map(function (p1, p2, p3) {
-            //         return {
-            //             answer_id: results[p2][0].insertId,
-            //             is_right: p1.is_right
-            //         }
-            //     });
-            //     res.pkg.data.answers = answerIds;
-            //     return answerIds;
-            // });
         }).then(function () {//插入足球表t_task_football
             var values = [{
                 task_id: taskId,
                 team_name: home,
+                team_logo:home_logo,
                 court_type: 0,
                 create_by: user_id
             }, {
                 task_id: taskId,
                 team_name: visit,
+                team_logo:visit_logo,
                 court_type: 1,
                 create_by: user_id
             }];
@@ -279,8 +320,6 @@ module.exports = function (req, res, next) {
                     var key = config.redis_key_score_prefix+taskId;
                     redis.set(key, JSON.stringify({
                         taskId:taskId,
-                        matchType:match_type,
-                        playType:play_type,
                         settleTime:settle_time
                     }));
                     var ttl = parseInt(new Date(settle_time).getTime()/1000 - new Date().getTime()/1000);

@@ -1,9 +1,9 @@
 
 
 <template>
-  <div class="pub-guess" ref="wrapper" :style="{height: height-44 + 'px'}">
+  <div class="pub-guess" ref="wrapper" style="background:rgba(239,239,239,1)" :style="{height: height-89 + 'px'}">
     <div class="guess-content" :style="{height: height-89 + 'px'}">
-      <div class="part1">
+      <div class="part1" style="margin-top: 0px;">
         <textarea v-model="desc" :maxlength="textMax" class="desc-input" :class="{'desc-warn': descAcount}" placeholder="给你的竞猜想一个6个字以上的好玩的描述吧~要记得说明是猜什么哦~">
         </textarea>
         <div class="text-wrapper">
@@ -385,7 +385,7 @@
         handler: function (val) {
           // 发布成功，此组件state数据清空
           let self = this
-          if (this.status === null) {
+          if (this.status === null && !this.$store.state.sports.isSportsCopy) {
             this.desc = ''
             this.show0 = true
             this.show1 = true

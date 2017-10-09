@@ -2,6 +2,7 @@ package com.agdress.service;
 
 
 import com.agdress.entity.Starship_UserEntity;
+import com.agdress.entity.vo.Starship_AgentrVo;
 import com.agdress.entity.vo.Starship_UserVo;
 import com.agdress.entity.vo.Starship_UserlistVo;
 import com.agdress.result.DatatablesResult;
@@ -24,4 +25,7 @@ public interface Starship_IUserService extends IService<Starship_UserEntity> {
 
      DatatablesResult<Starship_UserlistVo> selectUserVo(JSONObject params, Integer page, Integer rows, Integer draw);
 
+     void  updatePassword(String userId,String passWord,String messageCode);
+
+     Starship_AgentrVo getAgentLoginId(String bgLoginId);
 }

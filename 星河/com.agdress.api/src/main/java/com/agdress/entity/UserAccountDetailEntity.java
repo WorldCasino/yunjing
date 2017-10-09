@@ -13,19 +13,19 @@ import com.baomidou.mybatisplus.enums.IdType;
 @TableName("t_user_account_detail")
 public class UserAccountDetailEntity extends BaseEntity {
     @TableId(type = IdType.AUTO, value = "trade_id")
-    private long tradeId;
+    private Long tradeId;
     @TableField(value = "account_id")
-    private long accountId;
+    private Long accountId;
     @TableField(value = "user_id")
-    private long userId;
+    private Long userId;
     @TableField(value = "trade_no")
     private String tradeNo;
     @TableField(value = "trade_kind")
     private TradeKindEnum tradeKind;
     @TableField(value = "amount")
-    private double amount;
+    private Double amount;
     @TableField(value = "new_balance")
-    private double newBalance;
+    private Double newBalance;
     @TableField(value = "trade_type")
     private TradeTypeEnum tradeType;
     @TableField(value = "trade_status")
@@ -37,43 +37,28 @@ public class UserAccountDetailEntity extends BaseEntity {
     @TableField(value = "flow_id")
     private Long flowId;
 
-    public Long getFlowId() {
-        return flowId;
-    }
 
-    public void setFlowId(Long flowId) {
-        this.flowId = flowId;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public long getTradeId() {
+    public Long getTradeId() {
         return tradeId;
     }
 
-    public void setTradeId(long tradeId) {
+    public void setTradeId(Long tradeId) {
         this.tradeId = tradeId;
     }
 
-    public long getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -93,19 +78,19 @@ public class UserAccountDetailEntity extends BaseEntity {
         this.tradeKind = tradeKind;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public double getNewBalance() {
+    public Double getNewBalance() {
         return newBalance;
     }
 
-    public void setNewBalance(double newBalance) {
+    public void setNewBalance(Double newBalance) {
         this.newBalance = newBalance;
     }
 
@@ -123,5 +108,21 @@ public class UserAccountDetailEntity extends BaseEntity {
 
     public void setTradeStatus(TradeStatusEnum tradeStatus) {
         this.tradeStatus = tradeStatus;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Long getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(Long flowId) {
+        this.flowId = flowId;
     }
 }

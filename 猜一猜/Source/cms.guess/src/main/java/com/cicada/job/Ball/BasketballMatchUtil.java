@@ -14,18 +14,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.cicada.commons.Exception.ApiException;
 import com.cicada.commons.utils.DateFormatUtil;
 import com.cicada.commons.utils.DateUtil;
 import com.cicada.commons.utils.SpringContextUtil;
 import com.cicada.commons.utils.SystemConfig;
+import com.cicada.enums.ErrorCodeEnum;
 import com.cicada.enums.MatchesStatusEnum;
 import com.cicada.enums.MatchesTypeEnum;
 import com.cicada.pojo.MatchesEntity;
 import com.cicada.pojo.TeamEntity;
 import com.cicada.service.impl.MatchesServiceImpl;
 import com.cicada.service.impl.TeamServiceImpl;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  *NBA赛事调用示例代码 － 聚合数据
@@ -33,13 +37,21 @@ import net.sf.json.JSONObject;
  **/
 
 public class BasketballMatchUtil {
-    public static final String DEF_CHATSET = "UTF-8";
-    public static final int DEF_CONN_TIMEOUT = 30000;
-    public static final int DEF_READ_TIMEOUT = 30000;
-    public static String userAgent =  "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.66 Safari/537.36";
+    public static final String DEF_CHATSET = SystemConfig.getInstance().getBALL_MATCH_DEF_CHATSET();
+    public static final int DEF_CONN_TIMEOUT = Integer.parseInt(SystemConfig.getInstance().getBALL_MATCH_DEF_CONN_TIMEOUT());
+    public static final int DEF_READ_TIMEOUT = Integer.parseInt(SystemConfig.getInstance().getBALL_MATCH_DEF_READ_TIMEOUT());
+    public static String userAgent =  SystemConfig.getInstance().getBALL_MATCH_USERAGENT();
+
 
     //配置您申请的KEY
-    public static final String APPKEY ="887284f4cd696d22241601d7bc71f125";
+    public static final String APPKEY =SystemConfig.getInstance().getBALL_MATCH_BASKETBALL_KEY();
+
+    private static final Logger LOTTERY_LOGGER = LogManager.getLogger("ball");
+
+    //10月1日至10月14日：NBA 季前赛
+    public static long jqstarttime=DateUtil.fomatDate(DateUtil.getYear()+"-10-01").getTime();
+    public static long jqendttime=DateUtil.fomatDate(DateUtil.getYear()+"-10-15").getTime();
+
 
 
     //status:0-未开赛，1-正在直播，2-已结束
@@ -55,50 +67,52 @@ public class BasketballMatchUtil {
         params.put("dtype","");//返回数据的格式,xml或json，默认json
          try {
              result =net(url, params, "GET");//正式
-             JSONObject object = JSONObject.fromObject(result);
-              if(object.getInt("error_code")==0){
-//                System.out.println(object.get("result"));
+             JSONObject object = JSONObject.parseObject(result);
+              if(object.getInteger("error_code")    ==0){
+                System.out.println(object.get("result"));
                 JSONObject jsonObject=object.getJSONObject("result");
                 JSONArray jsonArray= jsonObject.getJSONArray("list") ;
                 for (int i = 0; i < jsonArray.size() ; i++) {
+                    String title="NBA 常规赛";
                     JSONObject jsonObject2=jsonArray.getJSONObject(i);
                     String time_title=  jsonObject2.getString("title");
                     String day_date=time_title.substring(0,5).trim();
                     String day_week=time_title.substring(6,time_title.length()).trim();
-                    long number=DateUtil.fomatDate(DateFormatUtil.getYear().trim()+"-"+day_date).getTime()-(new Date()).getTime();
+                    //判断标题
+                    long nowplaytime=DateUtil.fomatDate(DateFormatUtil.getYear().trim()+"-"+day_date).getTime();
+                    long number=nowplaytime-(new Date()).getTime();
                     //时间判断如果是今天的就忽略
                     if(number <= 0){
                         continue;
                     }
+                    if(nowplaytime >= jqstarttime && nowplaytime <= jqendttime){
+                        title="NBA 季前赛";
+                    }
                     //获取赛事
                     JSONArray jsonArray2= jsonObject2.getJSONArray("tr");
                     for (int j = 0; j < jsonArray2.size() ; j++) {
+
                          JSONObject jsonObject3= jsonArray2.getJSONObject(j);
 //                         System.out.println(jsonObject3.toString());
                          String time=jsonObject3.getString("time");
                          String day_time=time.substring(6,time.length());
-                         String home_team_name=jsonObject3.getString("player1");
-                         String home_team_logo=jsonObject3.getString("player1logobig");
-                         String away_team_name=jsonObject3.getString("player2");
-                         String away_team_logo=jsonObject3.getString("player2logobig");
-                        String score=jsonObject3.getString("score");
-                        String home_score="";
-                        String away_score="";
-                        if(!score.equals("VS")){
-                            home_score=score.split("-")[0];
-                            away_score=score.split("-")[1];
-                        }
-                         BallUtil.SaveMatch( home_team_name, home_team_logo,away_team_name,away_team_logo, day_week, day_date, day_time, "NBA常规赛赛程", MatchesTypeEnum.Basketball.getDesc().toString(),home_score,away_score);
+                         String home_team_name=jsonObject3.getString("player2");
+                         String home_team_logo=jsonObject3.getString("player2logobig");
+                         String away_team_name=jsonObject3.getString("player1");
+                         String away_team_logo=jsonObject3.getString("player1logobig");
+                         String score=jsonObject3.getString("score");
+                          BallUtil.SaveMatch( home_team_name, home_team_logo,away_team_name,away_team_logo, day_week, day_date, day_time, title, MatchesTypeEnum.Basketball.getCode()+"" );
                      }
                }
-               //开始redis存储
-               BallUtil.changeRedisBallList(MatchesTypeEnum.Basketball.getDesc().toString());
-            }else{
-                System.out.println(object.get("error_code")+":"+object.get("reason"));
-            }
-        } catch (Exception e) {
+             }else{
+                  LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程失败",object.get("error_code")+":"+object.get("reason")));
+             }
+         } catch (Exception e) {
             e.printStackTrace();
+             LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程是吧",e.toString()));
         }
+        //开始redis存储
+        BallUtil.changeRedisBallList(MatchesTypeEnum.Basketball.getCode()+"");
     }
 
 
@@ -120,9 +134,9 @@ public class BasketballMatchUtil {
         params.put("vteam",away_team_name);//客队球队名称
         try {
             result =net(url, params, "GET");
-            JSONObject object = JSONObject.fromObject(result);
-            if(object.getInt("error_code")==0){
-//                System.out.println(object.get("result"));
+            JSONObject object = JSONObject.parseObject(result);
+            if( object.getInteger("error_code")   ==0){
+                System.out.println(object.get("result"));
                 JSONObject jsonObject= object.getJSONObject("result") ;
                 JSONArray jsonArray= jsonObject.getJSONArray("list") ;
                 for (int i = 0; i < jsonArray.size() ; i++) {
@@ -157,10 +171,11 @@ public class BasketballMatchUtil {
                     ((MatchesServiceImpl)SpringContextUtil.getBean("matchesServiceImpl")).updateById(matchesEntity);
                 }
             }else{
-                System.out.println(object.get("error_code")+":"+object.get("reason"));
+                LOTTERY_LOGGER.info(String.format("ball-获取蓝球赛果失败",object.get("error_code")+":"+object.get("reason")));
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程结果失败",e.toString()));
         }
         return  flag;
     }
@@ -256,7 +271,7 @@ public class BasketballMatchUtil {
         params.put("key","27398ce915369f329522af83f8be64b6");//应用APPKEY(应用详细页查询)
         try {
             result =net(url, params, "GET");
-            JSONObject object = JSONObject.fromObject(result);
+            JSONObject object = JSONObject.parseObject(result);
             System.out.println(object.toString());
             if(object.get("reason").toString().equals("success")){
                 JSONObject jsonObject= object.getJSONObject("result") ;

@@ -42,7 +42,11 @@
         SELECT t.user_id,t.user_name,t.nickname,t.phonenumber,t.gender,t.wxopenid,
           t.user_type,t.head_url,
           t.last_time,user_status,t.device_type,t.device_token,t.create_date,
-          a.account_id,a.task_count,a.task_join,
+          a.account_id,
+        (SELECT count(*)
+        FROM (select count(1),tao.user_id from t_task_orders tao JOIN t_tasks ta on tao.task_id=ta.task_id and ta.is_delete=0  where tao.is_delete = 0 GROUP BY tao.task_id,tao.user_id) as f
+        where  f.user_id= t.user_id ) as task_join,
+        (select count(1) from t_tasks where user_id= t.user_id and is_delete = 0 ) as task_count,
           a.coin_balance,a.coin_income,a.coin_expend,a.coin_locked,a.recharge_amount,
           a.member_points
         FROM ( SELECT * FROM m_users
@@ -64,28 +68,31 @@
             ORDER BY user_id DESC limit #{limit} offset #{offset}
         ) t
         JOIN t_user_account a on t.user_id = a.user_id
+        WHERE a.coin_type=0
         ORDER BY t.user_id DESC
     </select>
 
     <!--玩家记录总数-->
     <select id="selectClientTotal" parameterType="java.util.Map" resultType="java.lang.Long" >
         <bind name="nick" value="'%'+_parameter.nickname+'%'"/>
-        select count(1) cnt from m_users
-        <where>
-            is_delete = 0
+        select count(1) cnt
+        from m_users t
+        JOIN t_user_account a on t.user_id = a.user_id
+        WHERE
+            a.coin_type=0
+            and t.is_delete = 0
             <if test=" nickname != null and nickname != '' ">
-                AND nickname LIKE #{nick}
+                AND t.nickname LIKE #{nick}
             </if>
             <if test=" userStatus != null and userStatus != '' ">
-                AND user_status = #{userStatus}
+                AND t.user_status = #{userStatus}
             </if>
             <if test=" startTime != null  and startTime != '' ">
-                <![CDATA[ AND create_date >= #{startTime} ]]>
+                <![CDATA[ AND t.create_date >= #{startTime} ]]>
             </if>
             <if test=" endTime != null  and endTime != '' ">
-                <![CDATA[ AND create_date <= #{endTime} ]]>
+                <![CDATA[ AND t.create_date <= #{endTime} ]]>
             </if>
-        </where>
     </select>
 
     <!--获取玩家详情-->
@@ -95,8 +102,12 @@
         t.last_time,user_status,t.device_type,t.device_token,t.create_date,
         a.account_id,
 
-        (SELECT count(*) FROM (select count(1) from t_task_orders tao JOIN t_tasks ta on tao.task_id=ta.task_id and ta.is_delete=0  where tao.user_id=#{userId} and tao.is_delete = 0 GROUP BY tao.task_id,tao.user_id) as f) as task_join,
-        (select count(1) from t_tasks where user_id=#{userId} and is_delete = 0 ) as task_count,
+        (SELECT count(*)
+      FROM (select count(1),tao.user_id
+            from t_task_orders tao JOIN t_tasks ta on tao.task_id=ta.task_id and ta.is_delete=0
+            where tao.is_delete = 0 GROUP BY tao.task_id,tao.user_id) as f
+       where  f.user_id= t.user_id ) as task_join,
+        (select count(1) from t_tasks where user_id= t.user_id and is_delete = 0 ) as task_count,
 
         a.coin_balance,a.coin_income,a.coin_expend,a.coin_locked,a.recharge_amount,
         a.member_points

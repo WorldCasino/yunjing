@@ -40,7 +40,7 @@ public class UserEntity extends BaseEntity{
     private UserTypeEnum userType;
 
     @TableField(value = "role_id")
-    private long roleId;
+    private Long roleId;
 
     @TableField(value = "head_url")
     private String headUrl;
@@ -52,10 +52,10 @@ public class UserEntity extends BaseEntity{
     private UserStatusEnum userStatus;
 
     @TableField(value = "agent_id")
-    private long agentId;
+    private Long agentId;
 
     @TableField(value = "bg_user_id")
-    private long bgUserId;
+    private Long bgUserId;
 
     @TableField(value = "bg_login_id")
     private String bgLoginId;
@@ -64,7 +64,7 @@ public class UserEntity extends BaseEntity{
     private String bgRegType;
 
     @TableField(value = "be_user_id")
-    private long beUserId;
+    private Long beUserId;
 
     @TableField(value = "qq")
     private String qq;
@@ -125,11 +125,11 @@ public class UserEntity extends BaseEntity{
         this.userType = userType;
     }
 
-    public long getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(long roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 
@@ -157,19 +157,19 @@ public class UserEntity extends BaseEntity{
         this.userStatus = userStatus;
     }
 
-    public long getAgentId() {
+    public Long getAgentId() {
         return agentId;
     }
 
-    public void setAgentId(long agentId) {
+    public void setAgentId(Long agentId) {
         this.agentId = agentId;
     }
 
-    public long getBgUserId() {
+    public Long getBgUserId() {
         return bgUserId;
     }
 
-    public void setBgUserId(long bgUserId) {
+    public void setBgUserId(Long bgUserId) {
         this.bgUserId = bgUserId;
     }
 
@@ -189,11 +189,11 @@ public class UserEntity extends BaseEntity{
         this.bgRegType = bgRegType;
     }
 
-    public long getBeUserId() {
+    public Long getBeUserId() {
         return beUserId;
     }
 
-    public void setBeUserId(long beUserId) {
+    public void setBeUserId(Long beUserId) {
         this.beUserId = beUserId;
     }
 

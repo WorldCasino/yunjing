@@ -1,20 +1,4 @@
 import Vue from 'vue'
-// import Router from 'vue-router'
-// import Hello from '@/components/Hello'
-
-// Vue.use(Router)
-
-// export default new Router({
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'Hello',
-//       component: Hello
-//     }
-//   ]
-// })
-
-// framework7 style router
 export default [
   {
     path: '/about/',
@@ -141,6 +125,10 @@ export default [
     component: require('../pages/mine/setting-help.vue')
   },
   {
+    path: '/mine-related/',
+    component: require('../pages/mine/mine-related.vue')
+  },
+  {
     path: '/mine-publish/',
     component: require('../pages/mine/mine-publish.vue')
   },
@@ -161,15 +149,15 @@ export default [
     component: require('../pages/mine/help-exchange.vue')
   },
   {
-    path: '/make-goldbean/',
-    component: require('../pages/task/task-makebean.vue')
-  },
-  {
     path: '/publish-sports/',
     component: require('../pages/guess/sports.vue')
   },
   {
     path: '/publish-sports-set/',
     component: require('../pages/guess/sports-set.vue')
+  },
+  {
+    path: '/publish-sports-set-copy/',
+    component: require('../pages/guess/sports-set-copy.vue')
   }
 ]

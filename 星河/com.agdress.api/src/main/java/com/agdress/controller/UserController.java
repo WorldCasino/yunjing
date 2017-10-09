@@ -49,6 +49,7 @@ public class UserController extends BaseController {
      * 快速登录
      * @param params
      * @return
+     * params 新增一个字段 agent_id 代理商ID
      */
     @RequestMapping(value = "/login/fast",method = RequestMethod.POST)
     @ResponseBody
@@ -56,7 +57,8 @@ public class UserController extends BaseController {
 
         String mobile = params.getString("mobile");
         String captcha = params.getString("captcha");
-        LoginResultVo rtn = userService.fastLogin(mobile,captcha);
+        String agent_id=params.getString("agent_id");
+        LoginResultVo rtn = userService.fastLogin(mobile,captcha,agent_id);
 
         ResponseWrapper result = ResponseWrapper.succeed(rtn);
 
@@ -67,13 +69,15 @@ public class UserController extends BaseController {
      * 游客登录
      * @param params
      * @return
+     *  新增一个字段 agent_id 代理商ID
      */
     @RequestMapping(value = "/login/visitor",method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity visitorLogin(@RequestBody JSONObject params){
 
         String device = params.getString("device");
-        LoginResultVo rtn = userService.visitorLogin(device);
+        String agent_id=params.getString("agent_id");
+        LoginResultVo rtn = userService.visitorLogin(device,agent_id);
 
         ResponseWrapper result = ResponseWrapper.succeed(rtn);
 

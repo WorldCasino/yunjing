@@ -40,7 +40,7 @@
             <div class="col-sm-3">
                 <input type="text" class="form-control bgLoginId" disabled>
             </div>
-            <label class="col-sm-2 control-label" > 专属业务员</label>
+            <label class="col-sm-2 control-label" > 专属客服</label>
             <div class="col-sm-3">
                 <select  class="form-control beuserList" name="beUserId" >
 
@@ -52,10 +52,11 @@
             <div class="col-sm-3">
                 <input type="text" class="form-control balance"  disabled >
             </div>
-            <label class="col-sm-2 control-label">转码总量</label>
+            <label class="col-sm-2 control-label" >专属代理商</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control totalLottery"  disabled >
+                <input type="text" class="form-control agentId" disabled>
             </div>
+
          </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">充值总额</label>
@@ -64,7 +65,7 @@
                     <input type="text" class="form-control totalRecharge"   disabled >
                     <shiro:hasPermission name="20update">
                                      <span class="input-group-btn">
-                                        <button  class="btn btn-default" type="button" id="listrecharge">查看明细</button>
+                                        <button  class="btn btn-default" type="button" id="listrecharge">充值明细</button>
                                     </span>
                     </shiro:hasPermission>
                 </div>
@@ -75,7 +76,7 @@
                     <input type="text" class="form-control totalWithdraw" disabled   >
                     <shiro:hasPermission name="20update">
                                      <span class="input-group-btn">
-                                        <button  class="btn btn-default" type="button" id="listwithdraw">查看明细</button>
+                                        <button  class="btn btn-default" type="button" id="listwithdraw">提现明细</button>
                                     </span>
                     </shiro:hasPermission>
                 </div>
@@ -87,17 +88,48 @@
                 <div class="input-group">
                     <input type="text" class="form-control actionTotle" disabled   >
                     <shiro:hasPermission name="20update">
-                                     <span class="input-group-btn">
-                                        <button  class="btn btn-default" type="button" id="listaction">查看明细</button>
+                                    <span class="input-group-btn">
+                                        <button  class="btn btn-default" type="button" id="listaction">赢输明细</button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button  class="btn btn-default" type="button" id="listLottery">转码总量</button>
                                     </span>
                     </shiro:hasPermission>
                 </div>
             </div>
+            <%--<label class="col-sm-2 control-label">转码总量</label>--%>
+            <%--<div class="col-sm-3">--%>
+                <%--<div class="input-group">--%>
+                    <%--<input type="text" class="form-control totalLottery"   disabled >--%>
+                    <%--<shiro:hasPermission name="20update">--%>
+                                     <%--<span class="input-group-btn">--%>
+                                        <%--<button  class="btn btn-default" type="button" id="listLottery">查看转码总量</button>--%>
+                                    <%--</span>--%>
+                    <%--</shiro:hasPermission>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        </div>
+        <div class="form-group">
+
             <label class="col-sm-2 control-label" > 银行类型 </label>
             <div class="col-sm-3">
                 <select  class="form-control bankEntityList" name="bankType">
 
                 </select>
+            </div>
+             <label class="col-sm-2 control-label">银行卡号</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control cardNo" name="cardNo"   >
+            </div>
+         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">开户行</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control cardBank" name="cardBank"   >
+            </div>
+             <label class="col-sm-2 control-label">持卡人</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control cardName" name="cardName"   >
             </div>
         </div>
         <div class="form-group">
@@ -105,29 +137,9 @@
             <div class="col-sm-3">
                 <input type="text" class="form-control updateDate"  disabled >
             </div>
-            <label class="col-sm-2 control-label">开户行</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control cardBank" name="cardBank"   >
-            </div>
-         </div>
-        <div class="form-group">
             <label class="col-sm-2 control-label">注册时间</label>
             <div class="col-sm-3">
                 <input type="text" class="form-control createDate"  disabled >
-            </div>
-            <label class="col-sm-2 control-label">持卡人</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control cardName" name="cardName"   >
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"> </label>
-            <div class="col-sm-3">
-
-            </div>
-            <label class="col-sm-2 control-label">银行卡号</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control cardNo" name="cardNo"   >
             </div>
         </div>
 
@@ -137,6 +149,8 @@
                 <button type="submit" class="btn btn-primary btn-lg" >
                     保存信息
                 </button>
+            </shiro:hasPermission>
+            <shiro:hasPermission name="20recharge">
                 <button type="button" class="btn btn-primary btn-lg" id="btnRecharge">
                     给TA充值
                 </button>
@@ -218,6 +232,8 @@
             var imgurl=usepd.headUrl;
             if(imgurl == ""){
                 imgurl="../../apiresources/img/icon.png";
+            }else{
+                imgurl=agdress.CONSTS.URL_BASE_IMG+imgurl;
             }
             $(".headUrl").attr("src",imgurl);
             $(".headUrl").attr("layer-src",imgurl);
@@ -226,7 +242,7 @@
             $(".phone").val(usepd.phone);
             $(".bgLoginId").val(usepd.bgLoginId);
             $(".nickName").val(usepd.nickName);
-
+            $(".agentId").val(usepd.agentNumber);
 
             $(".createDate").val( agdress.timeStamp2String(usepd.createDate));
             $(".updateDate").val(agdress.timeStamp2String(usepd.updateDate));
@@ -246,7 +262,7 @@
             var beuserList=usepd.beuserList;
             $(".beuserList").empty();
             for(var i =0 ;i <beuserList.length ; i++){
-                $(".beuserList").append("<option value="+beuserList[i].userId+">"+beuserList[i].nickName+"</option>");
+                $(".beuserList").append("<option value="+beuserList[i].userId+">"+beuserList[i].loginName+"</option>");
             }
             $(".beuserList").val(usepd.beUserId);
             //循环银行卡信息
@@ -310,6 +326,7 @@
                     async: false,
                     success: function (data) {
                         layer.msg('充值成功！');
+                        window.parent.messageList();
                         $("#systemGift").modal("hide");
                         loadForm();
                     },error: function(error) {
@@ -335,8 +352,8 @@
 
         //查看充值记录
         $("#listrecharge").on("click", function () {
-            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=1011';
-            var id = "Account_10"+window.userId;
+            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=1011'+"&bgLoginId="+$(".bgLoginId").val();
+            var id = "Account_1011"+window.userId;
             var title = "充值明细【" + $(".nickName").val() +"】";
             window.parent.openNewTab(id,title,url);
             return;
@@ -345,7 +362,7 @@
 
         //查看提现记录
         $("#listwithdraw").on("click", function () {
-            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=50';
+            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=50'+"&bgLoginId="+$(".bgLoginId").val();
             var id = "Account_50"+window.userId;
             var title = "提现明细【" + $(".nickName").val() +"】";
             window.parent.openNewTab(id,title,url);
@@ -354,13 +371,22 @@
 
         //查看输赢记录
         $("#listaction").on("click", function () {
-            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=3040';
-            var id = "Account_3040"+window.userId;
+            var url = 'ss_games/dataGrid?bgLoginId='+$(".bgLoginId").val();
+            var id = "Account_SY"+window.userId;
             var title = "输赢明细【" + $(".nickName").val() +"】";
             window.parent.openNewTab(id,title,url);
             return;
         });
 
+
+        //查看转码总量
+        $("#listLottery").on("click", function () {
+            var url = 'ss_games/dataGrid?bgLoginId='+$(".bgLoginId").val();
+            var id = "Account_ZM"+window.userId;
+            var title = "输赢明细【" + $(".nickName").val() +"】";
+            window.parent.openNewTab(id,title,url);
+            return;
+        });
 
 
         //保存信息表单验证
@@ -391,34 +417,34 @@
                     }
                 },
                 cardName: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '请输入持卡人！'
-                        }
-                    }
+//                    validators: {
+//                        notEmpty: {/*非空提示*/
+//                            message: '请输入持卡人！'
+//                        }
+//                    }
                 },
                 cardNo: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '请输入银行卡号！'
-                        },
-                        regexp: {
-                            regexp: /^([1-9]{1})(\d{14}|\d{18})$/,
-                            message: '输入正确的银行卡号！'
-                        }
-                    }
+//                    validators: {
+//                        notEmpty: {/*非空提示*/
+//                            message: '请输入银行卡号！'
+//                        },
+//                        regexp: {
+//                            regexp: /^([1-9]{1})(\d{14}|\d{18})$/,
+//                            message: '输入正确的银行卡号！'
+//                        }
+//                    }
                 },
                 cardBank: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '请输入开户行！'
-                        }
-                    }
+//                    validators: {
+//                        notEmpty: {/*非空提示*/
+//                            message: '请输入开户行！'
+//                        }
+//                    }
                 },
                 beUserId: {
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '请选择业务员！'
+                            message: '请选择客服！'
                         }
                     }
                 },

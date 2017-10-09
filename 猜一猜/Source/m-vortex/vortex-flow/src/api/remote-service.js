@@ -4,8 +4,10 @@
  */
 import 'whatwg-fetch'
 import * as servConf from './server-config'
-
-let entryURL = 'https://cms.caiecai.net/rest/api/'
+// 正式
+// let entryURL = 'https://cms.caiecai.net/rest/api/'
+// 测试
+let entryURL = 'http://cmsdev.caiecai.net/rest/api/'
 // let baseURL = servConf.NODE_API_ADDR
 // let serverURL = servConf.CMS_API_ADDR
 let testURL = ''

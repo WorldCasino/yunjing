@@ -9,31 +9,42 @@
     <!-- 查询、添加、批量删除、导出、刷新 -->
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
+            <input type="hidden" name="loginbeUserId" id="loginbeUserId" value="<shiro:principal property="limitBeUserId"/>">
+            <input type="hidden" name="loginagentId" id="loginagentId" value="<shiro:principal property="limitAgentId"/>">
             <div class="form-group">
                 <label for="userId" class="col-sm-1 control-label">用户ID</label>
                 <div class="col-sm-2" >
                     <input type="text" name="userId" id="userId" class="form-control">
                 </div>
+                <label for="tradeNo" class="col-sm-2 control-label">订单编号</label>
+                <div class="col-sm-2" >
+                    <input type="text" name="tradeNo" id="tradeNo" value="" style="width: 120%;">
+                </div>
+
+                <div class="pull-right" style="margin-top: 5px;">
+                    <div class="btn-group">
+                        <shiro:hasPermission name="5search">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-query">
+                                <i class="fa fa-search"></i> 查询
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-re">
+                                <i class="fa fa-refresh"></i> 刷新
+                            </button>
+                        </shiro:hasPermission>
+                    </div>
+                </div>
+
+
               </div>
          </form>
-        <div class="pull-right" style="margin-top: 5px;">
-            <div class="btn-group">
-                <shiro:hasPermission name="5search">
-                    <button type="button" class="btn btn-primary btn-sm" id="btn-query">
-                        <i class="fa fa-search"></i> 查询
-                    </button>
-                    <button type="button" class="btn btn-primary btn-sm" id="btn-re">
-                        <i class="fa fa-refresh"></i> 刷新
-                    </button>
-                </shiro:hasPermission>
-            </div>
-        </div>
+
     </div>
 
     <!--表格-->
     <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed" align="center">
         <thead>
         <tr class="info">
+            <th style="width: 10%;">订单编号</th>
             <th style="width: 10%;">用户ID</th>
             <th style="width: 10%;">昵称</th>
             <th style="width: 10%;">手机号</th>
@@ -51,9 +62,9 @@
 
 
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width:30%;">
-        <div class="modal-content" style=" width: 100%; ">
-             <div class="modal-header" style=" width: 100%; ">
+    <div class="modal-dialog"  >
+        <div class="modal-content"  >
+             <div class="modal-header"  >
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                     <span class="sr-only"></span>
@@ -67,17 +78,17 @@
                     <input type="hidden"  class="phone" value="">
                      <%--账户信息--%>
                      <div class="form-group"  >
-                        <label class="col-sm-7 control-label" >已经给用户打款，提醒用户打款进度</label>
+                        <label class="col-sm-8 control-label" >已经给用户打款，提醒用户打款进度</label>
                     </div>
                     <div class="form-group"  >
-                        <label class="col-sm-2 control-label">持卡人</label>
-                        <div class="col-sm-4">
+                        <label class="col-sm-4 control-label">持卡人</label>
+                        <div class="col-sm-6">
                             <input type="text" class="form-control cardName"  disabled >
                         </div>
                     </div>
                     <div class="form-group"  >
-                        <label class="col-sm-2 control-label">金额</label>
-                        <div class="col-sm-4">
+                        <label class="col-sm-4 control-label">金额</label>
+                        <div class="col-sm-6">
                             <input type="text" class="form-control amount"  disabled >
                         </div>
                     </div>
@@ -130,6 +141,7 @@
                 'queryForm',
                 //对应上面thead里面的序列
                 [
+                    {"data": "tradeNo"},
                     {"data": "bgLoginId"},
                     {"data": "nickName"},
                     {"data": "phone"},
@@ -140,7 +152,7 @@
                     {
                         "data": 'tradeStatusEnum',
                         "render": function (data, type, full, callback) {
-                            return data.code == 3 ? str:'已通知'
+                            return data.code == 3 ? str:data.desc
                         }
                     }
                 ],
@@ -172,7 +184,6 @@
 
         //取消
         $("#btnCancel").on("click", function () {
-            $("#editModal").modal("hide");
             window.location.reload();
         });
 
@@ -210,9 +221,8 @@
                     async: false,
                     success: function (data) {
                         if (data.data == true) {
-                            $("#okOne").hide();
-                            $("#errorOne").hide();
                             layer.msg('打款成功！');
+                            $("#btnCancel").click();
                         } else {
                             layer.msg("打款失败", {icon: 2});
                         }

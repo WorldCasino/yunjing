@@ -89,7 +89,7 @@ public class GameDataService implements IGameDataService {
 
         try {
             GameRsp gameRsp = gameConnector.openOrderQuery(null, loginIds, 0, null,
-                    startTime, endTime, 0, 0, 0, null, pageIndex, pageSize, null);
+                    startTimeStr, endTimeStr, 0, 0, 0, null, pageIndex, pageSize, null);
 
             if (gameRsp.getError() == null) {
                 return ((OrderQuery) gameRsp.getResult()).getItems();

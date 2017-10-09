@@ -9,6 +9,7 @@ import com.cicada.mapper.*;
 import com.cicada.pojo.*;
 import com.cicada.pojo.vo.*;
 import com.cicada.redis.MessageQueueProducer;
+import com.cicada.redis.RedisHelper;
 import com.cicada.result.DatatablesResult;
 import com.cicada.result.PicUploadResult;
 import com.cicada.service.IMarqueeQueueService;
@@ -22,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import redis.clients.jedis.JedisPool;
 
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -155,7 +155,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
 //        //手动开奖的没设置下注截止时间不能开奖
 //        if (task.getLotteryType() == 1 && null == task.getLockTime()){
-////            LOTTERY_LOGGER.error(String.format("手动开奖必须设置下注截止时间"));
+//            LOTTERY_LOGGER.error(String.format("手动开奖必须设置下注截止时间"));
 //            throw new ApiException(ErrorCodeEnum.SystemError.getCode(),"手动开奖必须设置下注截止时间");
 //        }
 
@@ -163,19 +163,41 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         Map<String,Object> queryMap = new HashMap<>();
         queryMap.put("task_id",task.getTaskId());
         List<TaskAnswer> answerList = taskAnswerMapper.selectByMap(queryMap);
+        //让球和大小球不显示平局答案
+        if(task.getPlayType()==2 || task.getPlayType()==3){
+            answerList.stream().filter(x -> "平".equals(x.getAnswer()));
+            for (int i = answerList.size() - 1;i > 0; i--) {
+                if("平".equals(answerList.get(i))) {
+                    answerList.remove(i);
+                }
+            }
+        }
         List<TaskAnswer> temp = answerList.stream().filter(x -> x.getIsRight() == 1).collect(Collectors.toList());
         if (!(System.currentTimeMillis() > task.getSettleTime().getTime() && task.getLotteryType() == 1)){
             if(temp.size() == 0) {
                 //重新扔回REDIS队列，等待5分钟后处理
-                JedisPool jedisPool = (JedisPool)SpringContextUtil.getBean("jedisPool");
                 String key = ConstantInterface.REDIS_KEY_LOTTERY_PREFIX + String.valueOf(task.getTaskId());
-                if(jedisPool.getResource().exists(key)) jedisPool.getResource().del(key);
-                jedisPool.getResource().setex(key,5*60,String.format("待开奖%s",task.getTaskId()));
-
+                RedisHelper.setString(key,5*60,String.format("待开奖%s",task.getTaskId()));
                 //必须先设置正确答案
-                throw new ApiException(ErrorCodeEnum.TaskRightAnswerNotFound);
+                //throw new ApiException(ErrorCodeEnum.TaskRightAnswerNotFound);
+
+                LOTTERY_LOGGER.error(String.format("竞猜项目【%s】开奖失败，原因：必须先设置正确答案！",task.getTaskId()));
+                return null;
             }
         }
+
+        int homeScore=0;
+        int visitScore=0;
+        double concedePoints=0;
+        if(task.getPlayType()==2 || task.getPlayType()==3){
+            //获取主客队比分
+            Map<String,Object> score=taskMapper.selectScore(task.getMatchId());
+            homeScore= (int) score.get("home_score");
+            visitScore= (int) score.get("away_score");
+            //获取让球数或盘口
+            concedePoints=taskMapper.selectConcedePoints(taskId);
+        }
+
 
         // </editor-fold>
 
@@ -221,28 +243,34 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
             orgBeanBalance = dealerBeanAccount.getCoinBalance();
 
             //获取竞猜项目的所有下注订单
-            queryMap = new HashMap<>();
-            queryMap.put("task_id", task.getTaskId());
-            List<TaskOrder> orders = taskOrderMapper.selectByMap(queryMap);
+            //queryMap = new HashMap<>();
+            //queryMap.put("task_id", task.getTaskId());
+            List<TaskOrder> orders = taskOrderMapper.selectOrdersByTaskId(taskId);
 
             //超时开奖，奖金平分
             if (task.getLotteryType() == 1 && System.currentTimeMillis() > task.getSettleTime().getTime()){
-                lotteryResult = new LotteryResultVo(task.getTaskId(),task.getUserId(),task.getTaskContent(),2,task.getSalePrice(),"");
+                String orgContent = task.getTaskContent();
+                orgContent = EscapeUnescape.unescape(orgContent);
+                lotteryResult = new LotteryResultVo(task.getTaskId(),task.getUserId(),orgContent,2,task.getSalePrice(),"");
 
                 //保留一位小数
                 DecimalFormat df=new DecimalFormat(".#");
                 df.setRoundingMode(RoundingMode.FLOOR);
+                //玩家总下注数
                 int totalQty = 0;
                 for(TaskOrder taskOrder : orders){
                     totalQty += taskOrder.getQuantity();
                 }
                 //玩家、币种、下注数
+                //统计玩家总下注数，跑马灯用
                 Map<Long, Map<String, Integer>> userQty = new HashMap<>();
                 int cnt = 0;
                 double newCoinTotal = coinLocked;
+                //double LEDCoins = 0;
                 for (TaskAnswer answer : answerList) {
                     cnt++;
                     char abc = (char) (cnt + 64);
+                    answerInfo += String.format("%s.%s \r\n", abc, answer.getAnswer());
                     List<TaskOrder> answerOrders = orders.stream()
                             .filter(x -> x.getAnswerId() == answer.getAnswerId())
                             .collect(Collectors.toList());
@@ -253,36 +281,37 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                     Map<Long, Map<String, Integer>> userQtySmall = new HashMap<>();
                     for(TaskOrder taskOrder : answerOrders) {
                         Map<String, Integer> map = new HashMap<>();
-//                                Map<String, Integer> map1 = new HashMap<>();
+                        //统计玩家总下注数，跑马灯用
+                        Map<String, Integer> map1 = new HashMap<>();
                         if (taskOrder.getCoinType() == 0) {
                             int qty = userQtySmall.containsKey(taskOrder.getUserId()) && userQtySmall.get(taskOrder.getUserId()).containsKey("coin")
                                     ? userQtySmall.get(taskOrder.getUserId()).get("coin") + taskOrder.getQuantity() : taskOrder.getQuantity();
-//                                    int qty1 = userQty.containsKey(taskOrder.getUserId()) && userQty.get(taskOrder.getUserId()).containsKey("coin")
-//                                            ? userQty.get(taskOrder.getUserId()).get("coin") + taskOrder.getQuantity() : taskOrder.getQuantity();
+                            int qty1 = userQty.containsKey(taskOrder.getUserId()) && userQty.get(taskOrder.getUserId()).containsKey("coin")
+                                    ? userQty.get(taskOrder.getUserId()).get("coin") + taskOrder.getQuantity() : taskOrder.getQuantity();
                             //非空判断
                             if (userQtySmall.containsKey(taskOrder.getUserId())) {
                                 userQtySmall.get(taskOrder.getUserId()).put("coin", qty);
-//                                        userQty.get(taskOrder.getUserId()).put("coin", qty1);
+                                userQty.get(taskOrder.getUserId()).put("coin", qty1);
                             } else {
                                 map.put("coin", qty);
-//                                        map1.put("coin", qty1);
+                                map1.put("coin", qty1);
                                 userQtySmall.put(taskOrder.getUserId(), map);
-//                                        userQty.put(taskOrder.getUserId(), map1);
+                                userQty.put(taskOrder.getUserId(), map1);
                             }
                         } else {
                             int qty = userQtySmall.containsKey(taskOrder.getUserId()) && userQtySmall.get(taskOrder.getUserId()).containsKey("bean")
                                     ? userQtySmall.get(taskOrder.getUserId()).get("bean") + taskOrder.getQuantity() : taskOrder.getQuantity();
-//                                    int qty1 = userQtySmall.containsKey(taskOrder.getUserId()) && userQtySmall.get(taskOrder.getUserId()).containsKey("bean")
-//                                            ? userQtySmall.get(taskOrder.getUserId()).get("bean") + taskOrder.getQuantity() : taskOrder.getQuantity();
+                            int qty1 = userQtySmall.containsKey(taskOrder.getUserId()) && userQtySmall.get(taskOrder.getUserId()).containsKey("bean")
+                                    ? userQtySmall.get(taskOrder.getUserId()).get("bean") + taskOrder.getQuantity() : taskOrder.getQuantity();
                             //非空判断
                             if (userQtySmall.containsKey(taskOrder.getUserId())) {
                                 userQtySmall.get(taskOrder.getUserId()).put("bean", qty);
-//                                        userQty.get(taskOrder.getUserId()).put("bean", qty1);
+                                userQty.get(taskOrder.getUserId()).put("bean", qty1);
                             } else {
                                 map.put("bean", qty);
-//                                        map1.put("bean", qty1);
+                                map1.put("bean", qty1);
                                 userQtySmall.put(taskOrder.getUserId(), map);
-//                                        userQty.put(taskOrder.getUserId(), map1);
+                                userQty.put(taskOrder.getUserId(), map1);
                             }
                         }
                     }
@@ -290,13 +319,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                     //添加到玩家开奖结果
                     for (Map.Entry<Long,Map<String, Integer>> entry : userQtySmall.entrySet()){
                         int userTotalQty = 0;
-                        //非空判断
+                        //开奖结果加到结果集
                         if (null == entry.getValue().get("coin")) {
                             userTotalQty = entry.getValue().get("bean");
                             double avgCoin = Double.valueOf(df.format((double) userTotalQty / totalQty*coinLocked));
                             lotteryResult.addPlayerResult(entry.getKey(), answer.getAnswerId(), abc, true,
-                                    answer.getOdds(), 0, avgCoin, entry.getValue().get("bean"),
-                                    0);
+                                    answer.getOdds(), 0, avgCoin, entry.getValue().get("bean"), 0);
                         }else if (null == entry.getValue().get("bean")){
                             userTotalQty = entry.getValue().get("coin");
                             double avgCoin = Double.valueOf(df.format((double) userTotalQty / totalQty*coinLocked));
@@ -309,12 +337,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                                     answer.getOdds(), entry.getValue().get("coin"), avgCoin, entry.getValue().get("bean"), 0);
                         }
 
-//                        }
-
-
-                //下注金额退还+平均分庄家冻结金额
-//                        double newCoinTotal = coinLocked;
-//                        for (Map.Entry<Long,Map<String, Integer>> entry : userQty.entrySet()){
+                        //下注金额退还+平均分庄家冻结金额
                         queryMap = new HashMap<>();
                         queryMap.put("user_id",entry.getKey());
                         List<ClientAccountEntity> userAccount = accountMapper.selectByMap(queryMap);
@@ -327,7 +350,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                         detailEntity.setFromType(TradeTypeEnum.TaskReward);
                         detailEntity.setCreateBy(task.getUserId());
                         detailEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
-//                                int userTotalQty = 0;
                         //非空判断
                         if (null == entry.getValue().get("coin")) {
                             userTotalQty = entry.getValue().get("bean");
@@ -346,7 +368,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                             detailEntity.setCoins(avgCoin);
                             detailEntity.setAccountId(coinAccount.getAccountId());
                             accountDetailMapper.insert(detailEntity);
-
+                            //存日志信息
+                            LOTTERY_LOGGER.info(String.format("玩家【%s】用【%s】购买答案【%s】，%s注", entry.getKey(), beanAccount.getCoinType().getDesc(), answer.getAnswerId(), entry.getValue().get("bean")));
                         }else if (null == entry.getValue().get("bean")){
                             userTotalQty = entry.getValue().get("coin");
                             double avgCoin = Double.valueOf(df.format((double) userTotalQty / totalQty*coinLocked));
@@ -358,7 +381,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                             detailEntity.setCoins(entry.getValue().get("coin")*task.getSalePrice() + avgCoin);
                             detailEntity.setAccountId(coinAccount.getAccountId());
                             accountDetailMapper.insert(detailEntity);
-                        }else{
+                            LOTTERY_LOGGER.info(String.format("玩家【%s】用【%s】购买答案【%s】，%s注", entry.getKey(), coinAccount.getCoinType().getDesc(), answer.getAnswerId(), entry.getValue().get("coin")));
+                        }else if (null != entry.getValue().get("bean") && null != entry.getValue().get("coin")){
                             userTotalQty = entry.getValue().get("coin") + entry.getValue().get("bean");
                             double avgCoin = Double.valueOf(df.format((double) userTotalQty / totalQty*coinLocked));
                             newCoinTotal -= avgCoin;
@@ -375,12 +399,29 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                             detailEntity.setCoins(entry.getValue().get("coin")*task.getSalePrice() + avgCoin);
                             detailEntity.setAccountId(coinAccount.getAccountId());
                             accountDetailMapper.insert(detailEntity);
+                            LOTTERY_LOGGER.info(String.format("玩家【%s】购买答案【%s】，【%s】 %s注，【%s】 %s注", entry.getKey(), answer.getAnswerId(),
+                                    coinAccount.getCoinType().getDesc(), entry.getValue().get("coin"), beanAccount.getCoinType().getDesc(), entry.getValue().get("bean")));
                         }
                         accountMapper.updateAccountCoins(coinAccount);
                         accountMapper.updateAccountCoins(beanAccount);
                     }
-                }
 
+                }
+                for (Map.Entry<Long,Map<String, Integer>> entry : userQty.entrySet()){
+                    for (LotteryResultVo.PlayerVo playerVo : lotteryResult.getPlayerVoList()) {
+                        if (entry.getKey() == playerVo.getUserId()){
+                            double pealCoins = 0;
+                            for (LotteryResultVo.BettingVo bettingVo : playerVo.getBettingVoList()) {
+                                pealCoins += bettingVo.getCoins();
+                            }
+                            //跑马灯消息
+                            ClientEntity client = clientMapper.selectById(entry.getKey());
+                            String clientName = StringUtils.isEmpty(client.getNickname())?client.getPhonenumber():client.getNickname();
+                            String content = String.format("玩家%s猜对了%s发布的竞猜，赢了%s金币", clientName,dealerName, new Double(pealCoins).intValue());
+                            marqueeQueueService.insertMarqueeRoll(MarqueeTypeEnum.LotteryWinners,content,task.getTaskId());
+                        }
+                    }
+                }
                 //多余的还给庄家
                 dealerCoinAccount.setCoinBalance(dealerCoinAccount.getCoinBalance() - coinLocked + newCoinTotal);
                 dealerCoinAccount.setCoinExpend(dealerCoinAccount.getCoinExpend() + coinLocked - newCoinTotal);
@@ -396,12 +437,15 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                 dealerAd.setCreateDate(new Timestamp(System.currentTimeMillis()));
                 accountDetailMapper.insert(dealerAd);
 
-                //TODO 跑马灯、APP推送消息、微信模板消息
                 LOTTERY_LOGGER.info(String.format("竞猜项目【%s】开奖超时，【%s】金币平均下发给下注玩家",task.getTaskId(),coinLocked));
+                //跑马灯消息
+                String content = String.format("很遗憾，玩家%s发布竞猜输了%s金币", dealerName, Math.abs(coinLocked));
+                marqueeQueueService.insertMarqueeRoll(MarqueeTypeEnum.DealerExpend,content,task.getTaskId());
             }else {
                 //正常开奖
-                lotteryResult = new LotteryResultVo(task.getTaskId(),task.getUserId(),task.getTaskContent(),1,task.getSalePrice(),"");
-
+                String orgContent = task.getTaskContent();
+                orgContent = EscapeUnescape.unescape(orgContent);
+                lotteryResult = new LotteryResultVo(task.getTaskId(),task.getUserId(),orgContent,1,task.getSalePrice(),"");
 
                 int cnt = 0;
                 for (TaskAnswer answer : answerList) {
@@ -419,9 +463,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
                     // <editor-fold desc="每个玩家的下注合计">
                     Map<Long, Map<String, Integer>> userCount = new HashMap<>();//玩家、币种、下注数
-                    Map<String, Integer> map = new HashMap<>();
+                    Map<String, Integer> qtyMap = new HashMap<>();
                     for (int i = answerOrders.size() - 1; i >= 0; i--) {
                         TaskOrder x = answerOrders.get(i);
+                        if (!userCount.containsKey(x.getUserId())) {
+                            qtyMap = new HashMap<>();
+                        }
                         String type = "";
                         Integer qty = 0;
                         if (x.getCoinType() == 0) {
@@ -431,8 +478,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                         }
                         qty = userCount.containsKey(x.getUserId()) && userCount.get(x.getUserId()).containsKey(type)
                                 ? userCount.get(x.getUserId()).get(type) + x.getQuantity() : x.getQuantity();
-                        map.put(type, qty);
-                        userCount.put(x.getUserId(), map);
+                        qtyMap.put(type, qty);
+                        userCount.put(x.getUserId(), qtyMap);
                         answerOrders.remove(i);
                     }
                     // </editor-fold>
@@ -447,6 +494,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                     double beans = 0;
 
                     for (Map.Entry<Long, Map<String, Integer>> entry : userCount.entrySet()) {
+                        Map<String, Integer> map = entry.getValue();
                         for (Map.Entry<String, Integer> entryEntry : map.entrySet()) {
                             if ("coin".contains(entryEntry.getKey())) {
                                 totalCoinQty += entryEntry.getValue();
@@ -456,10 +504,24 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                         if (answer.getIsRight() == 1) {
 
                             //恭喜你猜对了~
-                            if (null != map.get("coin"))
-                                coins = task.getSalePrice() * map.get("coin") * answer.getOdds();
-                            if (null != map.get("bean"))
-                                beans = task.getSalePrice() * map.get("bean") * answer.getOdds();
+                            if (null != map.get("coin")){
+                                //让球或大小球0.25球：输赢一半
+                                if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                                         task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25)){
+                                    coins = task.getSalePrice() * map.get("coin")/2;
+                                }else{
+                                    coins = task.getSalePrice() * map.get("coin") * answer.getOdds();
+                                }
+                            }
+                            if (null != map.get("bean")){
+                                //让球或大小球0.25球：输赢一半
+                                if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                                        task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25)){
+                                    beans = task.getSalePrice() * map.get("bean")/2;
+                                }else{
+                                    beans = task.getSalePrice() * map.get("bean") * answer.getOdds();
+                                }
+                            }
                             queryMap = new HashMap<>();
                             queryMap.put("user_id", entry.getKey());
                             for (int i = 0; i < 2; i++) {
@@ -491,43 +553,56 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                             }
                             if (null != map.get("coin")) {
                                 double pealCoins = task.getSalePrice() * map.get("coin") * (answer.getOdds() - 1);
+                                if((task.getPlayType()==2 || task.getPlayType()==3) && (((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25))){
+                                    pealCoins = task.getSalePrice() * map.get("coin") * (answer.getOdds() - 1)/2;
+                                }
                                 //跑马灯消息
                                 ClientEntity client = clientMapper.selectById(entry.getKey());
                                 String clientName = StringUtils.isEmpty(client.getNickname())?client.getPhonenumber():client.getNickname();
                                 String content = String.format("玩家%s猜对了%s发布的竞猜，赢了%s金币", clientName,dealerName, new Double(pealCoins).intValue());
                                 marqueeQueueService.insertMarqueeRoll(MarqueeTypeEnum.LotteryWinners,content,task.getTaskId());
                             }
-                            /*//跑马灯消息
-                            ClientEntity client = clientMapper.selectById(entry.getKey());
-                            String clientName = StringUtils.isEmpty(client.getNickname()) ? client.getPhonenumber() : client.getNickname();
-                            String content = String.format("玩家%s猜对了%s发布的竞猜，赢了%s金币" , clientName, dealerName, new Double(money).intValue());
-                            marqueeQueueService.insertMarqueeRoll(MarqueeTypeEnum.LotteryWinners, content, task.getTaskId());*/
-
-                            /*if (null != map.get("coin") && accountEntity.getCoinType()== CurrencyTypeEnum.Coin) {
-                                coins = task.getSalePrice() * map.get("coin") * (answer.getOdds() - 1);
-                            }
-                            if (null != map.get("bean") && accountEntity.getCoinType()== CurrencyTypeEnum.Peas) {
-                                beans = task.getSalePrice() * map.get("bean") * (answer.getOdds() - 1);
-                            }*/
                         } else {
                             //智商是硬伤啊~
-                            if (null != map.get("coin"))
+                            if (null != map.get("coin")) {
                                 coins = task.getSalePrice() * map.get("coin");
-                            if (null != map.get("bean"))
+                                //让球或大小球平局：退回本金
+                                if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0) ||
+                                        task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0)){
+                                    coins = task.getSalePrice() * map.get("coin");
+                                }
+                                //让球或大小球0.25球：输赢一半
+                                if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                                        task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25)){
+                                    coins = task.getSalePrice() * map.get("coin")/2;
+                                }
+                            }
+                            if (null != map.get("bean")) {
                                 beans = task.getSalePrice() * map.get("bean");
+                                //让球或大小球平局：退回本金
+                                if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0) ||
+                                        task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0)){
+                                    beans = task.getSalePrice() * map.get("bean");
+                                }
+                                //让球或大小球0.25球：输赢一半
+                                if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                                        task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25)){
+                                    beans = task.getSalePrice() * map.get("bean")/2;
+                                }
+                            }
                         }
 
                         for (int i = 0; i < 2; i++) {
                             queryMap = new HashMap<>();
                             queryMap.put("user_id", entry.getKey());
                             ClientAccountEntity accountEntity = accountMapper.selectByMap(queryMap).get(i);
-                            double moneyType = 0;
+                            //double moneyType = 0;
                             String keyType = "";
                             if (accountEntity.getCoinType() == CurrencyTypeEnum.Coin) {
-                                moneyType = coins;
+                                //moneyType = coins;
                                 keyType = "coin";
                             } else {
-                                moneyType = beans;
+                                //moneyType = beans;
                                 keyType = "bean";
                             }
                             LOTTERY_LOGGER.info(String.format("玩家【%s】用【%s】购买答案【%s】，%s注", entry.getKey(), accountEntity.getCoinType().getDesc(), answer.getAnswerId(), map.get(keyType)));
@@ -538,8 +613,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                                 map.put("bean", 0);
                             }
                         }
-                        lotteryResult.addPlayerResult(entry.getKey(), answer.getAnswerId(), abc,
-                                answer.getIsRight() == 1, answer.getOdds(), map.get("coin"), coins, map.get("bean"), beans);
+                        if(task.getPlayType()==2 || task.getPlayType()==3){
+                            lotteryResult.addPlayerResult(task.getPlayType(),homeScore,visitScore,concedePoints,entry.getKey(), answer.getAnswerId(), abc,
+                                    answer.getIsRight() == 1, answer.getOdds(), map.get("coin"), coins, map.get("bean"), beans);
+                        }else{
+                            lotteryResult.addPlayerResult(entry.getKey(), answer.getAnswerId(), abc,
+                                    answer.getIsRight() == 1, answer.getOdds(), map.get("coin"), coins, map.get("bean"), beans);
+                        }
                     }
                     // </editor-fold>
 
@@ -581,6 +661,53 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                         //有人猜对了，赔钱货
                         double dealerExpendCoins = clientCoinBet * answer.getOdds();
                         double dealerExpendBeans = clientBeanBet * answer.getOdds();
+                        //让球或大小球0.25球：输赢一半
+                        if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                                task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25)){
+                            dealerExpendCoins = clientCoinBet * answer.getOdds()/2;
+                            dealerExpendBeans = clientBeanBet * answer.getOdds()/2;
+                        }
+                        //生成庄家 发布竞猜赔付
+                        for (int i = 0; i < 2; i++) {
+                            ClientAccountEntity accountEntity = dealerAccount.get(i);
+                            double expendType = 0;
+                            long accountId = 0;
+                            if (accountEntity.getCoinType() == CurrencyTypeEnum.Coin) {
+                                accountId = accountEntity.getAccountId();
+                                expendType = dealerExpendCoins;
+                            } else {
+                                accountId = accountEntity.getAccountId();
+                                expendType = dealerExpendBeans;
+                            }
+                            ClientAccountDetailEntity dealerExpend = new ClientAccountDetailEntity();
+                            if (expendType != 0) {
+                                dealerExpend.setUserId(task.getUserId());
+                                dealerExpend.setAccountId(accountId);
+                                dealerExpend.setCoins(expendType);
+                                dealerExpend.setTaskId(task.getTaskId());
+                                dealerExpend.setFromType(TradeTypeEnum.TaskLotteryExpend);
+                                dealerExpend.setCreateBy(task.getUserId());
+                                dealerExpend.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                                accountDetailMapper.insert(dealerExpend);
+                            }
+                            dealerAccount.get(i).setCoinBalance(accountEntity.getCoinBalance() - expendType);
+                            dealerAccount.get(i).setCoinIncome(accountEntity.getCoinIncome() - expendType);
+                            accountMapper.updateAccountCoins(accountEntity);
+                        }
+                    }else{
+                        //让球或大小球平局也退本金，此时算猜错
+                        //让球或大小球0.25球输一半，即退一半
+                        double dealerExpendCoins = 0;
+                        double dealerExpendBeans = 0;
+                        if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0) ||
+                                task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0)){
+                             dealerExpendCoins = clientCoinBet ;
+                             dealerExpendBeans = clientBeanBet;
+                        }else if(task.getPlayType()==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                                task.getPlayType()==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25)){
+                            dealerExpendCoins = clientCoinBet * answer.getOdds()/2;
+                            dealerExpendBeans = clientBeanBet * answer.getOdds()/2;
+                        }
                         //生成庄家 发布竞猜赔付
                         for (int i = 0; i < 2; i++) {
                             ClientAccountEntity accountEntity = dealerAccount.get(i);
@@ -628,7 +755,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
             //task.setLotteryResult(jacksonSerializer.toJson(lotteryResult));
             task.setSettleCoins(lotteryResult.getCoinIncomeTotal() - lotteryResult.getCoinExpendTotal());
             task.setUpdateBy(task.getUserId());
-            task.setUpdateDate(task.getUpdateDate());
+            //task.setUpdateDate(task.getUpdateDate());//更新时间
+            task.setUpdateDate(new Timestamp(System.currentTimeMillis()));
             taskMapper.updateLotteryComplete(task);
 
             // </editor-fold>
@@ -1026,9 +1154,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
         try {
             //发布成功提交REDIS，倒计时开奖
-            JedisPool jedisPool = (JedisPool)SpringContextUtil.getBean("jedisPool");
             String key = ConstantInterface.REDIS_KEY_LOTTERY_PREFIX + String.valueOf(taskId);
-            jedisPool.getResource().setex(key, expire, String.format("待开奖任务 %s", taskId));
+            RedisHelper.setString(key, expire, String.format("待开奖任务 %s", taskId));
 
             LOTTERY_LOGGER.info(String.format("竞猜项目【%s】 成功加入倒计时开奖队列，过期时间%s秒", taskId,expire));
         }catch (Exception e){
@@ -1136,14 +1263,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         int homeScore= (int) score.get("home_score");
         int visitScore= (int) score.get("away_score");
         //获取让球数或盘口
-        int concedePoints=taskMapper.selectConcedePoints(taskId);
+        double concedePoints=taskMapper.selectConcedePoints(taskId);
 
 
         //比赛结果
         String answer="";
         if(matchType==1){
             //足球
-            if(playType==1 || playType==2){
+            if(playType==1){
                 //标准盘或让球
                 if((homeScore-visitScore)>concedePoints){
                     answer="主胜";
@@ -1152,11 +1279,54 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                 }else{
                     answer="平";
                 }
+            }else if(playType==2){
+//                //标准盘或让球
+//                if((homeScore-visitScore)>concedePoints){
+//                    answer="主胜";
+//                }else if((homeScore-visitScore)<concedePoints){
+//                    answer="客胜";
+//                }else{
+//                    answer="平";
+//                }
+
+                //让球
+                if((homeScore-visitScore)+concedePoints>0.25){
+                    answer="主胜";
+                }else if((homeScore-visitScore)+concedePoints==0.25){
+                    //买主胜赢一半，客胜输一半
+                    answer="主胜";
+                }else if((homeScore-visitScore)+concedePoints==0){
+                    answer="平";
+                }else if((homeScore-visitScore)+concedePoints==-0.25){
+                    //买客胜赢一半，主胜输一半
+                    answer="客胜";
+                }else if((homeScore-visitScore)+concedePoints<-0.25){
+                    answer="客胜";
+                }
             }else if(playType==3){
+//                //大小球
+//                if((homeScore+visitScore)>concedePoints){
+//                    answer="大于"+concedePoints+"球";
+//                }else if((homeScore+visitScore)<concedePoints){
+//                    answer="小于"+concedePoints+"球";
+//                }else{
+//                    //现在可以为整数，及平局，返还本金
+//                    answer="平";
+//                    return;
+//                }
+
                 //大小球
-                if((homeScore+visitScore)>concedePoints){
+                if((homeScore+visitScore)+concedePoints>0.25){
                     answer="大球";
-                }else if((homeScore+visitScore)<concedePoints){
+                }else if((homeScore+visitScore)+concedePoints==0.25){
+                    //买大球赢一半，小球输一半
+                    answer="大球";
+                }else if((homeScore+visitScore)+concedePoints==0){
+                    answer="平";
+                }else if((homeScore+visitScore)+concedePoints==-0.25){
+                    //买小球赢一半，大球输一半
+                    answer="小球";
+                }else if((homeScore+visitScore)+concedePoints<-0.25){
                     answer="小球";
                 }
             }
@@ -1185,10 +1355,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
         try {
             //发布成功提交REDIS，倒计时开奖
-            JedisPool jedisPool = (JedisPool)SpringContextUtil.getBean("jedisPool");
             String key = ConstantInterface.REDIS_KEY_SCORE_PREFIX + String.valueOf(taskId);
-            jedisPool.getResource().setex(key, expire, String.format("待处理比分 %s", taskId));
-
+            RedisHelper.setString(key, expire, String.format("待处理比分 %s", taskId));
             LOTTERY_LOGGER.info(String.format("竞猜项目【%s】 成功加入比赛结果待处理队列，过期时间%s秒", taskId,expire));
         }catch (Exception e){
             e.printStackTrace();
@@ -1199,8 +1367,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
 
 
-    /**
-     * 获取竞猜详情
+    /* 获取竞猜详情
      * @param params
      * @return
      * @throws ApiException
@@ -1267,4 +1434,5 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
             throw new ApiException(ErrorCodeEnum.SystemError.getCode(),e.getMessage());
         }
     }
+
 }

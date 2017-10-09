@@ -15,6 +15,7 @@ public interface IOperateService extends IService<OperateEntity> {
     void deleteDailyActivesJob() throws ApiException;
 
     int isParticipationActive(OperateVo operateVo) throws ApiException;
+    int isSharedActive(OperateVo operateVo) throws ApiException;
     void deleteOperateLog(OperateVo operateVo) throws ApiException;
     void operateProccess(OperateVo operateVo) throws ApiException;
 }

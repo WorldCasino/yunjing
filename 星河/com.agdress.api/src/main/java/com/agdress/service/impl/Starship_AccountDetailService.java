@@ -4,6 +4,7 @@ package com.agdress.service.impl;
 import com.agdress.bgapi.GameRsp;
 import com.agdress.bgapi.IGameConnector;
 import com.agdress.commons.Exception.ApiException;
+import com.agdress.commons.utils.DateUtil;
 import com.agdress.entity.*;
 import com.agdress.entity.vo.Starship_AccountDetaillistVo;
 import com.agdress.entity.vo.Starship_SumVo;
@@ -11,16 +12,20 @@ import com.agdress.enums.*;
 import com.agdress.mapper.AgentMapper;
 import com.agdress.mapper.Starship_AccountDetailMapper;
 import com.agdress.mapper.UserAccountMapper;
+import com.agdress.message.SmsAdapter;
 import com.agdress.result.DatatablesResult;
 import com.agdress.service.*;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.jms.Destination;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -57,6 +62,22 @@ public class Starship_AccountDetailService extends ServiceImpl<Starship_AccountD
 
     @Autowired
     private Starship_IUserService starship_iUserService;
+
+
+    @Autowired
+    private IMessageService messageService;
+
+    @Autowired
+    private IMessageContentService  messageContentService;
+
+    @Autowired
+    private SmsAdapter smsAdapter;
+
+    @Autowired
+    private IMessageProducerService producerService;
+    @Autowired
+    @Qualifier("payNotifyQueueDestination")
+    private Destination payDestination;
 
 
     @Override
@@ -147,31 +168,28 @@ public class Starship_AccountDetailService extends ServiceImpl<Starship_AccountD
                 throw new ApiException(ErrorCodeEnum.InvalidRoleException);
             }
             String message=remarks.equals("")?"出金审核通过":remarks;
+            double amount=accountDetailEntity.getAmount();
+            //判断余额是否充足
+            Starship_UserEntity userEntity=starship_iUserService.selectById(accountDetailEntity.getUserId());
             if(examine.equals("false")){
                 //审核不通过处理的逻辑---开始返还金额
-                double amount=accountDetailEntity.getAmount();
-                Starship_AccountDetaillistVo advo=accountDetailMapper.selectByTradeId(Long.parseLong(tradeId));
-                AgentEntity agent = agentMapper.selectById(advo.getAgentId());
-                GameRsp<Float> newBalance;
-                try {
-                    newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),advo.getBgLoginId(),String.valueOf(amount),accountDetailEntity.getTradeId(),"1");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
-                }
-                Map<String,Object> whereMap = new HashMap<>();
-                whereMap.put("user_id",advo.getUserId());
-                UserAccountEntity accountEntity;
-                List<UserAccountEntity> temp = accountMapper.selectByMap(whereMap);
-                accountEntity=temp.get(0);//获取会员财富数据
-                accountEntity.setBalance(newBalance.getResult());
-                accountEntity.setTotalWithdraw(accountEntity.getTotalWithdraw() - amount);
-                accountEntity.setUpdateBy(Long.parseLong(updateBy));
-                accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                accountMapper.updateById(accountEntity);
                 userAccountDetailEntity.setTradeStatusEnum(TradeStatusEnum.AuditDisagree);//添加不通过状态
             }else{
-                 //判断是否还有下一个步骤
+                //判断余额是否充足
+                AgentEntity agent = agentMapper.selectById(userEntity.getAgentId());
+                double bgBalance=0;
+                try {
+                    GameRsp<Float> resp = gameConnector.openBalanceGet(agent.getBgPwd(),userEntity.getBgLoginId());
+                    bgBalance = new Double(resp.getResult());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new ApiException(ErrorCodeEnum.NetWorkError);
+                }
+                 //余额不足
+                if(bgBalance < amount){
+                    throw new ApiException(ErrorCodeEnum.BalanceNoneException);
+                }
+                //判断是否还有下一个步骤
                 Integer step=auditTemplateStepEntity.getStep()+1;
                 auditTemplateStepEntity=new AuditTemplateStepEntity();
                 auditTemplateStepEntity.setTempId((long)AuditTemplateEnum.WithdrawAudit.getCode());
@@ -181,12 +199,68 @@ public class Starship_AccountDetailService extends ServiceImpl<Starship_AccountD
                 if(selectList.size() > 0){
                     long flowId_next=selectList.get(0).getFlowId();
                     userAccountDetailEntity.setFlowId(flowId_next);
-                }else{
+                    //新增消息通知
+                    MessageContentEntity messageContentEntity=new MessageContentEntity();
+                    //判断是否是客服还是财务
+                    Starship_UserEntity message_userEntity=starship_iUserService.selectById(updateBy);
+                    if(message_userEntity != null && selectList.get(0).getRoleId() == RoleTypeEnum.Salesman.getCode()){
+                        messageContentEntity.setUserId(message_userEntity.getUserId());
+                    }
+                    messageContentEntity.setStatus(0);
+                    messageContentEntity.setTradeId(Long.parseLong(tradeId));
+                    messageContentEntity.setRoleId(selectList.get(0).getRoleId());
+                    messageContentEntity.setCreateBy(Long.parseLong(updateBy));
+                    messageContentEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    messageContentEntity.setUpdateBy(Long.parseLong(updateBy));
+                    messageContentEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    messageContentEntity.setIsDelete(0);
+                    String content="你有一笔新的提现审核，编号："+accountDetailEntity.getTradeNo()+"。";
+                    messageContentEntity.setContent(content);
+                    messageContentService.insert(messageContentEntity);
+                 }else{
                     userAccountDetailEntity.setTradeStatusEnum( TradeStatusEnum.ShippedIsOk);
+                    //更新余额
+                    Map<String,Object> whereMap = new HashMap<>();
+                    whereMap.put("user_id",userEntity.getUserId());
+                    UserAccountEntity accountEntity;
+                    List<UserAccountEntity> temp = accountMapper.selectByMap(whereMap);
+                    accountEntity = temp.get(0);
+                    GameRsp<Float> newBalance;
+                    try {
+                        newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),userEntity.getBgLoginId(),String.valueOf(-1 * amount),Long.parseLong(tradeId),"1");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
+                    }
+                    accountEntity.setBalance(newBalance.getResult());
+                    accountEntity.setTotalWithdraw(accountEntity.getTotalWithdraw() + amount);
+                    accountEntity.setUpdateBy(userEntity.getUserId());
+                    accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    accountMapper.updateById(accountEntity);
                 }
             }
             //==当前步骤添加audit_logs纪录
             auditLogsService.addAuditLogs(tradeId, AuditTemplateEnum.WithdrawAudit.getCode(), flowId,  message, updateBy);
+            //修改消息通知状态
+            MessageContentEntity messageContentEntity=new MessageContentEntity();
+            //判断是否是客服还是财务
+            Starship_UserEntity message_userEntity=starship_iUserService.selectById(updateBy);
+            if(message_userEntity != null){
+                if(message_userEntity.getRoleId() == RoleTypeEnum.Salesman.getCode()){
+                    messageContentEntity.setUserId(Long.parseLong(updateBy));
+                }
+                messageContentEntity.setRoleId(message_userEntity.getRoleId());
+            }
+            messageContentEntity.setTradeId(Long.parseLong(tradeId));
+            EntityWrapper<MessageContentEntity> wrapper = new EntityWrapper<MessageContentEntity>(messageContentEntity);
+            List<MessageContentEntity> selectList = messageContentService.selectList(wrapper);
+            if(selectList.size() >0){
+                messageContentEntity=selectList.get(0);
+                messageContentEntity.setStatus(1);
+                messageContentEntity.setUpdateBy(Long.parseLong(updateBy));
+                messageContentEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                messageContentService.updateById(messageContentEntity);
+            }
         }else{
             if(playMoeny != null ){
                 if(playMoeny.equals("true")){

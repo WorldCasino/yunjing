@@ -2,7 +2,7 @@
      Des:  提示框confirm插件
  -->
 <template>
-  <div v-if="isShowConfirm" class="confirm-wrapper">
+  <div class="confirm-wrapper dm-confirm">
     <div class="confirm">
       <div v-if="btnType === 'bet'" class="m-close" @click="close">&times;</div>
 
@@ -10,7 +10,7 @@
         <div class="title">{{title}}</div>
 
         <div v-if="isChecked === 'noChecked'" class="text-wrapper">
-          <div v-html="mes" class="text text-nochecked"></div>
+          <div v-html="mes" class="text text-nochecked" :style="{textAlign}"></div>
         </div>
 
         <div v-else class="text-wrapper">
@@ -36,20 +36,23 @@
   export default {
     data () {
       return {
-        isShowConfirm: true,
         // 是否勾选复选框
-        isShowRadio: false
+        isShowRadio: false,
+        textAlign: ''
       }
     },
     computed: {
     },
     methods: {
+      removeNode () {
+        document.body.removeChild(this.$el)
+      },
       close () {
-        this.isShowConfirm = false
+        this.removeNode()
         this.cancelCb()
       },
       confirm () {
-        this.isShowConfirm = false
+        this.removeNode()
         if (this.isChecked === 'nochecked') {
           this.confirmCb()
           return

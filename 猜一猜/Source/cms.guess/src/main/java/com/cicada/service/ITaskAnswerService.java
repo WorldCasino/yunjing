@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.service.IService;
 import com.cicada.commons.Exception.ApiException;
 import com.cicada.pojo.TaskAnswer;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/7/3.
  */
@@ -16,4 +18,19 @@ public interface ITaskAnswerService extends IService<TaskAnswer> {
      * @throws ApiException
      */
     int resetRightAnswer(long taskId,long answerId) throws ApiException;
+
+
+    /**
+     * 定时任务查询转发已开奖的竞猜
+     * @return
+     * @throws ApiException
+     */
+    List<Long> selectWattingAnswerTasks() throws ApiException;
+
+    /**
+     * 定时任务查询转发已开奖的竞猜
+     * @return
+     * @throws ApiException
+     */
+    void setRightAnswer(long answerId) throws ApiException;
 }

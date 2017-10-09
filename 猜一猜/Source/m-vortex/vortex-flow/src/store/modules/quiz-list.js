@@ -21,7 +21,14 @@ const state = {
   betStatus: null,
   betData: null,
 
-  watches: []
+  // 首页滚动条信息
+  scrollTop: 0,
+  visualHeight: 0,
+
+  // 首页、足球、篮球共用watches
+  watches: [],
+  // 存首页的watches点击切换到首页后，使用此数据)
+  watchesBrg: []
 }
 
 const getters = {
@@ -38,7 +45,7 @@ const actions = {
    * @param payload: [mode] 0: 下拉刷新   1: 上拉加载
    */
   getQuizzes ({ state, commit, rootState }, payload) {
-    API.quizzes(state.limit, payload[0] === 0 ? 0 : state.offset, rootState.token)
+    API.quizzes(state.limit, payload[0] === 0 ? 0 : state.offset, 0, rootState.token)
       .then(function (data) {
         if (payload[0] === 0) {
           commit(types.REFRESH_QUIZ_LIST_SUCCESS, data)
@@ -52,6 +59,7 @@ const actions = {
       })
   },
 
+  // 首页、足球、篮球的下注接口共用此入口  TODO 考虑未来把详情页下注接口合并为一个
   homepageQuizBet ({state, commit, rootState}, payload) {
     API.quizBet(payload[0], payload[1], payload[2], rootState.token)
       .then(function (data) {
@@ -63,6 +71,7 @@ const actions = {
       })
   },
 
+  // 首页、足球、篮球 下注开奖更新此猜数据共用此入口
   homepageQuizDetail ({state, commit, rootState}, payload) {
     API.quizDetail(payload[0], rootState.token)
       .then(function (data) {
@@ -70,8 +79,21 @@ const actions = {
         if (rootState.quizDetail.taskId === payload[0]) {
           commit(types.GET_QUIZ_DETAIL_SUCCEED, data)
         }
-
-        commit(types.GET_QUIZ_DETAIL_FOR_PUSH_SUCCESS, data)
+        switch (data.task_type) {
+          case 0 :
+          case 3 :
+            console.log('我去更新首页列表数据了1')
+            commit(types.GET_QUIZ_DETAIL_FOR_PUSH_SUCCESS, data)
+            break
+          case 1 :
+            console.log('我去更新球列表数据了2')
+            commit(types.GET_QUIZ_FOOT_DETAIL_FOR_PUSH_SUCCESS, data)
+            break
+          case 2 :
+            console.log('我去更新篮球列表数据了3')
+            commit(types.GET_QUIZ_BASK_DETAIL_FOR_PUSH_SUCCESS, data)
+            break
+        }
       })
       .catch(function (err) {
         commit(types.GET_QUIZ_DETAIL_FOR_PUSH_FAILED, err)

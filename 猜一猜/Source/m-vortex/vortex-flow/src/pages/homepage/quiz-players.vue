@@ -13,46 +13,19 @@
         已有{{playersData.length}}位玩家参与了竞猜
       </div>
     </f7-subnavbar>
-    <PlayerSub v-for="player in playersData" :key='Math.random()*456'
-               v-if="player != null && player.answer && player.answer.A && player.answer.B && !player.answer.C"
-               :avatar="player.head_url" 
-               :username="player.nickname" 
-               :is-male="player.gender" 
-               :refresh-time="player.create_date" 
+    <PlayerSub v-for="(player, index) in playersData"
+               :key="index"
+               v-if="player != null"
+               :avatar="player.head_url"
+               :username="player.nickname"
+               :is-male="player.gender"
+               :refresh-time="player.create_date"
                :lotteryType="player.lottery_type"
-               :status="player.status"
-               :coins="player.coins"
-               :userType="player.user_type"
-               :A="player.answer.A.quantity"
-               :B="player.answer.B.quantity">
-    </PlayerSub>
-    
-    <PlayerSub v-for="player in playersData" :key='Math.random() * 1000'
-               v-if="player != null && player.answer && player.answer.A && player.answer.B && player.answer.C"
-               :avatar="player.head_url" 
-               :username="player.nickname" 
-               :is-male="player.gender" 
-               :refresh-time="player.create_date" 
-               :lotteryType="player.lottery_type"
-               :status="player.status"
-               :coins="player.coins"
-               :userType="player.user_type"
-               :A="player.answer.A.quantity"
-               :B="player.answer.B.quantity"
-               :C="player.answer.C.quantity">
-    </PlayerSub>
-    
-    <PlayerSub v-for="player in playersData" :key='Math.random() * 100'
-               v-if="player != null && !player.answer"
-               :avatar="player.head_url" 
-               :username="player.nickname" 
-               :is-male="player.gender" 
-               :refresh-time="player.create_date" 
-               :lotteryType="player.lottery_type"
-               :status="player.status"
-               :coins="player.coins"
                :quantity="player.quantity"
-               :userType="player.user_type">
+               :status="player.status"
+               :coins="player.coins"
+               :userType="player.user_type"
+               :bettingVoList="player.bettingVoList">
     </PlayerSub>
   </f7-page>
 </template>

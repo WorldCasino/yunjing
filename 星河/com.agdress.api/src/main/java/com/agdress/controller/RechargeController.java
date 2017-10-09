@@ -109,8 +109,9 @@ public class RechargeController extends BaseController {
         JSONObject json = new JSONObject();
         json.put("type", QueueMessageTypeEnum.PayNotify.getCode());
         json.put("data",params);
+
         //加入消息队列，等待业务逻辑处理
-        boolean rtn = producerService.sendMessage(this.payDestination,json.toJSONString());
+        boolean rtn = producerService.sendMessage(params.getString("order_no"),this.payDestination,json.toJSONString());
         //String rtn = rechargeService.notifyProccess(params);
 
         return rtn?"ok":"error";

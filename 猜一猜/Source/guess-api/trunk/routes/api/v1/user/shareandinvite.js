@@ -54,7 +54,7 @@ module.exports = function (req,res,next) {
             })
         }).then(function () {
             //根据分享的任务类型，插入操作记录
-            //如果是邀请好友操作，return
+            //如果是分享到朋友圈或邀请好友操作，return
             if(operate_type==18 || operate_type==17){
                 return  true;
             }
@@ -97,6 +97,22 @@ module.exports = function (req,res,next) {
             })).catch(function (error) {
                 console.log(error);
             });
+        }).then(function () {
+            if(operate_type==18 ){
+                return true;
+            }
+            //记录用户分享的竞猜，分享过的不累加
+            setTimeout(function () {
+                var kvp = {
+                    user_id: user_id,
+                    task_id:task_id
+                };
+                return Q.ninvoke(mysql, 'query', {
+                    sql: 'INSERT INTO t_share_log SET ?',
+                    values: kvp
+                })
+            },1500)
+            return true;
         });
     }).then(function (success) {
         pd.checkState(success,'分享累计失败');

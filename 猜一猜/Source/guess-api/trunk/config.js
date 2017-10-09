@@ -17,12 +17,15 @@ var config = {
         host: 'rm-bp14q7o2rcj239l23o.mysql.rds.aliyuncs.com',
         user: 'root',
         password: 'Wgh0wgh0',
+        // database: 'app_guess',
         //database: 'test_guess',
         database: 'dev_guess',
         port: 3306
     },
     secret: process.env.JWT_SECRET_STRING || 'cicada@caiecai', // token secret string
     redis_key_lottery_prefix: 'lottery:task_', //redis prefix key of lottery
+    redis_key_score_prefix: 'score:task_', //redis prefix key of score
+
     redis_index_of_lottery_keys: 0, //redis db index of lottery queue
     redis_index_of_message_count: 2, //redis db index of message count
     upload: {
@@ -32,11 +35,11 @@ var config = {
         blurs:process.env.NODE_ENV === 'development' ? 'C:\\node_uploads\\blurs' : '/home/sources/image.caiecai.net/blurs'
     },
     domain:'https://image.caiecai.net/',
-    prefix_img_url_team:'http://imagetest.caiecai.net/team/',//球队logo图片
-    prefix_img_url_task:'http://imagetest.caiecai.net/task/',
+    prefix_img_url_team:'http://imagedev.caiecai.net/team/',//球赛logo地址
+    prefix_img_url_task:'http://imagedev.caiecai.net/task/',
     prefix_img_url_header:'https://image.caiecai.net/headers/',
     prefix_img_url_mall:'https://image.caiecai.net/mall/',
-    basketball_rediskey:"ball_matches:basketball",//篮球集合展示的rediskey
-    football_rediskey:"ball_matches:football"//足球展示的rediskey
+    basketball_rediskey:"ball_matches:basketball",//篮球rediskey
+    football_rediskey:"ball_matches:football"//足球rediskey
 };
 module.exports = config;

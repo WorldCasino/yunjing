@@ -61,7 +61,9 @@
         this.$f7.mainView.router.load({url: '/mine-goldbean-detail/'})
       },
       earnGoldBean () {
-        this.$f7.mainView.router.load({url: '/make-goldbean/'})
+        this.$f7.mainView.router.back({animatePages: false})
+        this.$f7.showTab('#tab3')
+        this.$root.$children[0].selectTab(3)
       }
     },
     mounted () {

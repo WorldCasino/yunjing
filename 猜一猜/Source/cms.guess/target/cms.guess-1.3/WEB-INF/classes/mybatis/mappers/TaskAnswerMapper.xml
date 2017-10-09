@@ -22,4 +22,18 @@
         SET is_right = 1
         WHERE task_id =#{taskId} and answer = #{answer}
     </update>
+
+
+    <!--查询转发竞猜已开奖的答案-->
+    <select id="selectWattingAnswerTasks" resultType="java.lang.Long">
+        select answer_id from t_task_answers
+        where parent_answ in (select answer_id from t_task_answers where is_right=1)
+        and is_right=0
+    </select>
+    <!--指定正确答案-->
+    <update id="setRightAnswer2" parameterType="java.lang.Long">
+        UPDATE t_task_answers
+        SET is_right = 1
+        WHERE answer_id = #{answerId}
+    </update>
 </mapper>

@@ -1,11 +1,11 @@
 <!-- 投注玩家 -->
 <template>
-  <div style="background: white; margin-left: 12px; margin-right: 12px; margin-top: 4px" @click="goPlayers">
+  <div style="background: white; margin-left: 12px; margin-right: 12px;" @click="goPlayers">
     <div class="box-players">
       <div class="item-title">已猜玩家:</div>
       <div v-for="player in players" class="box-avatar">
         <div class="head-pic" :style="{backgroundImage:'url('+ player.head_url +')'}" v-if="player.head_url"></div>
-        <div class="head-pic" :style="{backgroundImage:'url(../static/homepage/default_header.png)'}" v-else></div>
+        <div class="head-pic head-default-img" v-else></div>
         <div class="item-badge"><span class="my-badge">{{player.quantity}}</span></div>
       </div>
     </div>
@@ -56,6 +56,9 @@
 </script>
 
 <style scoped>
+  .head-default-img{
+    background-image:url(../../../static/homepage/default_header.png);
+  }
   .box-players {
     display: -webkit-flex;  /* safari */
     display: flex;
@@ -99,11 +102,11 @@
     line-height: 14px;
     display: block;
   }
-  
+
   .head-pic{
-    border-radius: 100%; width: 22px; height: 22px; 
+    border-radius: 100%; width: 22px; height: 22px;
     overflow: hidden; background-repeat: no-repeat;
     background-size: cover; background-position: center center;
   }
-  
+
 </style>

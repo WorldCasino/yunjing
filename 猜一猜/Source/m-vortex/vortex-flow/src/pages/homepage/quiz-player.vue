@@ -8,7 +8,7 @@
       <div>
         <div class="img-avatar">
           <div class="head-pic" v-if="publisherData !== null && publisherData.head_url" :style="{backgroundImage:'url('+ publisherData.head_url +')'}"></div>
-          <div class="head-pic" v-else :style="{backgroundImage:'url(./static/homepage/default_header.png)'}"></div>
+          <div class="head-pic head-default-img" v-else></div>
         </div>
       </div>
     </div>
@@ -92,7 +92,9 @@
 </script>
 
 <style scoped>
-
+  .head-default-img{
+    background-image: url(../../../static/homepage/default_header.png);
+  }
   .box-header {
     position: relative;
     /*background: blue;*/

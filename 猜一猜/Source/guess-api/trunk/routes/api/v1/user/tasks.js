@@ -21,25 +21,25 @@ module.exports = function (req, res, next) {
         // 构建查询语句
         var limit = parseInt(req.query.limit || 20),
             offset = parseInt(req.query.offset || 0);
-        return Q.ninvoke(mysql, 'query', {
-            sql: 'SELECT ' +
-            't.task_id, ' +
-            't.user_id, ' +
-            't.task_content, ' +
-            't.sale_price, ' +
-            't.quantity, ' +
-            't.task_status, ' +
-            't.create_date, ' +
-            't.settle_time, ' +
-            'u.user_name, ' +
-            'u.nickname, ' +
-            'u.gender, ' +
-            'u.head_url ' +
-            'FROM t_tasks AS t ' +
-            'LEFT JOIN m_users AS u ' +
-            'ON t.user_id = u.user_id limit ? offset ?',
-            values: [limit, offset]
-        });
+            return Q.ninvoke(mysql, 'query', {
+                sql: 'SELECT ' +
+                't.task_id, ' +
+                't.user_id, ' +
+                't.task_content, ' +
+                't.sale_price, ' +
+                't.quantity, ' +
+                't.task_status, ' +
+                't.create_date, ' +
+                't.settle_time, ' +
+                'u.user_name, ' +
+                'u.nickname, ' +
+                'u.gender, ' +
+                'u.head_url ' +
+                'FROM t_tasks AS t ' +
+                'LEFT JOIN m_users AS u ' +
+                'ON t.user_id = u.user_id limit ? offset ?',
+                values: [limit, offset]
+            });
     }).then(function (result) {
         res.pkg.data = result[0].map(function (currentValue) {
             return {

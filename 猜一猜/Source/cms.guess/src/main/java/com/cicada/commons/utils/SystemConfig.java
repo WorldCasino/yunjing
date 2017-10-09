@@ -79,6 +79,27 @@ public class SystemConfig {
      * 信鸽android secretkey
      */
     private String ANDROID_SUPPLY_SECRET_KEY;
+    /**
+     * 球队头像前缀
+     */
+    private String BALL_MATCH_LOGO;
+
+    /**
+     * 编码
+     */
+    private String BALL_MATCH_DEF_CHATSET;
+    /**
+     * 时间限制
+     */
+    private String BALL_MATCH_DEF_CONN_TIMEOUT;
+    /**
+     * 超出时间限制
+     */
+    private String BALL_MATCH_DEF_READ_TIMEOUT;
+    /**
+     * agent
+     */
+    private String BALL_MATCH_USERAGENT;
 
     /**
      * nba对战赛场次
@@ -89,6 +110,11 @@ public class SystemConfig {
      */
     private String BALL_MATCH_BASKETBALL_COMBAT;
     /**
+     * nbakey值
+     */
+    private String BALL_MATCH_BASKETBALL_KEY;
+    /**
+     *
      * 足球对战赛场次
      */
     private String BALL_MATCH_FOOTBALL_LEAGUE;
@@ -96,6 +122,68 @@ public class SystemConfig {
      *  足球对战赛结果
      */
     private String BALL_MATCH_FOOTBALL_COMBAT;
+    /**
+     * 足球对战赛结果
+     */
+    private String BALL_MATCH_FOOTBALL_KEY;
+
+
+
+    public String getBALL_MATCH_LOGO() {
+        return BALL_MATCH_LOGO;
+    }
+
+    public void setBALL_MATCH_LOGO(String BALL_MATCH_LOGO) {
+        this.BALL_MATCH_LOGO = BALL_MATCH_LOGO;
+    }
+
+    public String getBALL_MATCH_DEF_CHATSET() {
+        return BALL_MATCH_DEF_CHATSET;
+    }
+
+    public void setBALL_MATCH_DEF_CHATSET(String BALL_MATCH_DEF_CHATSET) {
+        this.BALL_MATCH_DEF_CHATSET = BALL_MATCH_DEF_CHATSET;
+    }
+
+    public String getBALL_MATCH_DEF_CONN_TIMEOUT() {
+        return BALL_MATCH_DEF_CONN_TIMEOUT;
+    }
+
+    public void setBALL_MATCH_DEF_CONN_TIMEOUT(String BALL_MATCH_DEF_CONN_TIMEOUT) {
+        this.BALL_MATCH_DEF_CONN_TIMEOUT = BALL_MATCH_DEF_CONN_TIMEOUT;
+    }
+
+    public String getBALL_MATCH_DEF_READ_TIMEOUT() {
+        return BALL_MATCH_DEF_READ_TIMEOUT;
+    }
+
+    public void setBALL_MATCH_DEF_READ_TIMEOUT(String BALL_MATCH_DEF_READ_TIMEOUT) {
+        this.BALL_MATCH_DEF_READ_TIMEOUT = BALL_MATCH_DEF_READ_TIMEOUT;
+    }
+
+    public String getBALL_MATCH_USERAGENT() {
+        return BALL_MATCH_USERAGENT;
+    }
+
+    public void setBALL_MATCH_USERAGENT(String BALL_MATCH_USERAGENT) {
+        this.BALL_MATCH_USERAGENT = BALL_MATCH_USERAGENT;
+    }
+
+    public String getBALL_MATCH_BASKETBALL_KEY() {
+        return BALL_MATCH_BASKETBALL_KEY;
+    }
+
+    public void setBALL_MATCH_BASKETBALL_KEY(String BALL_MATCH_BASKETBALL_KEY) {
+        this.BALL_MATCH_BASKETBALL_KEY = BALL_MATCH_BASKETBALL_KEY;
+    }
+
+    public String getBALL_MATCH_FOOTBALL_KEY() {
+        return BALL_MATCH_FOOTBALL_KEY;
+    }
+
+    public void setBALL_MATCH_FOOTBALL_KEY(String BALL_MATCH_FOOTBALL_KEY) {
+        this.BALL_MATCH_FOOTBALL_KEY = BALL_MATCH_FOOTBALL_KEY;
+    }
 
     public String getBALL_MATCH_BASKETBALL_NBA() {
         return BALL_MATCH_BASKETBALL_NBA;

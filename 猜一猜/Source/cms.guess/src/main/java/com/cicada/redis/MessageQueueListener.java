@@ -3,17 +3,13 @@ package com.cicada.redis;
 import com.cicada.commons.Exception.ApiException;
 import com.cicada.commons.utils.*;
 import com.cicada.enums.ErrorCodeEnum;
-import com.cicada.enums.MatchesStatusEnum;
 import com.cicada.job.Ball.BallUtil;
-import com.cicada.mapper.TaskMapper;
 import com.cicada.pojo.ClientEntity;
-import com.cicada.pojo.MatchesEntity;
 import com.cicada.pojo.Task;
 import com.cicada.pojo.vo.*;
 import com.cicada.service.IClientService;
 import com.cicada.service.IOperateService;
 import com.cicada.service.ITaskService;
-import com.cicada.service.impl.MatchesServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
@@ -21,10 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -121,7 +115,7 @@ public class MessageQueueListener {
     private void lotteryProccess(long taskId,boolean mustLottery,Serializable lotteryMessage){
 
         RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>)SpringContextUtil.getBean("redisTemplate");
-        RedisLockUtil lock = new RedisLockUtil(redisTemplate, "LOTTERY_TASK_"+String.valueOf(taskId), 10000, 20000);
+        RedisLockUtil lock = new RedisLockUtil(redisTemplate, "LOTTERY_TASK:LOTTERY_TASK_"+String.valueOf(taskId), 10000, 20000);
         try {
             if(lock.lock()) {
                 //开奖处理 项目ID
@@ -170,14 +164,14 @@ public class MessageQueueListener {
      */
     private boolean pushAppMessge(long taskId,long clientId){
         boolean rtn = false;
+        Jedis jedis = null;
         RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>)SpringContextUtil.getBean("redisTemplate");
         RedisLockUtil lock = new RedisLockUtil(redisTemplate, "LOTTERY_APP_PUSH:BETTING_"+String.valueOf(taskId), 10000, 20000);
         try {
             if(lock.lock()) {
                 //redis设置30秒过期key,如果key存在 在不推送，key不存在说明已经超过30秒，那再次推送给庄家
-                JedisPool jedisPool = (JedisPool) SpringContextUtil.getBean("jedisPool");
                 String key = ConstantInterface.REDIS_KEY_PUSH_LOTTERY + String.valueOf(taskId);
-                Jedis jedis = jedisPool.getResource();
+                jedis = RedisHelper.getJedis();
                 jedis.select(0);
 
                 if (!jedis.exists(key)) {
@@ -211,13 +205,16 @@ public class MessageQueueListener {
                 rtn = true;
             }
         }catch (ApiException e) {
+            RedisHelper.returnBrokenResource(jedis);
             LOTTERY_LOGGER.error(String.format("玩家【%s】参与竞猜项目【%s】，给庄家推送失败！原因：%s",clientId,taskId,e.getMessage()),e);
         }catch (Exception e){
+            RedisHelper.returnBrokenResource(jedis);
             LOTTERY_LOGGER.error(String.format("玩家【%s】参与竞猜项目【%s】，给庄家推送失败！原因：%s",clientId,taskId,e.getMessage()),e);
         } finally {
             //为了让分布式锁的算法更稳键些，持有锁的客户端在解锁之前应该再检查一次自己的锁是否已经超时，再去做DEL操作，因为可能客户端因为某个耗时的操作而挂起，
             //操作完的时候锁因为超时已经被别人获得，这时就不必解锁了。 ————这里没有做
             lock.unlock();
+            RedisHelper.returnResource(jedis);
         }
         return rtn;
     }
@@ -229,7 +226,7 @@ public class MessageQueueListener {
     private void operateProccess(OperateVo operateVo,Serializable operateMessage){
         boolean rtn = false;
         RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>)SpringContextUtil.getBean("redisTemplate");
-        RedisLockUtil lock = new RedisLockUtil(redisTemplate, "OPERATE_LOCK：OPERATE_"+String.valueOf(operateVo.getOperateId()), 10000, 20000);
+        RedisLockUtil lock = new RedisLockUtil(redisTemplate, "OPERATE_LOCK:OPERATE_"+String.valueOf(operateVo.getOperateId()), 10000, 20000);
         try {
             if(lock.lock()) {
                 //下注操作判断是否是下的同一个竞猜
@@ -237,9 +234,17 @@ public class MessageQueueListener {
                     int cnt=operateService.isParticipationActive(operateVo);
                     if(cnt !=0){
                         LOTTERY_LOGGER.info(String.format("此操作不用累计，用户：%s，：竞猜：%s", operateVo.getUserId(),operateVo.getTaskId() ));
-
                         operateService.deleteOperateLog(operateVo);
+                        return;
+                    }
+                }
 
+                //下注操作判断是否是下的同一个竞猜
+                if (operateVo.getOperateType()>10 && operateVo.getOperateType()<18){
+                    int cnt=operateService.isSharedActive(operateVo);
+                    if(cnt !=0){
+                        LOTTERY_LOGGER.info(String.format("此操作不用累计，用户：%s，：竞猜：%s", operateVo.getUserId(),operateVo.getTaskId() ));
+                        operateService.deleteOperateLog(operateVo);
                         return;
                     }
                 }
@@ -270,7 +275,7 @@ public class MessageQueueListener {
     private void scoreProccess(long taskId,Serializable matchMessage){
         boolean rtn = false;
         RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>)SpringContextUtil.getBean("redisTemplate");
-        RedisLockUtil lock = new RedisLockUtil(redisTemplate, "SCORE_LOCK：SCORE_"+String.valueOf(taskId), 10000, 20000);
+        RedisLockUtil lock = new RedisLockUtil(redisTemplate, "SCORE_LOCK:SCORE_"+String.valueOf(taskId), 10000, 20000);
         try {
             if(lock.lock()) {
 

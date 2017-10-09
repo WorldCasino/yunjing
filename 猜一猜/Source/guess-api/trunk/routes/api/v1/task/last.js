@@ -19,41 +19,98 @@ var S = require('string');
 var latest = function (req, res, next) {
     Q.fcall(function () {
         // 构建查询语句
-        var limit = parseInt(req.query.limit || 20),
+        var task_type = parseInt(req.query.task_type),
+            limit = parseInt(req.query.limit || 20),
             offset = parseInt(req.query.offset || 0);
-        return Q.ninvoke(mysql, 'query', {
-            sql: 'SELECT ' +
-            't.task_id, ' +
-            't.task_type, ' +
-            't.user_id, ' +
-            't.task_content, ' +
-            't.sale_price, ' +
-            't.quantity, ' +
-            't.task_status, ' +
-            't.create_date, ' +
-            't.settle_time, ' +
-            't.update_date, ' +
-            't.hot, ' +
-            't.personal, ' +
-            't.like_peas, ' +
-            't.lottery_type, ' +
-            't.lock_time, ' +
-            't.parent_id, ' +
-            'u.user_name, ' +
-            'u.user_type, ' +
-            'u.nickname, ' +
-            'u.gender, ' +
-            'u.head_url, ' +
-            'p.user_id as parent_user_id, ' +
-            'p.user_type as parent_type, ' +
-            'p.nickname as parent_nickname ' +
-            'FROM t_tasks AS t ' +
-            'LEFT JOIN m_users AS u ON t.user_id = u.user_id ' +
-            'LEFT JOIN m_users AS p on t.parent_id = p.user_id ' +
-            'WHERE t.is_delete = 0 and t.task_status = 20 ' +
-            'ORDER BY t.hot DESC,t.create_date DESC limit ? offset ? ',
-            values: [limit, offset]
-        });
+        if(task_type==1 || task_type==2){
+            return Q.ninvoke(mysql, 'query', {
+                sql: 'SELECT ' +
+                't.task_id, ' +
+                't.task_type, ' +
+                't.match_id, ' +
+                't.match_type, ' +
+                't.play_type, ' +
+                't.concede_points_show, ' +
+                'm.title, ' +
+                'm.home_score, ' +
+                'm.away_score, ' +
+                'm.open_time, ' +
+                't.user_id, ' +
+                't.task_content, ' +
+                't.sale_price, ' +
+                't.quantity, ' +
+                't.task_status, ' +
+                't.create_date, ' +
+                't.settle_time, ' +
+                't.update_date, ' +
+                't.hot, ' +
+                't.personal, ' +
+                't.like_peas, ' +
+                't.lottery_type, ' +
+                't.lock_time, ' +
+                't.parent_id, ' +
+                'u.user_name, ' +
+                'u.user_type, ' +
+                'u.nickname, ' +
+                'u.gender, ' +
+                'u.head_url, ' +
+                'p.user_id as parent_user_id, ' +
+                'p.user_type as parent_type, ' +
+                'p.nickname as parent_nickname ' +
+                'FROM t_tasks AS t ' +
+                'LEFT JOIN m_users AS u ON t.user_id = u.user_id ' +
+                'LEFT JOIN m_users AS p on t.parent_id = p.user_id ' +
+                'LEFT JOIN t_matches AS m on t.match_id = m.match_id ' +
+                'WHERE t.is_delete = 0 and t.task_status = 20 ' +
+                'AND t.task_type = ? ' +
+                'AND (SYSDATE()<t.lock_time OR t.lock_time IS NULL) ' +
+                'AND t.quantity>(SELECT count(1) FROM t_task_orders AS o WHERE o.task_id=t.task_id) ' +
+                'ORDER BY m.open_time ASC,t.hot DESC,t.create_date DESC limit ? offset ? ',
+                values: [task_type,limit, offset]
+            });
+        }else{
+            return Q.ninvoke(mysql, 'query', {
+                sql: 'SELECT ' +
+                't.task_id, ' +
+                't.task_type, ' +
+                't.match_id, ' +
+                't.match_type, ' +
+                't.play_type, ' +
+                't.concede_points_show, ' +
+                't.user_id, ' +
+                't.task_content, ' +
+                't.sale_price, ' +
+                't.quantity, ' +
+                't.task_status, ' +
+                't.create_date, ' +
+                't.settle_time, ' +
+                't.update_date, ' +
+                't.hot, ' +
+                't.personal, ' +
+                't.like_peas, ' +
+                't.lottery_type, ' +
+                't.lock_time, ' +
+                't.parent_id, ' +
+                'u.user_name, ' +
+                'u.user_type, ' +
+                'u.nickname, ' +
+                'u.gender, ' +
+                'u.head_url, ' +
+                'p.user_id as parent_user_id, ' +
+                'p.user_type as parent_type, ' +
+                'p.nickname as parent_nickname ' +
+                'FROM t_tasks AS t ' +
+                'LEFT JOIN m_users AS u ON t.user_id = u.user_id ' +
+                'LEFT JOIN m_users AS p on t.parent_id = p.user_id ' +
+                'WHERE t.is_delete = 0 and t.task_status = 20 ' +
+                'AND t.task_type in (0,3) ' +
+                'AND (SYSDATE()<t.lock_time OR t.lock_time IS NULL) ' +
+                'AND t.quantity>(SELECT count(1) FROM t_task_orders AS o WHERE o.task_id=t.task_id) ' +
+                'ORDER BY t.hot DESC,t.create_date DESC limit ? offset ? ',
+                values: [limit, offset]
+            });
+        }
+
     }).then(function (result) {
         //私人发布的不显示
         for(var i = 0; i < result[0].length; i++){
@@ -63,9 +120,21 @@ var latest = function (req, res, next) {
             }
         }
         res.pkg.data = result[0].map(function (currentValue) {
+            var lockTime = currentValue.lock_time;
+            if (lockTime != null){
+                lockTime = moment(new Date(lockTime)).format('YYYY-MM-DD HH:mm:ss');
+            }
             return {
                 task_id: currentValue.task_id,
                 task_type: currentValue.task_type,
+                match_id: currentValue.match_id,
+                match_type: currentValue.match_type,
+                play_type: currentValue.play_type,
+                concede_points_show: currentValue.concede_points_show,
+                score: currentValue.home_score+'-'+currentValue.away_score,
+                // home_score: currentValue.home_score,
+                // visit_score: currentValue.away_score,
+                title: currentValue.title,
                 user_id: currentValue.user_id,
                 task_content: currentValue.task_content,
                 sale_price: parseInt(currentValue.sale_price),
@@ -75,10 +144,11 @@ var latest = function (req, res, next) {
                 personal: currentValue.personal, //...  0:平台发布  1:私人发布
                 like_peas: currentValue.like_peas, //...  0:不接受金豆  1：接受金豆
                 lottery_type: currentValue.lottery_type,
-                lock_time: currentValue.lottery_type,
+                lock_time: lockTime,
                 create_date: moment(currentValue.create_date).format('YYYY-MM-DD HH:mm:ss'),
                 settle_time: moment(currentValue.settle_time).format('YYYY-MM-DD HH:mm:ss'),
                 update_date: moment(currentValue.update_date).format('YYYY-MM-DD HH:mm:ss'),
+                open_time: moment(currentValue.open_time).format('YYYY-MM-DD HH:mm:ss'),
                 user: {
                     name: currentValue.user_name,
                     type: currentValue.user_type,
@@ -119,16 +189,18 @@ var latest = function (req, res, next) {
                 'ans.answer, ' +
                 'ans.odds, ' +
                 'ans.is_right, ' +
-                'ord.sum ' +
+                'ord.sum, ' +
+                't.play_type ' +
                 'FROM t_task_answers AS ans ' +
                 'LEFT JOIN ( ' +
                 'SELECT answer_id, SUM(quantity) AS sum FROM t_task_orders GROUP BY answer_id ) AS ord ' +
                 'ON ans.answer_id = ord.answer_id ' +
+                'LEFT JOIN t_tasks t ON ans.task_id=t.task_id ' +
                 'WHERE ans.task_id IN ? ORDER BY ans.answer_id',
                 values: [[taskIds]]
             }), Q.ninvoke(mysql, 'query', {
                 // 查询足球队伍
-                sql: 'SELECT tfb_id, task_id, team_name, court_type FROM t_task_football WHERE task_id IN ?',
+                sql: 'SELECT tfb_id, task_id, team_name,team_logo,court_type FROM t_task_football WHERE task_id IN ?',
                 values: [[taskIds]]
             })]);
     }).then(function (results) {
@@ -143,20 +215,27 @@ var latest = function (req, res, next) {
             });
             return p1;
         }, {});
+
         // 处理查询答案相关内容结果,task_id分组
         var group_answer = results[1][0].reduce(function (p1, p2) {
             if (!(p2.task_id in p1)) {
                 p1[p2.task_id] = [];
             }
-            p1[p2.task_id].push({
-                answer_id: p2.answer_id,
-                answer: p2.answer,
-                is_right:!!p2.is_right,
-                odds: p2.odds,
-                sum: p2.sum || 0
-            });
+            //让球和大小球不显示平局答案
+            if((p2.play_type==2 || p2.play_type==3) && p2.answer=="平"){
+
+            }else{
+                p1[p2.task_id].push({
+                    answer_id: p2.answer_id,
+                    answer: p2.answer,
+                    is_right:!!p2.is_right,
+                    odds: p2.odds,
+                    sum: p2.sum || 0
+                });
+            }
             return p1;
         }, {});
+
         // 处理足球
         var group_football = results[2][0].reduce(function (p1, p2) {
             if (!(p2.task_id in p1)) {
@@ -165,6 +244,7 @@ var latest = function (req, res, next) {
             p1[p2.task_id].push({
                 tfb_id: p2.tfb_id,
                 team_name: p2.team_name,
+                team_logo: p2.team_logo,
                 court_type: p2.court_type
             });
             return p1;

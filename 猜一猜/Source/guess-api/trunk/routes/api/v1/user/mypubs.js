@@ -36,6 +36,7 @@ module.exports = function (req, res, next) {
             't.sale_price, ' +
             't.quantity, ' +
             't.task_status, ' +
+            't.lock_time, ' +
             't.create_date, ' +
             't.settle_time, ' +
             't.update_date, ' +
@@ -58,6 +59,10 @@ module.exports = function (req, res, next) {
                 throw  err;
             }
             res.pkg.data = result[0].map(function (currentValue) {
+                var lockTime = currentValue.lock_time;
+                if (lockTime != null) {
+                    lockTime = moment(new Date(lockTime)).format('YYYY-MM-DD HH:mm:ss');
+                }
                 return {
                     task_id: currentValue.task_id,
                     task_type: currentValue.task_type,
@@ -67,6 +72,7 @@ module.exports = function (req, res, next) {
                     quantity: currentValue.quantity,
                     task_status: currentValue.task_status,
                     hot: !!parseInt(currentValue.hot),
+                    lock_time: lockTime,
                     create_date: moment(currentValue.create_date).format('YYYY-MM-DD HH:mm:ss'),
                     settle_time: moment(currentValue.settle_time).format('YYYY-MM-DD HH:mm:ss'),
                     update_date: moment(currentValue.update_date).format('YYYY-MM-DD HH:mm:ss'),

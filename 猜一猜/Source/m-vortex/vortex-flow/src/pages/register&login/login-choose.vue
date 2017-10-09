@@ -69,7 +69,8 @@
         'wxLogin',
         'shareQuiz',
         'registerDeviceToken',
-        'visitorLogin'
+        'visitorLogin',
+        'getUserInfo'
       ]),
       wxlogin () {
 //        this.wxLoginOAuthUrl([window.location.href])
@@ -166,7 +167,7 @@
         handler: function (val) {
           if (this.wxLoginStatus === null) {
             this.$store.state.token = this.wxLoginData.token
-
+            this.getUserInfo('')
             if (typeof (xgpush) !== 'undefined') {
               xgpush.registerPush('get-device-token')
                 .then(function (data) {

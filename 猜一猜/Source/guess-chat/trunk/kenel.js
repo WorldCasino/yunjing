@@ -74,6 +74,12 @@ module.exports = {
                             msg_id: count,
                             create_by: message.sender.id
                         }
+                    }).then(function(){
+                        //下注更新竞猜的update_date
+                        return Q.ninvoke(mysql, 'query', {
+                            sql: 'UPDATE t_tasks SET update_date = ?,update_by = ? WHERE task_id = ?',
+                            values: [new Date(), message.sender.id, room]
+                        })
                     });
                 }).then(function () {
                     // 返回给下一步广播消息使用

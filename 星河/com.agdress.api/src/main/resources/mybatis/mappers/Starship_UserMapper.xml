@@ -15,17 +15,24 @@
             a.update_date as updateDate,
             a.qq,
             a.role_id as roleId,
-            b.agent_name as agentName,
-            c.balance,
+             c.balance,
             (select count(*) from t_user_cards uc  where a.user_id=uc.user_id) as cardNumber,
-            d.nickname as ywName,
-            e.role_name as roleName
+
+            b.agent_id as agentId,
+            b.login_name as agentNumber,
+            b.nickname as agentName,
+
+            e.user_id as beUserId,
+            e.nickname as beUserName,
+            e.login_name as beUserNumber,
+
+            d.role_name as roleName
         FROM
             t_users a
-            left join m_agents b  on b.agent_id=a.agent_id
             left join t_user_account c  on c.user_id=a.user_id
-            left join t_users d  on d.user_id=a.be_user_id and d.role_id=3
-            LEFT JOIN  m_roles e on a.role_id=e.role_id
+            left join t_users b  on b.agent_id=a.agent_id and b.role_id=5
+            left join t_users e  on e.user_id=a.be_user_id and e.role_id=3
+            LEFT JOIN  m_roles d on a.role_id=d.role_id
         where
              a.is_delete = 0
             <if test=" bgLoginId != null and bgLoginId != '' ">
@@ -49,14 +56,20 @@
             <if test=" qq != null and qq != '' ">
                 and   a.qq LIKE CONCAT('%',CONCAT(#{qq},'%') )
             </if>
-            <if test=" beUserId != null and beUserId != '' ">
-                and   a.be_user_id  LIKE CONCAT('%',CONCAT(#{beUserId},'%') )
-            </if>
             <if test=" roleId != null and roleId != '' ">
                 and   a.role_id = #{roleId}
             </if>
-            <if test=" ywName != null and ywName != '' ">
-                and    d.nickname  LIKE CONCAT('%',CONCAT(#{ywName},'%') )
+            <if test=" agentNumber != null and agentNumber != '' ">
+                and   b.login_name  = #{agentNumber}
+            </if>
+            <if test=" beUserNumber != null and beUserNumber != '' ">
+                and   e.login_name  LIKE CONCAT('%',CONCAT( #{beUserNumber},'%') )
+            </if>
+            <if test=" loginbeUserId != null and loginbeUserId != '' ">
+                and   a.be_user_id = #{loginbeUserId}
+            </if>
+            <if test=" loginagentId != null and loginagentId != '' ">
+                and   a.agent_id  = #{loginagentId}
             </if>
             <if test=" loginStartTime != null and loginStartTime != '' ">
                 <![CDATA[ and TO_DAYS(a.update_date) >= TO_DAYS( #{loginStartTime}) ]]>
@@ -70,6 +83,8 @@
             <if test=" registerEndTime != null and registerEndTime != '' ">
                 <![CDATA[ and TO_DAYS(a.create_date) <= TO_DAYS( #{registerEndTime}) ]]>
             </if>
+
+        order by a.create_date desc
      </select>
 
 
@@ -83,7 +98,6 @@
             a.phone,
             a.create_date as createDate,
             a.update_date as updateDate,
-            a.be_user_id as beUserId,
             b.account_id as accountId,
             b.balance,
             b.total_recharge as totalRecharge,
@@ -97,18 +111,39 @@
             c.card_no as cardNo,
             c.card_name as cardName,
             c.bank_type as bankType,
+
             d.agent_id as agentId,
-            d.agent_name as agentName,
-            e.nickname as ywName
+            d.login_name as agentNumber,
+            d.nickname as agentName,
+
+            e.user_id as beUserId,
+            e.nickname as beUserName,
+            e.login_name as beUserNumber
          FROM
             t_users a
             LEFT JOIN t_user_account  b  ON a.user_id=b.user_id
             LEFT JOIN t_user_cards c   ON a.user_id=c.user_id
-            LEFT JOIN m_agents d   ON a.agent_id=d.agent_id
+            left join t_users d  on d.agent_id=a.agent_id and d.role_id=5
             left join t_users e  on e.user_id=a.be_user_id and e.role_id=3
        WHERE
              a.user_id = #{userId}
        limit 1
+    </select>
+
+
+    <!-- 获取账号 -->
+    <select id="getAgentId" parameterType="java.lang.String"   resultType="com.agdress.entity.vo.Starship_AgentrVo">
+        SELECT
+          ifnull(b.bg_agent_id,'0') as bgAgentId,
+          ifnull(c.login_name,'0') as agentNumber,
+          ifnull(a.agent_id,'0') as agentId
+        FROM
+          t_users a
+          JOIN m_agents  b  ON a.agent_id=b.agent_id
+          LEFT  JOIN  t_users c ON b.agent_id=c.agent_id and c.role_id=5
+         WHERE
+          a.bg_login_id = #{bgLoginId}
+        limit 1
     </select>
 
 

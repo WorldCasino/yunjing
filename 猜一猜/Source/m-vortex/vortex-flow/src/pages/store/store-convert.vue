@@ -9,7 +9,7 @@
           <img class="back-nav" src="./../../assets/nav-back.png" style="width: 11px;height: 20px"/>
         </f7-link>
       </f7-nav-left>
-      <f7-nav-center>兑换商品</f7-nav-center>
+      <f7-nav-center>兑换礼品</f7-nav-center>
     </f7-navbar>
     <div class="store-convert">
 

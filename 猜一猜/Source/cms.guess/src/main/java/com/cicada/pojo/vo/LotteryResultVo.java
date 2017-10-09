@@ -229,12 +229,9 @@ public class LotteryResultVo implements Serializable {
             if (lotteryType == 2){
                 coinExpendTotal += coins;
                 beanExpendTotal += beans;
-
-                coinIncomeTotal += this.salePrice * coinQty;
-                beanIncomeTotal += this.salePrice * beanQty;
             }else{
-                coinExpendTotal += coins + this.salePrice * coinQty;
-                beanExpendTotal += beans + this.salePrice * beanQty;
+                coinExpendTotal += coins;
+                beanExpendTotal += beans;
                 //同时庄家有一笔收入（玩家下注的金币）
                 coinIncomeTotal += this.salePrice * coinQty;
                 beanIncomeTotal += this.salePrice * beanQty;
@@ -247,6 +244,68 @@ public class LotteryResultVo implements Serializable {
     }
 
     /**
+     *
+     * @param userId
+     * @param answerId
+     * @param abc
+     * @param right
+     * @param odds
+     * @param beanQty
+     * @param coinQty
+     * @param coins
+     * @param beans
+     */
+    public void addPlayerResult(int play_type,int homeScore,int visitScore,double concedePoints,long userId,long answerId,char abc,boolean right,double odds,int coinQty,double coins,int beanQty,double beans){
+        PlayerVo vo = new PlayerVo();
+        vo.userId = userId;
+        if(this.playerVoList ==null) this.playerVoList = new ArrayList<>();
+
+        List<PlayerVo> temp = playerVoList.stream()
+                .filter(x -> x.getUserId() == userId)
+                .collect(Collectors.toList());
+        if (temp == null || temp.size() == 0) {
+
+            this.playerVoList.add(vo);
+        }else {
+            vo = temp.get(0);
+        }
+
+        BettingVo bettingVo = new BettingVo();
+        bettingVo.setAnswerId(answerId);
+        bettingVo.setAbc(abc);
+        bettingVo.setRight(right);
+        bettingVo.setCoins(coins);
+        bettingVo.setCoinsQty(coinQty);
+        bettingVo.setBeans(beans);
+        bettingVo.setBeansQty(beanQty);
+        bettingVo.setOdds(odds);
+        if(null ==vo.bettingVoList || vo.bettingVoList.size() == 0) {
+            vo.bettingVoList = new ArrayList<>();
+        }
+        vo.bettingVoList.add(bettingVo);
+
+        if(right) {
+            coinExpendTotal += coins;
+            beanExpendTotal += beans;
+            //同时庄家有一笔收入（玩家下注的金币）
+            coinIncomeTotal += this.salePrice * coinQty;
+            beanIncomeTotal += this.salePrice * beanQty;
+        }
+        else {
+            if(play_type==2  && ((homeScore-visitScore)+concedePoints==0.25) || ((homeScore-visitScore)+concedePoints==-0.25) ||
+                    play_type==3  && ((homeScore+visitScore)-concedePoints==0.25) || ((homeScore+visitScore)-concedePoints==-0.25) ||
+                    play_type==2 && ((homeScore-visitScore)+concedePoints==0) ||
+                    play_type==3 && ((homeScore+visitScore)-concedePoints==0)){
+                coinExpendTotal += coins;
+                beanExpendTotal += beans;
+            }
+            //同时庄家有一笔收入（玩家下注的金币）
+            coinIncomeTotal += this.salePrice * coinQty;
+            beanIncomeTotal += this.salePrice * beanQty;
+        }
+    }
+
+    /**
      * 参与人数
      * @return
      */
@@ -254,6 +313,10 @@ public class LotteryResultVo implements Serializable {
         if(null==playerVoList) return 0;
 
         return playerVoList.size();
+    }
+
+    public double getSalePrice() {
+        return salePrice;
     }
 
     public int getLotteryType() {

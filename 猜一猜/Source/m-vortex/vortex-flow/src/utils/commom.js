@@ -85,3 +85,48 @@ export function arrSort (arr) {
   return arr
 }
 
+// 数组去重，重复项的值设为 null
+export function arrRepeatValToNull (argArr) {
+  if (!Array.isArray(argArr)) {
+    console.log('不是数组,请传入数组')
+    return false
+  }
+  let aResult = []
+  argArr.forEach((val, index, arr) => {
+    if (arr.indexOf(val) === index) {
+      aResult.push(val)
+    } else {
+      aResult.push(null)
+    }
+  })
+  return aResult
+}
+// 判断手机还是PC
+export function IsPC () {
+  var userAgentInfo = navigator.userAgent
+  var Agents = ['Android', 'iPhone', 'iPad', 'iPod']
+  var flag = true
+  for (var v = 0; v < Agents.length; v++) {
+    if (userAgentInfo.indexOf(Agents[v]) >= 0) {
+      flag = false
+      break
+    }
+  }
+  return flag
+}
+
+// 金额格式化: 1000、1.2w、22.2w、100w
+export function balanceFormat (amount) {
+  if (isNaN(amount)) {
+    return false
+  }
+  switch (true) {
+    case amount < 10000 :
+      return parseInt(amount)
+    case amount < 1000000 :
+      return (amount / 10000).toFixed(1) + 'w'
+    case amount > 1000000 :
+      return parseInt(amount / 10000) + 'w'
+  }
+}
+

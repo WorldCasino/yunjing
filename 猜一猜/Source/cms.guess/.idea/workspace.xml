@@ -6,8 +6,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="21ddf0f0-2395-4d0b-88eb-4025bd5aa0b6" name="Default" comment="">
+    <list default="true" readonly="true" id="de73af2b-0b1d-4f4e-8a5f-3f7eda92ce1a" name="Default" comment="猜一猜1.3 添加每半个小时定时跟新redis缓存">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cms.guess.iml" afterPath="$PROJECT_DIR$/cms.guess.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,47 +20,67 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="UserController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/UserController.java">
+      <file leaf-file-name="PlayOddsMapper.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/PlayOddsMapper.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="42" column="47" lean-forward="true" selection-start-line="42" selection-start-column="47" selection-end-line="42" selection-end-column="47" />
-              <folding />
+            <state relative-caret-position="119">
+              <caret line="7" column="99" lean-forward="false" selection-start-line="7" selection-start-column="99" selection-end-line="7" selection-end-column="99" />
+              <folding>
+                <marker date="1506756240937" expanded="true" signature="342:1070" ph="SELECT a.odd... t_play_odds" />
+                <marker date="1506756240937" expanded="true" signature="1207:1466" ph="SELECT COUNT... t_play_odds" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SysLogController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/SysLogController.java">
+      <file leaf-file-name="PlayOddsEntity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/pojo/PlayOddsEntity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoginController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/LoginController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientController.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/ClientController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1343">
-              <caret line="35" column="13" lean-forward="false" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
+            <state relative-caret-position="170">
+              <caret line="51" column="31" lean-forward="true" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>redisMessageQueueListener</find>
+      <find>jedisPool</find>
+      <find>sendMessage</find>
+      <find>supportedMediaTypes</find>
+      <find>userAgent</find>
+      <find>list</find>
+      <find>selectClientVoList</find>
+      <find>updateMatchTime</find>
+      <find>MatchBallIsOk</find>
+      <find>flagIsOver</find>
+      <find>player1</find>
+      <find>TimerBall</find>
+      <find>selectClientVo</find>
+      <find>REDIS_BALLKEY_LOTTERY_PREFIX</find>
+      <find>getJedis</find>
+      <find>wechat</find>
+      <find>catalina.home</find>
+      <find>请联系</find>
+      <find>hold-transition</find>
+      <find>skin-blue</find>
+      <find>sidebar-mini</find>
+      <find>SystemConfig</find>
+      <find>job</find>
+      <find>selectScore</find>
+      <find>changeRedisBallList</find>
+      <find>open_beforlocktime</find>
+      <find>邮箱</find>
+      <find>groupBy</find>
+      <find>groupby</find>
+      <find>Play</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -69,19 +90,45 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BallUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cicada/redis/MessageQueueListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/pojo/vo/MatchesVo.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/spring/applicationContext.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/SystemConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/redis/RedisHelper.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/ClientMapper.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/pojo/MatchesEntity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/enums/MatchesStatusEnum.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/ConstantInterface.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/log4j.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/controller/LoginController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/service/impl/TaskServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/job/CheckWaittingAnswerJob.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/DateUtil.java" />
         <option value="$PROJECT_DIR$/src/main/resources/environment/env-dev.properties" />
         <option value="$PROJECT_DIR$/src/main/resources/environment/env-test.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/SystemConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/spring/applicationContext.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/mapper/PlayOddsMapper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/pojo/PlayOddsEntity.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/PlayOddsMapper.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/job/BallMatchJob.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/FootBallMatchUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BasketballMatchUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/controller/MatchController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/service/IPlayOddsService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/service/impl/PlayOddsServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BallUtil.java" />
       </list>
     </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsFlowSettings">
+    <service-enabled>false</service-enabled>
+    <exe-path />
+    <annotation-enable>false</annotation-enable>
+    <other-services-enabled>false</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
@@ -108,7 +155,6 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
-    <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -143,6 +189,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -173,59 +223,12 @@
               <item name="cms.guess" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cms.guess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cms.guess" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="cicada" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cms.guess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cms.guess" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="cicada" type="462c0819:PsiDirectoryNode" />
-              <item name="controller" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cms.guess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cms.guess" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cms.guess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cms.guess" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="environment" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cms.guess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cms.guess" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="spring" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -237,6 +240,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../guess-api/trunk" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\猜一猜svn项目\Source\cms.guess\src\main\resources\mybatis\mappers" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -250,7 +258,121 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Tomcat Server.test">
+  <component name="RunManager" selected="Tomcat Server.Unnamed">
+    <configuration name="BallUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.cicada.job.Ball.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.cicada.job.Ball.BallUtil" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="cms.guess" />
+      <envs />
+    </configuration>
+    <configuration name="DateUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.cicada.commons.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.cicada.commons.utils.DateUtil" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="cms.guess" />
+      <envs />
+    </configuration>
+    <configuration name="Unnamed" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 8.0.45" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8090/" />
+      <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
+      <option name="UPDATE_CLASSES_ON_FRAME_DEACTIVATION" value="true" />
+      <deployment>
+        <artifact name="cms.guess:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="Unnamed_cms_guess_6" />
+        <option name="HTTP_PORT" value="8090" />
+        <option name="JNDI_PORT" value="1091" />
+      </server-settings>
+      <predefined_log_file id="Tomcat" enabled="true" />
+      <predefined_log_file id="Tomcat Catalina" enabled="true" />
+      <predefined_log_file id="Tomcat Manager" enabled="false" />
+      <predefined_log_file id="Tomcat Host Manager" enabled="false" />
+      <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="56166" />
+      </RunnerSettings>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method>
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="cms.guess:war exploded" />
+        </option>
+      </method>
+    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -332,81 +454,17 @@
       <properties />
       <listeners />
     </configuration>
-    <configuration name="test" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 8.0.45" ALTERNATIVE_JRE_ENABLED="false">
-      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8090/" />
-      <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
-      <option name="UPDATE_CLASSES_ON_FRAME_DEACTIVATION" value="true" />
-      <deployment>
-        <artifact name="cms.guess:war exploded">
-          <settings>
-            <option name="CONTEXT_PATH" value="/" />
-          </settings>
-        </artifact>
-      </deployment>
-      <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="Unnamed_cms_guess_5" />
-        <option name="HTTP_PORT" value="8090" />
-      </server-settings>
-      <predefined_log_file id="Tomcat" enabled="true" />
-      <predefined_log_file id="Tomcat Catalina" enabled="true" />
-      <predefined_log_file id="Tomcat Manager" enabled="false" />
-      <predefined_log_file id="Tomcat Host Manager" enabled="false" />
-      <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="54876" />
-      </RunnerSettings>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <method>
-        <option name="BuildArtifacts" enabled="true">
-          <artifact name="cms.guess:war exploded" />
-        </option>
-      </method>
-    </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="Tomcat Server.Unnamed" />
+      <item index="1" class="java.lang.String" itemvalue="Application.BallUtil" />
+      <item index="2" class="java.lang.String" itemvalue="Application.DateUtil" />
+    </list>
+    <recent_temporary>
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Application.DateUtil" />
+        <item index="1" class="java.lang.String" itemvalue="Application.BallUtil" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -435,54 +493,144 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="21ddf0f0-2395-4d0b-88eb-4025bd5aa0b6" name="Default" comment="" />
-      <created>1505356613263</created>
+      <changelist id="de73af2b-0b1d-4f4e-8a5f-3f7eda92ce1a" name="Default" comment="" />
+      <created>1505697905054</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1505356613263</updated>
-      <workItem from="1505356628557" duration="2346000" />
-      <workItem from="1505358997559" duration="2478000" />
+      <updated>1505697905054</updated>
+      <workItem from="1505697908409" duration="11379000" />
+      <workItem from="1505714483675" duration="740000" />
+      <workItem from="1505715239411" duration="9639000" />
+      <workItem from="1505728871981" duration="491000" />
+      <workItem from="1505729370313" duration="3149000" />
+      <workItem from="1505783752515" duration="5660000" />
+      <workItem from="1505790849854" duration="17189000" />
+      <workItem from="1505824663582" duration="7000" />
+      <workItem from="1505869551951" duration="10962000" />
+      <workItem from="1505880575100" duration="8757000" />
+      <workItem from="1505910645600" duration="74000" />
+      <workItem from="1505958802984" duration="15585000" />
+      <workItem from="1506043094372" duration="4189000" />
+      <workItem from="1506301620808" duration="5932000" />
+      <workItem from="1506389598165" duration="33000" />
+      <workItem from="1506477452034" duration="12408000" />
+      <workItem from="1506516325900" duration="197000" />
+      <workItem from="1506579185201" duration="1056000" />
+      <workItem from="1506583203930" duration="3365000" />
+      <workItem from="1506648273181" duration="13457000" />
+      <workItem from="1506752363187" duration="8433000" />
     </task>
+    <task id="LOCAL-00001">
+      <created>1505701297795</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1505701297795</updated>
+    </task>
+    <task id="LOCAL-00002" summary="猜一猜1.3 去掉不需要的代码">
+      <created>1506302750907</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1506302750907</updated>
+    </task>
+    <task id="LOCAL-00003" summary="猜一猜1.3 去掉不需要的代码">
+      <created>1506303398704</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1506303398704</updated>
+    </task>
+    <task id="LOCAL-00004" summary="猜一猜1.3 添加定时">
+      <created>1506516133801</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1506516133801</updated>
+    </task>
+    <task id="LOCAL-00005" summary="猜一猜1.3 添加定时">
+      <created>1506516516112</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1506516516112</updated>
+    </task>
+    <task id="LOCAL-00006" summary="猜一猜1.3 修改球赛锁定时间">
+      <created>1506583824488</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1506583824488</updated>
+    </task>
+    <task id="LOCAL-00007" summary="猜一猜1.3 添加每15分钟定时跟新redis缓存">
+      <created>1506584337582</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1506584337582</updated>
+    </task>
+    <task id="LOCAL-00008" summary="猜一猜1.3 添加每半个小时定时跟新redis缓存">
+      <created>1506669719643</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1506669719643</updated>
+    </task>
+    <task id="LOCAL-00009" summary="猜一猜1.3 更新缓存">
+      <created>1506687487810</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1506687487810</updated>
+    </task>
+    <task id="LOCAL-00010" summary="猜一猜1.3 添加赔率默认值">
+      <created>1506760018024</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1506760018024</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4824000" />
+    <option name="totallyTimeSpent" value="132702000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21268657" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2510661" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21695095" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -491,265 +639,429 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="猜一猜更新存储redis的球队类型" />
+    <MESSAGE value="猜一猜1.3 去掉不需要的代码" />
+    <MESSAGE value="猜一猜1.3 添加定时" />
+    <MESSAGE value="猜一猜1.3 修改球赛锁定时间" />
+    <MESSAGE value="猜一猜1.3 添加每15分钟定时跟新redis缓存" />
+    <MESSAGE value="猜一猜1.3 添加每半个小时定时跟新redis缓存" />
+    <MESSAGE value="猜一猜1.3 更新缓存" />
+    <MESSAGE value="猜一猜1.3 添加赔率默认值" />
+    <option name="LAST_COMMIT_MESSAGE" value="猜一猜1.3 添加赔率默认值" />
+  </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="85" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-dev.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1411">
-          <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="91" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-test.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1564">
-          <caret line="92" column="77" lean-forward="false" selection-start-line="92" selection-start-column="77" selection-end-line="92" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/spring/applicationContext.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="37" column="83" lean-forward="true" selection-start-line="37" selection-start-column="83" selection-end-line="37" selection-end-column="83" />
-          <folding>
-            <marker date="1505358459170" expanded="false" signature="2163:2191" ph="http://cmsapitest.caiecai.net/rest/api/wx/jspay_notify" />
-            <marker date="1505358459170" expanded="false" signature="2242:2271" ph="http://cmsapitest.caiecai.net/rest/api/wx/apppay_notify" />
-            <marker date="1505358459170" expanded="false" signature="2314:2343" ph="https://wap.caiecai.net/index.html" />
-            <marker date="1505358459170" expanded="false" signature="2389:2420" ph="2" />
-            <marker date="1505358459170" expanded="false" signature="2559:2596" ph="ec839b6c2a2fe5c552d39cb166dc15b7" />
-            <marker date="1505358459170" expanded="false" signature="2651:2691" ph="2100186457" />
-            <marker date="1505358459170" expanded="true" signature="2747:2788" ph="7da56cd13fd0e7654e58e47f576b72d4" />
-            <marker date="1505358459170" expanded="false" signature="3271:3298" ph="1" />
-            <marker date="1505358459170" expanded="false" signature="3336:3361" ph="0" />
-            <marker date="1505358459170" expanded="false" signature="3482:3509" ph="http://apitest.caiecai.net/api/" />
-            <marker date="1505358459170" expanded="false" signature="3560:3590" ph="http://wschattest.caiecai.net" />
-            <marker date="1505358459170" expanded="false" signature="3641:3671" ph="http://wspushtest.caiecai.net" />
-            <marker date="1505358459170" expanded="false" signature="3714:3736" ph="http://waptest.caiecai.net/index.html" />
-            <marker date="1505358459170" expanded="false" signature="3784:3811" ph="https://wap.caiecai.net/resources/logo.png" />
-            <marker date="1505358459170" expanded="false" signature="3868:3904" ph="https://wap.caiecai.net/resources/football.png" />
-            <marker date="1505358459170" expanded="false" signature="3963:4001" ph="https://wap.caiecai.net/resources/basketball.png" />
-            <marker date="1505358459170" expanded="false" signature="4168:4190" ph="LTAIZ9zY2KUkGyyV" />
-            <marker date="1505358459170" expanded="false" signature="4246:4275" ph="siYk3HF7u0An65PPIoSjtIrq35W4tF" />
-            <marker date="1505358459170" expanded="false" signature="4327:4352" ph="https://1521291552649633.mns.cn-hangzhou.aliyuncs.com/" />
-            <marker date="1505358459170" expanded="false" signature="4398:4417" ph="sms.topic-cn-hangzhou" />
-            <marker date="1505358459170" expanded="false" signature="4577:4613" ph="SMS_70170159" />
-            <marker date="1505358459170" expanded="false" signature="4831:4853" ph="LTAIZ9zY2KUkGyyV" />
-            <marker date="1505358459170" expanded="false" signature="4909:4938" ph="siYk3HF7u0An65PPIoSjtIrq35W4tF" />
-            <marker date="1505358459170" expanded="false" signature="4990:5015" ph="https://1521291552649633.mns.cn-hangzhou.aliyuncs.com/" />
-            <marker date="1505358459170" expanded="false" signature="5061:5080" ph="sms.topic-cn-hangzhou" />
-            <marker date="1505358459170" expanded="false" signature="5188:5223" ph="SMS_70170159" />
-            <marker date="1505358459170" expanded="false" signature="6305:6328" ph="com.mysql.jdbc.Driver" />
-            <marker date="1505358459170" expanded="false" signature="6391:6402" ph="jdbc:mysql://rm-bp14q7o2rcj239l23o.mysql.rds.aliyuncs.com:3306/dev_guess?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true&amp;useSSL=false" />
-            <marker date="1505358459170" expanded="false" signature="6461:6477" ph="root" />
-            <marker date="1505358459170" expanded="false" signature="6535:6551" ph="Wgh0wgh0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/SystemConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1938">
-          <caret line="114" column="0" lean-forward="true" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
-          <folding>
-            <element signature="e#1739#1740#0" expanded="false" />
-            <element signature="e#1787#1788#0" expanded="false" />
-            <element signature="e#1998#1999#0" expanded="false" />
-            <element signature="e#2049#2050#0" expanded="false" />
-            <element signature="e#2270#2271#0" expanded="false" />
-            <element signature="e#2319#2320#0" expanded="false" />
-            <element signature="e#2532#2533#0" expanded="false" />
-            <element signature="e#2581#2582#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/FootBallMatchUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="48" column="46" lean-forward="false" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BasketballMatchUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="44" column="31" lean-forward="true" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BallUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2703">
-          <caret line="185" column="24" lean-forward="true" selection-start-line="185" selection-start-column="24" selection-end-line="185" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/Tencent Files/971083603/FileRecv/MessageQueueListener.java">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <caret line="22" column="62" lean-forward="true" selection-start-line="22" selection-start-column="62" selection-end-line="22" selection-end-column="62" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.17/log4j-1.2.17.jar!/org/apache/log4j/LogManager.class">
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/login.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="76" column="25" lean-forward="false" selection-start-line="76" selection-start-column="25" selection-end-line="76" selection-end-column="25" />
-          <folding>
-            <element signature="e#2981#2982#0" expanded="true" />
-            <element signature="e#3041#3042#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1964">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/trade/lotteryList.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="51" column="18" lean-forward="true" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/index.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="316" column="30" lean-forward="true" selection-start-line="316" selection-start-column="30" selection-end-line="316" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/mapper/TaskMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="21" column="41" lean-forward="false" selection-start-line="21" selection-start-column="41" selection-end-line="21" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/ITaskService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="139" column="9" lean-forward="false" selection-start-line="139" selection-start-column="9" selection-end-line="139" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/impl/TaskServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="1358" column="96" lean-forward="false" selection-start-line="1358" selection-start-column="96" selection-end-line="1358" selection-end-column="96" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/RollMessageNotifyJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/enums/MatchesStatusEnum.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          <caret line="8" column="12" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sysconfig.properties" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/redis/MessageQueueListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1391">
+          <caret line="145" column="22" lean-forward="true" selection-start-line="145" selection-start-column="22" selection-end-line="145" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/redis/MessageQueueProducer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-dev.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1411">
-          <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="91" selection-end-column="77" />
-          <folding />
+        <state relative-caret-position="656">
+          <caret line="95" column="57" lean-forward="false" selection-start-line="95" selection-start-column="25" selection-end-line="95" selection-end-column="57" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-test.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1564">
-          <caret line="92" column="77" lean-forward="false" selection-start-line="92" selection-start-column="77" selection-end-line="92" selection-end-column="77" />
+        <state relative-caret-position="639">
+          <caret line="68" column="59" lean-forward="true" selection-start-line="68" selection-start-column="59" selection-end-line="68" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/DateFormatUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1098">
+          <caret line="111" column="38" lean-forward="false" selection-start-line="111" selection-start-column="25" selection-end-line="111" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/SystemConfig.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/DateUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1938">
-          <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+        <state relative-caret-position="85">
+          <caret line="9" column="42" lean-forward="false" selection-start-line="9" selection-start-column="42" selection-end-line="9" selection-end-column="42" />
           <folding>
-            <element signature="e#1739#1740#0" expanded="false" />
-            <element signature="e#1787#1788#0" expanded="false" />
-            <element signature="e#1998#1999#0" expanded="false" />
-            <element signature="e#2049#2050#0" expanded="false" />
-            <element signature="e#2270#2271#0" expanded="false" />
-            <element signature="e#2319#2320#0" expanded="false" />
-            <element signature="e#2532#2533#0" expanded="false" />
-            <element signature="e#2581#2582#0" expanded="false" />
+            <element signature="e#922#923#0" expanded="false" />
+            <element signature="e#971#972#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/task/taskView.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1054">
+          <caret line="62" column="70" lean-forward="true" selection-start-line="62" selection-start-column="70" selection-end-line="62" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/resources/js/cicada.main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9384">
+          <caret line="552" column="4" lean-forward="true" selection-start-line="552" selection-start-column="4" selection-end-line="552" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/client/clientDetail.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3842">
+          <caret line="226" column="64" lean-forward="false" selection-start-line="226" selection-start-column="56" selection-end-line="226" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/task/taskList.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/task/taskDetail.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="836">
+          <caret line="412" column="18" lean-forward="true" selection-start-line="412" selection-start-column="18" selection-end-line="412" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/util/Iterator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="52" column="3" lean-forward="true" selection-start-line="52" selection-start-column="3" selection-end-line="52" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="360" column="24" lean-forward="true" selection-start-line="360" selection-start-column="24" selection-end-line="360" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/alibaba/fastjson/1.1.42/fastjson-1.1.42.jar!/com/alibaba/fastjson/JSONArray.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="242" column="18" lean-forward="false" selection-start-line="242" selection-start-column="18" selection-end-line="242" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/alibaba/fastjson/1.1.42/fastjson-1.1.42.jar!/com/alibaba/fastjson/JSONObject.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="218" column="38" lean-forward="false" selection-start-line="218" selection-start-column="38" selection-end-line="218" selection-end-column="38" />
+          <folding>
+            <element signature="e#6071#6072#0" expanded="true" />
+            <element signature="e#6113#6114#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/UserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/impl/UserServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="44" column="62" lean-forward="true" selection-start-line="44" selection-start-column="62" selection-end-line="44" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/pojo/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="31" column="4" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="32" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/pojo/MatchesEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="95" column="16" lean-forward="false" selection-start-line="95" selection-start-column="16" selection-end-line="95" selection-end-column="16" />
+          <folding>
+            <element signature="e#2285#2286#0" expanded="false" />
+            <element signature="e#2315#2316#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/mapper/PlayOddsMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="16" column="50" lean-forward="true" selection-start-line="16" selection-start-column="50" selection-end-line="16" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/mybatis/mybatis/3.4.2/mybatis-3.4.2.jar!/org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="170" column="0" lean-forward="false" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/baomidou/mybatis-plus/2.0.2/mybatis-plus-2.0.2.jar!/com/baomidou/mybatisplus/service/impl/ServiceImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="186" column="13" lean-forward="false" selection-start-line="186" selection-start-column="13" selection-end-line="186" selection-end-column="13" />
+          <folding>
+            <element signature="e#6680#6681#0" expanded="true" />
+            <element signature="e#6733#6734#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/IOrganizationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="17" lean-forward="false" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/IMessageService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/IPcdService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="17" lean-forward="false" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/CheckWaittingScoreJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="24" column="27" lean-forward="false" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/CleanOperateLogJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/CheckWaittingLotteryJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="40" column="53" lean-forward="false" selection-start-line="40" selection-start-column="28" selection-end-line="40" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/CheckWaittingAnswerJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="23" column="7" lean-forward="true" selection-start-line="23" selection-start-column="7" selection-end-line="23" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/CheckOperateJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="17" column="10" lean-forward="true" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/FootBallMatchUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="48" column="46" lean-forward="false" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="46" />
+        <state relative-caret-position="247">
+          <caret line="109" column="8" lean-forward="true" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BasketballMatchUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="44" column="31" lean-forward="false" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
+        <state relative-caret-position="128">
+          <caret line="110" column="32" lean-forward="true" selection-start-line="110" selection-start-column="32" selection-end-line="110" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spring/applicationContext.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/BallMatchJob.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="37" column="83" lean-forward="false" selection-start-line="37" selection-start-column="83" selection-end-line="37" selection-end-column="83" />
-          <folding>
-            <marker date="1505358459170" expanded="false" signature="2163:2191" ph="http://cmsapitest.caiecai.net/rest/api/wx/jspay_notify" />
-            <marker date="1505358459170" expanded="false" signature="2242:2271" ph="http://cmsapitest.caiecai.net/rest/api/wx/apppay_notify" />
-            <marker date="1505358459170" expanded="false" signature="2314:2343" ph="https://wap.caiecai.net/index.html" />
-            <marker date="1505358459170" expanded="false" signature="2389:2420" ph="2" />
-            <marker date="1505358459170" expanded="false" signature="2559:2596" ph="ec839b6c2a2fe5c552d39cb166dc15b7" />
-            <marker date="1505358459170" expanded="false" signature="2651:2691" ph="2100186457" />
-            <marker date="1505358459170" expanded="true" signature="2747:2788" ph="7da56cd13fd0e7654e58e47f576b72d4" />
-            <marker date="1505358459170" expanded="false" signature="3271:3298" ph="1" />
-            <marker date="1505358459170" expanded="false" signature="3336:3361" ph="0" />
-            <marker date="1505358459170" expanded="false" signature="3482:3509" ph="http://apitest.caiecai.net/api/" />
-            <marker date="1505358459170" expanded="false" signature="3560:3590" ph="http://wschattest.caiecai.net" />
-            <marker date="1505358459170" expanded="false" signature="3641:3671" ph="http://wspushtest.caiecai.net" />
-            <marker date="1505358459170" expanded="false" signature="3714:3736" ph="http://waptest.caiecai.net/index.html" />
-            <marker date="1505358459170" expanded="false" signature="3784:3811" ph="https://wap.caiecai.net/resources/logo.png" />
-            <marker date="1505358459170" expanded="false" signature="3868:3904" ph="https://wap.caiecai.net/resources/football.png" />
-            <marker date="1505358459170" expanded="false" signature="3963:4001" ph="https://wap.caiecai.net/resources/basketball.png" />
-            <marker date="1505358459170" expanded="false" signature="4168:4190" ph="LTAIZ9zY2KUkGyyV" />
-            <marker date="1505358459170" expanded="false" signature="4246:4275" ph="siYk3HF7u0An65PPIoSjtIrq35W4tF" />
-            <marker date="1505358459170" expanded="false" signature="4327:4352" ph="https://1521291552649633.mns.cn-hangzhou.aliyuncs.com/" />
-            <marker date="1505358459170" expanded="false" signature="4398:4417" ph="sms.topic-cn-hangzhou" />
-            <marker date="1505358459170" expanded="false" signature="4577:4613" ph="SMS_70170159" />
-            <marker date="1505358459170" expanded="false" signature="4831:4853" ph="LTAIZ9zY2KUkGyyV" />
-            <marker date="1505358459170" expanded="false" signature="4909:4938" ph="siYk3HF7u0An65PPIoSjtIrq35W4tF" />
-            <marker date="1505358459170" expanded="false" signature="4990:5015" ph="https://1521291552649633.mns.cn-hangzhou.aliyuncs.com/" />
-            <marker date="1505358459170" expanded="false" signature="5061:5080" ph="sms.topic-cn-hangzhou" />
-            <marker date="1505358459170" expanded="false" signature="5188:5223" ph="SMS_70170159" />
-            <marker date="1505358459170" expanded="false" signature="6305:6328" ph="com.mysql.jdbc.Driver" />
-            <marker date="1505358459170" expanded="false" signature="6391:6402" ph="jdbc:mysql://rm-bp14q7o2rcj239l23o.mysql.rds.aliyuncs.com:3306/dev_guess?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true&amp;useSSL=false" />
-            <marker date="1505358459170" expanded="false" signature="6461:6477" ph="root" />
-            <marker date="1505358459170" expanded="false" signature="6535:6551" ph="Wgh0wgh0" />
-          </folding>
+        <state relative-caret-position="51">
+          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/commons/utils/SpringContextUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="44" column="25" lean-forward="false" selection-start-line="44" selection-start-column="25" selection-end-line="44" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/IPlayOddsService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/impl/PlayOddsServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/MatchController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="575">
+          <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/impl/TeamServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="33" column="86" lean-forward="false" selection-start-line="33" selection-start-column="86" selection-end-line="33" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/service/ITeamService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="15" column="29" lean-forward="false" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/job/Ball/BallUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="185" column="24" lean-forward="false" selection-start-line="185" selection-start-column="24" selection-end-line="185" selection-end-column="24" />
-          <folding />
+        <state relative-caret-position="85">
+          <caret line="370" column="39" lean-forward="true" selection-start-line="370" selection-start-column="39" selection-end-line="370" selection-end-column="39" />
+          <folding>
+            <element signature="e#11626#11637#0" expanded="true" />
+            <element signature="e#12265#12280#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/redis/MessageQueueListener.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/PlayOddsMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2288">
-          <caret line="181" column="0" lean-forward="false" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="119">
+          <caret line="7" column="99" lean-forward="false" selection-start-line="7" selection-start-column="99" selection-end-line="7" selection-end-column="99" />
+          <folding>
+            <marker date="1506756240937" expanded="true" signature="342:1070" ph="SELECT a.odd... t_play_odds" />
+            <marker date="1506756240937" expanded="true" signature="1207:1466" ph="SELECT COUNT... t_play_odds" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/UserController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/pojo/PlayOddsEntity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="42" column="47" lean-forward="true" selection-start-line="42" selection-start-column="47" selection-end-line="42" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/SysLogController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/LoginController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cicada/controller/ClientController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1343">
-          <caret line="35" column="13" lean-forward="false" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
+        <state relative-caret-position="170">
+          <caret line="51" column="31" lean-forward="true" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="31" />
           <folding />
         </state>
       </provider>

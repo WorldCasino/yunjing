@@ -34,7 +34,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/alipay-sdk-java20170615110434.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/xinge/PushJavaSDK.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -43,7 +43,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/xinge/PushJavaSDK.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/alipay-sdk-java20170615110434.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -123,8 +123,5 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.4.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.6.2" level="project" />
     <orderEntry type="library" name="Maven: commons-net:commons-net:3.6" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.json-lib:json-lib:jdk15:2.4" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.5" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.ezmorph:ezmorph:1.0.6" level="project" />
   </component>
 </module>

@@ -9,32 +9,40 @@
     <!-- 查询、添加、批量删除、导出、刷新 -->
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
+            <input type="hidden" name="loginbeUserId" id="loginbeUserId" value="<shiro:principal property="limitBeUserId"/>">
+            <input type="hidden" name="loginagentId" id="loginagentId" value="<shiro:principal property="limitAgentId"/>">
             <div class="form-group">
-                <label for="bgLoginId" class="col-sm-1 control-label">用户ID</label>
+                <label for="bgLoginId" class="col-sm-2 control-label">用户ID</label>
                 <div class="col-sm-2" >
                     <input type="text" name="bgLoginId" id="bgLoginId" class="form-control">
                 </div>
-                <label for="ywName" class="col-sm-1 control-label">业务员</label>
+                <label for="date2" class="col-sm-2 control-label">最近登录时间</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="ywName" id="ywName" class="form-control">
+                    <input type="text" name="date2" id="date2" class="form-control" style="width: 120%;">
+                    <input type="text" id = "loginStartTime" name="loginStartTime" class="form-control" style="display: none"/>
+                    <input type="text" id = "loginEndTime" name="loginEndTime" class="form-control" style="display: none;"/>
                 </div>
-                <label for="phone" class="col-sm-1 control-label">手机号</label>
+                <label for="agentNumber" class="col-sm-2 control-label">所属代理商</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="phone" id="phone" class="form-control">
+                    <select name="agentNumber" id="agentNumber" class="form-control agentNumber">
+
+                    </select>
                 </div>
              </div>
             <div class="form-group">
-                <label for="date1" class="col-sm-1 control-label">注册时间</label>
+                <label for="phone" class="col-sm-2 control-label">手机号</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="date1" id="date1" class="form-control" style="width: 100%;">
+                    <input type="text" name="phone" id="phone" class="form-control">
+                </div>
+                <label for="date1" class="col-sm-2 control-label">注册时间</label>
+                <div class="col-sm-2" >
+                    <input type="text" name="date1" id="date1" class="form-control" style="width: 120%;">
                     <input type="text" id = "registerStartTime" name="registerStartTime" class="form-control" style="display: none"/>
                     <input type="text" id = "registerEndTime" name="registerEndTime" class="form-control" style="display: none;"/>
                 </div>
-                <label for="date2" class="col-sm-1 control-label">最近登录时间</label>
+                <label for="beUserNumber" class="col-sm-2 control-label">所属客服</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="date2" id="date2" class="form-control" style="width: 100%;">
-                    <input type="text" id = "loginStartTime" name="loginStartTime" class="form-control" style="display: none"/>
-                    <input type="text" id = "loginEndTime" name="loginEndTime" class="form-control" style="display: none;"/>
+                    <input type="text" name="beUserNumber" id="beUserNumber" class="form-control">
                 </div>
               </div>
          </form>
@@ -59,11 +67,12 @@
                 <th style="width: 10%;">用户ID</th>
                 <th style="width: 10%;">昵称</th>
                 <th style="width: 10%;">手机号码</th>
-                <th style="width: 10%;">银行卡是否绑定</th>
+                <th style="width: 10%;">代理商</th>
+                <th style="width: 10%;">银行卡</th>
                 <th style="width: 10%;">账户余额</th>
-                <th style="width: 10%;">专属业务员</th>
+                <th style="width: 10%;">客服账号</th>
                 <th style="width: 10%;">注册时间</th>
-                <th style="width: 10%;">最近上线时间</th>
+                <th style="width: 10%;">上线时间</th>
                 <th style="width: 10%;">操作</th>
             </tr>
         </thead>
@@ -88,16 +97,13 @@
                 $("#loginEndTime").val(end.format("YYYY/MM/DD"));
             });
 
-
-
         //添加、修改异步提交地址
         var str = "";
-        <shiro:hasPermission name="20detail">
-             str+= "<div class='btn-group' style='margin-right: 5px;'>" +
+        <shiro:hasPermission  name="20detail">
+        str+= "<div class='btn-group' style='margin-right: 5px;'>" +
             "<button  class='btn btn-primary btn-sm todetail'  id='btn-query'  type='button'> 详情</button>" +
             "</div>"
         </shiro:hasPermission>
-
 
 
         var tables = $("#dataTable").dataTable(
@@ -111,14 +117,25 @@
                     {"data": "nickName"},
                     {"data": 'phone'},
                     {
+                        "data": 'agentNumber',
+                        "render": function (data, type, full, callback) {
+                            return data //+"("+full.agentName+")"
+                        }
+                    },
+                    {
                         "data": 'cardNumber',
                         "render": function (data, type, full, callback) {
                             return (parseInt(data) > 0)?"已绑定":"未绑定"
                            }
                     },
                     {"data": 'balance'},
-                    {"data": 'ywName'},
                     {
+                        "data": 'beUserNumber',
+                        "render": function (data, type, full, callback) {
+                            return data+"("+full.beUserName+")"
+                        }
+                    },
+                     {
                         "data": 'createDate',
                         "render": function (data, type, full, callback) {
                             return agdress.timeStamp2String(data)
@@ -170,6 +187,25 @@
             window.parent.openNewTab(id,title,url);
             return;
         });
+
+
+        //代理商列表
+        if(true) {
+            $.ajax({
+                type: "POST",
+                url: agdress.CONSTS.URL_BASE_API+"ss_agent/getAgentList",
+                data: {},
+                async: false,
+                success: function (data) {
+                    var agentList=data.data;
+                    $(".agentNumber").append("<option value=''>全部</option>");
+                    for(var i=0 ; i <agentList.length ;i++){
+                        $(".agentNumber").append("<option value='"+agentList[i].loginName+"'>"+agentList[i].loginName+"</option>");
+                    }
+                }
+            });
+        }
+
 
 
      });

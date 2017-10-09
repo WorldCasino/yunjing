@@ -34,15 +34,15 @@ public class MatchesVo   implements Serializable {
      private String homeTeamLogo;
 
      private Integer awayTeamId;
-    private Integer awayScore;
+     private Integer awayScore;
      private String awayTeamName;
      private String awayTeamLogo;
 
      private String title;
 
-     private String dayName; //表示周几
+     private String dayName;
 
-     private String dayWeek;
+     private String dayWeek;//表示周几
 
      private String dayDate;
      private String dayTime;

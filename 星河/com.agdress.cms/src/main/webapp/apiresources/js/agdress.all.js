@@ -7,30 +7,30 @@
      * @type {{TASK_STATUS: [*], DAYS_OF_WEEK: [*], MONTH_NAMES: [*]}}
      */
     agdress.CONSTS ={
-        /**
-         * 视图URL
-         */
-        URL_BASE:"https://cms.caiecai.net/rest/",
-        /**
-         * 当前项目接口URL
-         * http://192.168.1.43:8091/cms/
-         * http://localhost:8080/cms/
-         */
-        URL_BASE_CMS:"http://192.168.1.43:8091/cms/",
 
         /**
-         * api项目接口URL
-         * http://192.168.1.43:8090/api/
-         * http://localhost:8090/api/
+         * 本地
          */
-        URL_BASE_API:"http://192.168.1.43:8090/api/",
+        URL_BASE_CMS:"http://localhost:8070/cms/",//当前项目接口URL
+        URL_BASE_API:"http://localhost:8090/api/",//api项目接口URL
+        URL_BASE_IMG:"https://image.xheqp.com/",//图片服务器URL
+
 
         /**
-         * 图片服务器URL
+         * 测试服务器
          */
-        URL_BASE_IMG:"https://image.caiecai.net/",
+        // URL_BASE_CMS:"http://192.168.1.43:8091/cms/",//当前项目接口URL
+        // URL_BASE_API:"http://192.168.1.43:8090/api/",//api项目接口URL
+        // URL_BASE_IMG:"https://image.xheqp.com/",//图片服务器URL
 
-        URL_BASE_IMG_TASK:"https://image.caiecai.net/task/",
+        /**
+         * 正式服务器
+         */
+        // URL_BASE_CMS:"https://cms.xheqp.com/cms/",//当前项目接口URL
+        // URL_BASE_API:"https://api.xheqp.com/api/",//api项目接口URL
+        // URL_BASE_IMG:"https://image.xheqp.com/",//图片服务器URL
+
+        URL_BASE_AGENT_LINKURL:"http://v.xheqp.com?agent_id=",//图片服务器URL
 
         DAYS_OF_WEEK:["日","一","二","三","四","五","六"],
 
@@ -181,7 +181,7 @@
         var minute = datetime.getMinutes();
         var second = datetime.getSeconds();
         var mseconds = datetime.getMilliseconds();
-        return year + "/" + month + "/" + date+" "+hour+":"+minute+":"+second;
+        return year + "/" + month + "/" + date+" "+hour+":"+minute;
     };
 
     /**

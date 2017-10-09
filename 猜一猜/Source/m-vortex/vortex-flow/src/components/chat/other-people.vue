@@ -1,8 +1,9 @@
 <template>
   <div class="box">
-    <div class="box-avatar">
-      <img v-if="avatar" width="35" height="35" style="border-radius: 100%;" v-bind:src="avatar">
-      <img v-else width="35" height="35" style="border-radius: 100%;" src="../../assets/default_header.png">
+    <div class="box-avatar" :style="{backgroundImage:'url('+ avatar +')'}" v-if="avatar">
+      <div class="item-badge"><span class="my-badge">{{count}}</span></div>
+    </div>
+    <div class="box-avatar head-pic" v-else>
       <div class="item-badge"><span class="my-badge">{{count}}</span></div>
     </div>
     <div>
@@ -48,9 +49,12 @@
     align-items: flex-start;
   }
   .box-avatar {
-    margin-top: 2px;
+    width: 35px; height: 35px;
+    margin-top: 2px; border-radius: 100%;
     position: relative;
-    /*background: yellow;*/
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .item-badge {
     position: absolute;
@@ -139,6 +143,10 @@
     left:-12px;
     border-right-color: #dddddd;
     z-index: 0
+  }
+  
+  .head-pic{
+    background-image:url(../../assets/default_header.png);
   }
 
 </style>

@@ -4,7 +4,7 @@
       <div v-for="quiz in quizzes">
         <QuizSub :quizDetail="quiz" :task_id="quiz.task_id" :task_type="quiz.task_type" :user_id="quiz.user_id" :task_content="quiz.task_content" :sale_price="quiz.sale_price" :quantity="quiz.quantity"
                  :task_status="quiz.task_status" :hot="quiz.hot" :create_date="quiz.create_date" :settle_time="quiz.settle_time" :update_date="quiz.update_date"
-                 :user="quiz.user" :pics="quiz.pics" :teams="quiz.teams" :answer="quiz.answer" :message_count="quiz.message_count" ref="quizItem"></QuizSub>
+                 :user="quiz.user" :pics="quiz.pics" :teams="quiz.teams" :answer="quiz.answer" :message_count="quiz.message_count" :lock_time="quiz.lock_time" ref="quizItem"></QuizSub>
 
       </div>
     </div>
@@ -14,6 +14,7 @@
 <script>
 
   import QuizSub from '../../components/quiz-sub.vue'
+  import TaskListWatch from '../../utils/taskListWatch.js'
   import { mapState, mapGetters, mapActions } from 'vuex'
 
   import * as StorageHelper from '../../store/storage-helper'
@@ -21,17 +22,14 @@
 
   export default {
     name: 'homepage',
+    mixins: [TaskListWatch],
     components: {
       QuizSub
-
     },
     data () {
       return {
-        lastPos: 0,
-        intervalId: null,
-        watchIndexStart: 0,
-        watchIndexEnd: 0,
-        initData: true
+        // 模块名称
+        model: 'quizList'
       }
     },
     computed: {
@@ -49,7 +47,13 @@
         currentPage: state => state.currentPage,
         quizDetailTaskId: state => state.quizDetail.taskId,
 
-        serverInit: state => state.serverInit
+        serverInit: state => state.serverInit,
+
+        // quizList === quizzes 为了使用公共模块定义quizList
+        quizList: state => state.quizList.quizzes,
+
+        // 滚动条高度
+        scrollTop: state => state.quizList.scrollTop
       }),
       ...mapGetters([
         'quizzes',
@@ -66,74 +70,6 @@
       ]),
       refreshList () {
         this.getQuizzes([0])
-      },
-      onTouchEnd () {
-        let self = this
-
-        if (self.intervalId !== null) {
-          return
-        }
-
-        let itemHeight = self.$refs.quizItem[0].$el.clientHeight
-        let visualHeight = self.$store.state.homepageVisualHeight
-
-        if (visualHeight === 0) {
-          return
-        }
-
-        self.lastPos = self.$store.state.homepageScrollTop
-        self.intervalId = setInterval(function () {
-          let currPos = self.$store.state.homepageScrollTop
-          if (self.lastPos !== currPos) {
-            self.lastPos = currPos
-          } else {
-            // 认为滚动停止
-
-            var indexStart
-            var indexEnd
-
-            if (self.quizzes.length < 5) {
-              indexStart = 0
-              indexEnd = self.quizzes.length
-            } else {
-              // 10px offset
-              indexStart = Math.floor((currPos - 10) / itemHeight)
-              if (indexStart < 0) {
-                indexStart = 0
-              }
-
-              indexEnd = Math.floor((currPos - 10 + visualHeight) / itemHeight)
-              if (indexEnd > self.quizzes.length) {
-                indexEnd = self.quizzes.length
-              }
-            }
-
-            if (indexStart === self.watchIndexStart && indexEnd === self.watchIndexEnd) {
-              return
-            }
-
-            self.watchIndexStart = indexStart
-            self.watchIndexEnd = indexEnd
-
-            // 停止计时
-            clearInterval(self.intervalId)
-            self.intervalId = null
-            console.log(indexStart)
-            console.log(indexEnd)
-
-            if (self.taskSocket === null) {
-              return
-            }
-            var watches = []
-            for (var i = indexStart; i < indexEnd; i++) {
-              watches.push(self.quizzes[i].task_id)
-            }
-            console.log(watches)
-
-            self.$store.state.quizList.watches = watches
-            self.taskSocket.emit('watch', JSON.stringify(watches))
-          }
-        }, 200)
       }
     },
     mounted () {
@@ -148,22 +84,39 @@
           }
         }
       },
+      // 首页、足球、篮球的下注监听共用此逻辑
       betShake: {
         handler: function (val) {
+          console.log('homepage下注监听')
           let self = this
           if (self.betStatus === null) {
             // 下注成功刷新用户数据
             self.getUserInfo('')
   //            扣除金币,本地显示 todo考虑本地数据变化逻辑写到vuex中
+            console.log('本地下注成功', self.betData)
             self.userInfoData.coin_balance -= self.betData.cost
             // 下注声音提示
             const oBetAudio = document.querySelector('.bet-audio')
-            oBetAudio.src = '../../static/audio/bet.mp3'
-            // oBetAudio.volume = 0.2
+            if (servConf.APP === 1) {
+              oBetAudio.src = 'audio/bet.mp3'
+            } else {
+              oBetAudio.src = '../../static/audio/bet.mp3'
+            }
+
+            // 下注成功提示
             oBetAudio.play()
+            let goldType = ''
+            switch (this.betData.coin_type) {
+              case 0 :
+                goldType = '金币'
+                break
+              case 1 :
+                goldType = '金豆'
+                break
+            }
             this.$f7.addNotification({
               title: '提示',
-              message: '下注成功!',
+              message: `投${this.betData.price}${goldType}，猜中可得${this.betData.win_expect}${goldType}`,
               closeOnClick: true,
               hold: 3000
             })
@@ -202,6 +155,7 @@
           }
         }
       },
+      // 初次加载应用加入watches队列监听。
       shake: {
         handler: function (val) {
           let self = this
@@ -238,5 +192,6 @@
 <style scoped>
   .list {
     margin-top: 0px;
+    position: relative;
   }
 </style>

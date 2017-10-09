@@ -76,6 +76,19 @@ public class CmsGuessRealm extends AuthorizingRealm {
 		ShiroUser shiroUser = new ShiroUser(userEntity.getUserId(), userEntity.getLoginName(),userEntity.getNickname(), modSet);
 		shiroUser.setRoles(roles);
 		shiroUser.setRolesstr(String.valueOf(userEntity.getRole_id()));
+		shiroUser.setPhone(userEntity.getPhone());
+		//根据权限设置ID
+		long  role_id=userEntity.getRole_id();
+		if(role_id == 3){//客服
+			shiroUser.setLimitAgentId("");
+			shiroUser.setLimitBeUserId(String.valueOf(userEntity.getUserId()));
+		}else if(role_id == 5){
+			shiroUser.setLimitAgentId(String.valueOf(userEntity.getAgent_id()));
+			shiroUser.setLimitBeUserId("");
+ 		}else{
+			shiroUser.setLimitAgentId("");
+			shiroUser.setLimitBeUserId("");
+		}
  		String password= userEntity.getPassWord();
 		return new SimpleAuthenticationInfo(shiroUser,password.toCharArray(), getName());
 	}

@@ -35,6 +35,20 @@ module.exports = function (req,res,next) {
             })
         })
     }).then(function () {
+        // 更新登录时间
+        return Q.ninvoke(mysql, 'query', {
+            sql: 'UPDATE M_USERS SET last_time=? WHERE user_id=?',
+            values: [operate_time,user_id]
+        })
+    }).then(function () {
+        //更新最后登陆时间
+        return Q.fcall(function () {
+            Q.ninvoke(mysql, 'query', {
+                sql: 'UPDATE m_users SET last_time = ? WHERE user_id = ? ',
+                values: [operate_time ,user_id]
+            })
+        })
+    }).then(function () {
         // 根据下注数量将下注操作加入操作日志表并添加到队列
         Q.ninvoke(redisPub, 'publish', 'operate_queue_online', JSON.stringify({
             operateType:1,

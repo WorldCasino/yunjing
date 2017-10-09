@@ -40,7 +40,7 @@ public interface IGameConnector {
      * 时间参数格式 yyyy-MM-dd hh:mm:ss
      */
     GameRsp<OrderQuery> openOrderQuery(List<Long> userIds, List<String> loginIds,
-                                       long agentId, String agentLoginId, Date startTime, Date endTime, int moduleId,
+                                       long agentId, String agentLoginId, String startTime, String endTime, int moduleId,
                                        int gameId, int issueId, String playerId, int pageIndex, int pageSize, String etag) throws IOException;
 
     /**

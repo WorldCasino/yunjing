@@ -242,7 +242,8 @@
         'sendCurCount',
         'sendCurFalseRefund',
         'changeIsSet',
-        'getTaskData',
+        'getTaskDailyData',
+        'getTaskGrowData',
         'isAblePop',
         'getQuizzes'
       ]),
@@ -467,7 +468,8 @@
             this.isAbleBean = false
             this.$f7.mainView.router.load({url: '/quiz-detail/'})
             this.$f7.popup('#pub-succeed')
-            this.getTaskData(this.$store.state.task.taskType)
+            this.getTaskDailyData()
+            this.getTaskGrowData()
             this.getQuizzes([0])
             this.trueRefund = 1.80
             this.falseRefund = 1.80
@@ -831,6 +833,7 @@
   }
 
   .doubt-icon {
+    margin-top: -3px;
     width: 14px;
     height: 14px;
     border: 1px solid #666;

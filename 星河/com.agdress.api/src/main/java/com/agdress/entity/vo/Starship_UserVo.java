@@ -17,15 +17,19 @@ public class Starship_UserVo implements Serializable{
  	private String headUrl;
  	private String nickName;
 	private String phone;
+
 	private Long  agentId;
-	private String ywName;
+	private String agentNumber;
+	private String agentName;
+
+	private String beUserNumber;
+	private String beUserName;
 	private Long beUserId;
+
 	private String bgLoginId;
 
 	private Long updateBy;
 
-
-	private String agentName;
 	private Long cardId;//卡片id
  	private String cardBank;//开户行
 	private String bankType;
@@ -40,7 +44,33 @@ public class Starship_UserVo implements Serializable{
 	private Double totalIncome;//收入总额
 	private Double totalWithdraw;//提现总额
 	private Double totalLottery;//转码总额
-	private Double actionTotle;//合计输赢收入
+	private Double actionTotle;//合计输赢收入u
+
+	public String getBeUserNumber() {
+		return beUserNumber;
+	}
+
+	public void setBeUserNumber(String beUserNumber) {
+		this.beUserNumber = beUserNumber;
+	}
+
+	public String getAgentNumber() {
+		return agentNumber;
+	}
+
+	public void setAgentNumber(String agentNumber) {
+		this.agentNumber = agentNumber;
+	}
+
+
+
+	public String getBeUserName() {
+		return beUserName;
+	}
+
+	public void setBeUserName(String beUserName) {
+		this.beUserName = beUserName;
+	}
 
 	public String getBgLoginId() {
 		return bgLoginId;
@@ -108,14 +138,6 @@ public class Starship_UserVo implements Serializable{
 
 	public void setAgentId(Long agentId) {
 		this.agentId = agentId;
-	}
-
-	public String getYwName() {
-		return ywName;
-	}
-
-	public void setYwName(String ywName) {
-		this.ywName = ywName;
 	}
 
 	public Long getBeUserId() {

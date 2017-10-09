@@ -60,7 +60,7 @@ module.exports = function (app) {
                 return;
             }
             // 球赛不验证token
-            if((url.startsWith('/api/ball'))){
+            if(url.startsWith('/api/v1/ball') || url.startsWith('/api/ball/') ){
                 next();
                 return;
             }

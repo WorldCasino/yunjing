@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.sql.Timestamp;
 
 /**
- * 业务员实体
+ * 代理商实体
  */
 @TableName(value = "m_agents")
 public class Starship_AgentEntity  extends BaseEntity{
@@ -23,6 +23,15 @@ public class Starship_AgentEntity  extends BaseEntity{
     @TableField(value = "qq")
     private String qq;
 
+    @TableField(value = "defection_proportion")
+    private Double defectionProportion;
+
+    @TableField(value = "email")
+    private String email;
+
+    @TableField(value = "remarks")
+    private String remarks;
+
     @TableField(value = "bg_login")
     private String bgLogin;
 
@@ -31,6 +40,30 @@ public class Starship_AgentEntity  extends BaseEntity{
 
     @TableField(value = "bg_agent_id")
     private Long bgAgentId;
+
+    public Double getDefectionProportion() {
+        return defectionProportion;
+    }
+
+    public void setDefectionProportion(Double defectionProportion) {
+        this.defectionProportion = defectionProportion;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public Long getAgentId() {
         return agentId;

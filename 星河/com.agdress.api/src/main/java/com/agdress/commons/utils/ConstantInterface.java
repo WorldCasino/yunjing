@@ -55,6 +55,12 @@ public interface ConstantInterface {
     String KEY_IMG_CAPTCHA = "IMG_CAPTCHA:";
 
     /**
+     * 充值结果通知存储KEY
+     */
+    String KEY_RECHARGE_NOTIFY = "RECHARGE_NOTIFY:";
+    String KEY_RECHARGE_LOCK = "RECHARGE_LOCK:";
+
+    /**
      * 系统内置测试用户默认验证码8090
      */
     String[] TEST_PHONES = new String[] {
@@ -68,4 +74,11 @@ public interface ConstantInterface {
      * Redis键值过期KEY
      */
     String REDIS_KEY_EXPIRED = "__keyevent@0__:expired";
+
+
+    /**
+     * 发送短信
+     */
+    String KEY_MESSAGE = "KEY_MESSAGE:";
+
 }

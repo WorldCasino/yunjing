@@ -73,7 +73,7 @@ public interface ConstantInterface {
     /**
      * Redis 倒计时球赛开奖的KEY前缀
      */
-    String REDIS_BALLKEY_LOTTERY_PREFIX = "lottery:ball_";
+    String REDIS_BALLKEY_LOTTERY_PREFIX = "ball:task_";
 
     /**
      * Redis 比赛结束，根据比分，待处理竞猜结果的KEY前缀
@@ -133,6 +133,9 @@ public interface ConstantInterface {
             "18806514727",
             "13018912571",
             "18668223750",
-            "15972695813"
+            "15972695813",
+            "18711813597",
+            "18550473963",
+            "13276720611"
     };
 }

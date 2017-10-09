@@ -6,16 +6,29 @@
           <img src="./../../assets/nav-back.png" class="back-nav" style="margin-top: 0px"/>
         </f7-link>
       </f7-nav-left>
-      <f7-nav-center>提醒设置</f7-nav-center>
+      <f7-nav-center>设置</f7-nav-center>
     </f7-navbar>
 
     <div class="setting-main">
       <f7-list class="list-style">
+        <!--<f7-list-item class="item-wrapper">
+          <div class="content">
+            <div class="title">优先使用金豆下注</div>
+            <div class="desc">当我参与竞猜下注时，优先使用金豆下注</div>
+          </div>
+          <div class="item-after">
+            <div class="item-input">
+              <label class="label-switch">
+                <input type="checkbox" v-model="beanPreferCk">
+                <div class="checkbox"></div>
+              </label>
+            </div>
+          </div>
+        </f7-list-item>-->
         <f7-list-item class="item-wrapper">
           <div class="content">
             <div class="title">下注确认</div>
-            <div class="desc">当我参与竞猜下注时，向我弹出确认提示
-</div>
+            <div class="desc">当我参与竞猜下注时，向我弹出确认提示</div>
           </div>
           <div class="item-after">
             <div class="item-input">
@@ -33,8 +46,7 @@
         <f7-list-item class="item-wrapper">
           <div class="content">
             <div class="title">开奖提醒</div>
-            <div class="desc">当我参与的竞猜开奖时，向我发送消息
-</div>
+            <div class="desc">当我参与的竞猜开奖时，向我发送消息</div>
           </div>
           <div class="item-after">
             <div class="item-input">
@@ -64,8 +76,7 @@
         <f7-list-item>
           <div class="content">
             <div class="title">消息提醒</div>
-            <div class="desc">当有玩家在我发布的竞猜发言时，向我发送消息
-</div>
+            <div class="desc">当有玩家在我发布的竞猜发言时，向我发送消息</div>
           </div>
           <div class="item-after">
             <div class="item-input">
@@ -92,12 +103,16 @@
 
     data () {
       return {
-        checked: false
+        // 下注提醒
+        checked: false,
+        // 优先使用金豆下注
+        beanPreferCk: false
       }
     },
     computed: {
       ...mapState({
-        betTip: state => state.betTip
+        betTip: state => state.betTip,
+        beanPrefer: state => state.setTip.beanPrefer
       }),
       ...mapGetters([
         'showBetTip'
@@ -105,6 +120,7 @@
     },
     mounted () {
       this.checked = this.showBetTip
+      this.beanPreferCk = this.beanPrefer
     },
     watch: {
       checked: {
@@ -116,6 +132,12 @@
       betTip: {
         handler: function (val) {
           this.checked = val
+        }
+      },
+      beanPreferCk: {
+        handler: function (val) {
+          this.$store.state.setTip.beanPrefer = val
+          StorageHelper.saveBeanPrefer(val)
         }
       }
     }
@@ -130,7 +152,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center; */
-    //margin-top: 8px; 
+    //margin-top: 8px;
   }
 
   .list-style{

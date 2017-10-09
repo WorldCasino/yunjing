@@ -63,7 +63,12 @@ public interface IActiveService extends IService<ActiveEntity> {
 
 
     /**
-     * 更新宝箱任务数据
+     * 是否参与过
      */
     int isParticipationActive(Map<String,Object> params)  throws ApiException;
+
+    /**
+     * 是否分享过
+     */
+    int isSharedActive(Map<String,Object> params)  throws ApiException;
 }

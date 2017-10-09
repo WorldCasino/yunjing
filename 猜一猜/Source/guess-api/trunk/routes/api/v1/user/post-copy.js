@@ -20,7 +20,11 @@ var fs = require('fs');
 module.exports = function (req, res, next) {
     var user_id = req.headers.user_id;
     var personal = parseInt(req.body.personal),
-        like_peas = parseInt(req.body.like_peas);
+        like_peas = parseInt(req.body.like_peas),
+        concede_points_show = req.body.concede_points_show,
+        concede_points = 0,
+        task_content = req.body.task_content;
+        //task_type = parseInt(req.body.task_type);
     var params = {};
     var operate_time=new Date();
     Q.fcall(function () {
@@ -50,9 +54,18 @@ module.exports = function (req, res, next) {
                 if(orgTask.parent_id>0) params.parentId = orgTask.parent_id;
 
                 params.orgTask = orgTask;
+                params.task_type = orgTask.task_type;
                 return orgTask;
             });
         })
+    }).then(function(){
+        //根据concede_points_show得到concede_points
+        return Q.ninvoke(mysql, 'query', {
+            sql: 'select concede_points from t_concede_points WHERE concede_points_show = ?',
+            values: [concede_points_show]
+        }).then(function (result) {
+            concede_points = parseFloat(result[0][0].concede_points);
+        });
     }).then(function () {
         //检查用户金币是否够用，不够用返回错误，够用进行冻结。
         var price = parseFloat(req.body.price),
@@ -144,8 +157,8 @@ module.exports = function (req, res, next) {
             */
 
             return Q.ninvoke(mysql, 'query', {
-                sql:'insert into t_tasks(user_id,task_title,task_type,task_content,sale_price,quantity,sale_amount,task_status,hot,lock_time,settle_time,personal,like_peas,lottery_type,parent_id,locked_coins,create_by) '+
-                'select ?,task_title,task_type,task_content,?,?,?,task_status,0,lock_time,settle_time,?,?,lottery_type,?,?,? '+
+                sql:'insert into t_tasks(user_id,task_title,task_type,match_id,match_type,play_type,concede_points_show,concede_points,task_content,sale_price,quantity,sale_amount,task_status,hot,lock_time,settle_time,personal,like_peas,lottery_type,parent_id,locked_coins,create_by) '+
+                'select ?,task_title,task_type,match_id,match_type,play_type,concede_points_show,concede_points,task_content,?,?,?,task_status,0,lock_time,settle_time,?,?,lottery_type,?,?,? '+
                 'from t_tasks t '+
                 'where t.task_id = ? ; ',
                 values: [params.user_id,quantity,price,quantity * price,personal,like_peas,params.parentId,params.lockedBalance,params.user_id,params.parentId]
@@ -156,6 +169,15 @@ module.exports = function (req, res, next) {
                 return params.new_taskid;
             });
         }).then(function (new_taskid) {
+            //体育类可以编辑竞猜、盘口或让球数描述
+            if(params.task_type==1 || params.task_type==2){
+                Q.ninvoke(mysql, 'query', {
+                    sql:'UPDATE t_tasks SET task_content = ?,concede_points_show=?,concede_points=? WHERE task_id = ?; ',
+                    values: [task_content,concede_points_show,concede_points,new_taskid]
+                })
+            }
+
+
             return Q.all([
                 Q.ninvoke(mysql, 'query', {
                     sql:'insert into t_task_pictures(task_id,pic_url,blur_pic_url,pic_type,create_by) '+
@@ -165,8 +187,8 @@ module.exports = function (req, res, next) {
                     values: [new_taskid,params.parentId]
                 }),
                 Q.ninvoke(mysql, 'query', {
-                    sql:'insert into t_task_football(task_id,team_name,court_type,create_by) '+
-                    'select ?,team_name,court_type,create_by '+
+                    sql:'insert into t_task_football(task_id,team_logo,team_name,court_type,create_by) '+
+                    'select ?,team_logo,team_name,court_type,create_by '+
                     'from t_task_football t '+
                     'where t.task_id = ? and t.is_delete = 0; ',
                     values: [new_taskid,params.parentId]
@@ -192,7 +214,8 @@ module.exports = function (req, res, next) {
 
                 Q.ninvoke(mysql, 'query', {
                     sql:'select answer_id,answer,is_right from t_task_answers where task_id = ?;',
-                    values: [params.parentId]
+                    //values: [params.parentId]
+                    values: [req.body.taskId]
                 })
             ]).then(function (results) {
                 params.orgAnswerList = results[4][0];
@@ -202,35 +225,111 @@ module.exports = function (req, res, next) {
                 newAnswers = req.body.answerList;
             var answers = [];
             for(var i = 0 ; i < params.orgAnswerList.length ; i++){
-                var newOdds =0;
+                var newOdds =0,
+                    parent_answ=0;
                 for(var j =0;j<newAnswers.length;j++){
                     if(newAnswers[j].answerId == params.orgAnswerList[i].answer_id){
                         newOdds =newAnswers[j].odds;
+                        parent_answ =params.orgAnswerList[i].answer_id;
                         break;
                     }
                 }
-                pd.checkArgument(newOdds > 0, '请提供答案ID '+params.orgAnswerList[i].answer_id+'的赔率');
+
+                //pd.checkArgument(newOdds > 0, '请提供答案ID '+params.orgAnswerList[i].answer_id+'的赔率');
 
                 answers.push({
                     task_id:params.new_taskid,
                     answer:params.orgAnswerList[i].answer,
                     is_right:params.orgAnswerList[i].is_right,
                     odds:newOdds,
+                    parent_answ:parent_answ,
                     create_by:user_id
                 });
             }
 
-            if(new Date().getSeconds()%2 ==0){
-                answers.reverse();
-            }
-            var fns = answers.map(function (p1, p2, p3) {
-                return Q.ninvoke(mysql, 'query', {
-                    sql: 'INSERT INTO t_task_answers SET ?',
-                    values: p1
+            if(params.task_type==0 || params.task_type==3){
+                if(new Date().getSeconds()%2 ==0){
+                    answers.reverse();
+                }
+                var fns = answers.map(function (p1, p2, p3) {
+                    return Q.ninvoke(mysql, 'query', {
+                        sql: 'INSERT INTO t_task_answers SET ?',
+                        values: p1
+                    });
                 });
-            });
+                return Q.all(fns);
+            }else{
+                // 体育类竞猜不要倒序
+                return Q.fcall(function () {
+                    // 插入第一个答案
+                    return Q.ninvoke(mysql,'query',{
+                        sql: 'INSERT INTO t_task_answers SET ?',
+                        values: answers[0]
+                    });
+                }).then(function () {
+                    // 插入第二个答案
+                    return Q.ninvoke(mysql,'query',{
+                        sql: 'INSERT INTO t_task_answers SET ?',
+                        values: answers[1]
+                    });
+                }).then(function () {
+                    // 插入第三个答案
+                    if(answers[2]){
+                        return Q.ninvoke(mysql,'query',{
+                            sql: 'INSERT INTO t_task_answers SET ?',
+                            values: answers[2]
+                        });
+                    }
+                });
+            }
 
-            return Q.all(fns);
+            // if(new Date().getSeconds()%2 ==0){
+            //     answers.reverse();
+            // }
+            // var fns = answers.map(function (p1, p2, p3) {
+            //     //体育类竞猜，答案要按顺序存储
+            //     if(params.task_type==1 || params.task_type==2){
+            //         setTimeout(function () {
+            //             console.log(p1.answer);
+            //         },300);
+            //     }
+            //
+            //
+            //     return Q.ninvoke(mysql, 'query', {
+            //         sql: 'INSERT INTO t_task_answers SET ?',
+            //         values: p1
+            //     });
+            // });
+            //
+            // return Q.all(fns);
+        }).then(function () {
+            Q.ninvoke(redis,'select',config.redis_index_of_lottery_keys)
+                .then(function () {
+                    //插入redis，倒计时开奖用
+                    var key = config.redis_key_lottery_prefix+taskId;
+                    redis.set(key, JSON.stringify({
+                        taskId:taskId,
+                        settleTime:settle_time
+                    }));
+                    var ttl = parseInt(new Date(settle_time).getTime()/1000 - new Date().getTime()/1000)+60;//开奖时间延迟60秒再开奖
+                    redis.expire(key,ttl);
+
+                }).then(function () {
+                    if(params.task_type==0 || params.task_type==3){
+                        return;
+                    }
+                    //体育类竞猜,加入待处理比分队列
+                    var key = config.redis_key_score_prefix+taskId;
+                    redis.set(key, JSON.stringify({
+                        taskId:taskId,
+                        settleTime:settle_time
+                    }));
+                    var ttl = parseInt(new Date(settle_time).getTime()/1000 - new Date().getTime()/1000);
+                    redis.expire(key,ttl);
+
+            }).catch(function () {
+                //redis出错先不处理
+            });
         });
     }).catch(function (error) {
         //回滚mysql中已经加入的信息，本次冻结的金币，以及插入的竞猜项目信息

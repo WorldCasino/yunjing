@@ -70,4 +70,10 @@
         from t_task_orders
         WHERE user_id = #{userId} and task_id = #{taskId} and status=1
     </select>
+    <!--查看用户是否参与过此任务-->
+    <select id="isSharedActive" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select count(1)
+        from t_share_log
+        WHERE user_id = #{userId} and task_id = #{taskId}
+    </select>
 </mapper>

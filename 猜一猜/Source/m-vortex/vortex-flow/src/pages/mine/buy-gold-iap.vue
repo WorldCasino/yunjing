@@ -56,7 +56,7 @@
 
         self.$f7.showPreloader('购买中...')
 
-        if (typeof (inAppPurchase) === 'undefined') {
+        if (typeof (inAppPurchase) !== 'undefined') {
           inAppPurchase
             .getProducts([activity.iapProduct])
             .then(function (products) {

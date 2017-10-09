@@ -2,7 +2,12 @@
 <template>
   <div style="background: white">
     <div class="box-progress-block">
-      <f7-progressbar class="item-progress" color="pink" v-bind:progress="calcBuyPercent"></f7-progressbar>
+      <!--<f7-progressbar class="item-progress" color="blue" v-bind:progress="calcBuyPercent"></f7-progressbar>-->
+      <div class="item-progress progress-wrapper">
+        <div class="left aside"></div>
+        <div class="right  aside"></div>
+        <span :style="{width: calcBuyPercent + '%'}"></span>
+      </div>
       <div class="item-progress-desc-all">
         <div class="item-progress-desc1">
           已下注 {{count}}
@@ -61,12 +66,37 @@
     align-content: center;
   }
   .item-progress {
+    width: 100%;
     height: 16px;
-    background: #ffc3bf;
-    border: 1px solid #fc6868;
+    background: #fff;
+    border-top: 1px solid rgba(255,221,0,0.3);
+    border-bottom: 1px solid rgba(255,221,0,0.3);
     border-radius: 0px;
     position: absolute;
   }
+
+  .item-progress .aside {
+    height: 100%;
+    width: 1px;
+    background: rgba(255,221,0,0.3);
+  }
+
+  .item-progress .left{
+    float: left;
+  }
+
+  .item-progress .right{
+    float: right;
+  }
+
+  .item-progress span {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 18px;
+    background: #FFF29E;
+  }
+
   .item-progress-desc-all {
     width: 100%;
     display: -webkit-flex;  /* safari */
@@ -79,16 +109,17 @@
   }
   .item-progress-desc1 {
     font-size: 10px;
-    color: white;
+    color: #743C00;
     margin-left: 4px;
   }
   .item-progress-desc2 {
     font-size: 10px;
-    color: white;
+    color: #743C00;
   }
   .item-progress-desc3 {
     font-size: 10px;
-    color: white;
+    color: #743C00;
     margin-right: 4px;
   }
+
 </style>

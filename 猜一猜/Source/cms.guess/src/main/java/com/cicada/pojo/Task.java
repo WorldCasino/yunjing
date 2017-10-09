@@ -29,6 +29,21 @@ public class Task extends BaseEntity {
     @TableField(value = "task_type")
     private TaskTypeEnum taskType;
 
+    @TableField(value = "match_id")
+    private long matchId;
+
+    @TableField(value = "match_type")
+    private int matchtype;
+
+    @TableField(value = "play_type")
+    private int playType;
+
+    @TableField(value = "concede_points_show")
+    private String concedePointsShow;
+
+    @TableField(value = "concede_points")
+    private double concedePoints;
+
     @TableField(value = "task_content")
     private String taskContent;
 
@@ -74,6 +89,7 @@ public class Task extends BaseEntity {
     @TableField(value = "lottery_result")
     private String lotteryResult;
 
+
     public long getTaskId() {
         return taskId;
     }
@@ -104,6 +120,46 @@ public class Task extends BaseEntity {
 
     public void setTaskType(TaskTypeEnum taskType) {
         this.taskType = taskType;
+    }
+
+    public long getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(long matchId) {
+        this.matchId = matchId;
+    }
+
+    public int getMatchtype() {
+        return matchtype;
+    }
+
+    public void setMatchtype(int matchtype) {
+        this.matchtype = matchtype;
+    }
+
+    public int getPlayType() {
+        return playType;
+    }
+
+    public void setPlayType(int playType) {
+        this.playType = playType;
+    }
+
+    public String getConcedePointsShow() {
+        return concedePointsShow;
+    }
+
+    public void setConcedePointsShow(String concedePointsShow) {
+        this.concedePointsShow = concedePointsShow;
+    }
+
+    public double getConcedePoints() {
+        return concedePoints;
+    }
+
+    public void setConcedePoints(double concedePoints) {
+        this.concedePoints = concedePoints;
     }
 
     public String getTaskContent() {

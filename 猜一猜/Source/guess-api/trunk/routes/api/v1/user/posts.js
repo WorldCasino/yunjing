@@ -57,6 +57,7 @@ module.exports = function (req, res, next) {
             't.quantity, ' +
             't.task_status, ' +
             't.create_date, ' +
+            't.lock_time,' +
             't.settle_time, ' +
             't.update_date, ' +
             't.hot, ' +
@@ -67,12 +68,18 @@ module.exports = function (req, res, next) {
             'FROM t_tasks AS t ' +
             'LEFT JOIN m_users AS u ' +
             'ON t.user_id = u.user_id ' +
-            'WHERE t.is_delete = 0 and (t.user_id = ? OR t.task_id IN ? )' +
-            'ORDER BY t.create_date DESC '+
+            //'WHERE t.is_delete = 0 and (t.user_id = ? OR t.task_id IN ? )' +
+            'WHERE t.is_delete = 0 and  t.task_id IN ? ' +
+            'ORDER BY t.update_date desc,t.task_status DESC,t.create_date '+
             'limit ? offset ? ',
-            values: [user_id, [arrayOfOrders], limit, offset]
+            //values: [user_id, [arrayOfOrders], limit, offset]
+            values: [[arrayOfOrders], limit, offset]
         }).then(function (result) {
             res.pkg.data = result[0].map(function (currentValue) {
+                var lockTime = currentValue.lock_time;
+                if (lockTime != null) {
+                    lockTime = moment(new Date(lockTime)).format('YYYY-MM-DD HH:mm:ss');
+                }
                 return {
                     task_id: currentValue.task_id,
                     task_type: currentValue.task_type,
@@ -82,6 +89,7 @@ module.exports = function (req, res, next) {
                     quantity: currentValue.quantity,
                     task_status: currentValue.task_status,
                     hot: !!parseInt(currentValue.hot),
+                    lock_time: lockTime,
                     create_date: moment(currentValue.create_date).format('YYYY-MM-DD HH:mm:ss'),
                     settle_time: moment(currentValue.settle_time).format('YYYY-MM-DD HH:mm:ss'),
                     update_date: moment(currentValue.update_date).format('YYYY-MM-DD HH:mm:ss'),

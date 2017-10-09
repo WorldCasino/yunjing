@@ -331,16 +331,6 @@
 			<version>3.6</version>
 		</dependency>
 
-		<!-- map和json之间的转换 -->
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>2.4</version>
-			<classifier>jdk15</classifier>
-		</dependency>
-
-
-
 	</dependencies>
 	<build>
 		<plugins>

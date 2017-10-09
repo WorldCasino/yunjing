@@ -10,29 +10,29 @@
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
              <div class="form-group">
-                <label for="roleName" class="col-sm-1 control-label">角色名称</label>
+                <label for="roleName" class="col-sm-2 control-label">角色名称</label>
                 <div class="col-sm-2" >
                     <input type="text" name="roleName" id="roleName" class="form-control">
                 </div>
+                 <div class="pull-right" style="margin-top: 5px;">
+                     <shiro:hasPermission name="17add">
+                         <button type="button" class="btn btn-primary btn-sm toadd">
+                             添加
+                         </button>
+                     </shiro:hasPermission>
+                     <div class="btn-group">
+                         <shiro:hasPermission name="17search">
+                             <button type="button" class="btn btn-primary btn-sm" id="btn-query">
+                                 查询
+                             </button>
+                             <button type="button" class="btn btn-primary btn-sm" id="btn-re">
+                                 刷新
+                             </button>
+                         </shiro:hasPermission>
+                     </div>
+                  </div>
             </div>
          </form>
-        <div class="pull-right" style="margin-top: 5px;">
-              <div class="btn-group">
-                 <shiro:hasPermission name="17search">
-                     <button type="button" class="btn btn-primary btn-sm" id="btn-query">
-                         查询
-                     </button>
-                     <button type="button" class="btn btn-primary btn-sm" id="btn-re">
-                         刷新
-                     </button>
-                 </shiro:hasPermission>
-             </div>
-            <shiro:hasPermission name="17add">
-                <button type="button" class="btn btn-primary btn-sm toadd">
-                    添加
-                </button>
-            </shiro:hasPermission>
-        </div>
     </div>
 
     <!--表格-->
@@ -50,7 +50,7 @@
 
 
 <div class="modal fade" id="editModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width:30%;">
+    <div class="modal-dialog" style="width:50%;">
         <div class="modal-content" style=" width: 100%; ">
             <div class="modal-header" style=" width: 100%; ">
                 <button type="button" class="close" data-dismiss="modal">
@@ -105,76 +105,31 @@
                     <div class="form-group"  >
                         <label class="col-sm-3 control-label" >角色</label>
                         <div class="col-sm-4">
-                            <select  name="roleId" class="form-control roleId" onchange="showDetailUpdate(this.value)">
+                            <select  name="roleId" class="form-control roleId " onchange="showDetailUpdate(this.value)">
 
                             </select>
                         </div>
                     </div>
                     <div class="form-group"  >
                         <label class="col-sm-3 control-label" >权限管理</label>
-                        <!-- 权限设置表格 -->
+                        <div class="col-sm-6">
                         <table class="table table-bordered">
-                            <tr>
-                                <td>模块</td>
-                                <td>子模块</td>
-                                <td>操作</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" class="cd" value="01">用户管理</td>
-                                <td><input type="checkbox" class="cd" value="20">用户列表</td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="02">查询
-                                    <input type="checkbox" class="cd" value="03">详情
-                                    <input type="checkbox" class="cd" value="04">修改
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" class="cd" value="11">业务员管理</td>
-                                <td><input type="checkbox" class="cd" value="23">业务员列表</td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="12">查询
-                                </td>
-                            </tr>
-                            <tr>
-                                <td rowspan="2"><input type="checkbox" class="cd" value="21">账户管理</td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="05">账户出入金明细列表
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="06">查询
-                                    <input type="checkbox" class="cd" value="07">审核
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" class="cd" value="08">账户出金打款表
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="09">查询
-                                    <input type="checkbox" class="cd" value="10">打款
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" class="cd" value="24">账号管理</td>
-                                <td><input type="checkbox" class="cd" value="13">账号列表</td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="15">查询
-                                    <input type="checkbox" class="cd" value="14">新增
-                                    <input type="checkbox" class="cd" value="16">修改
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" class="cd" value="25">角色管理</td>
-                                <td><input type="checkbox" class="cd" value="17">角色列表</td>
-                                <td>
-                                    <input type="checkbox" class="cd" value="18">新增
-                                    <input type="checkbox" class="cd" value="19">权限设置
-                                </td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <td>模块</td>
+                                    <td>子模块</td>
+                                    <td>操作</td>
+                                </tr>
+                             </thead>
+                            <tbody class="modulesList">
+
+
+                            </tbody>
                         </table>
+                        </div>
                     </div>
                 </form>
-                <div class="text-center" style="margin-top: 50px">
+                 <div class="text-center" style="margin-top: 50px">
                     <shiro:hasPermission name="17update">
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-lg" id="okUpdate">
@@ -341,6 +296,34 @@
         }
 
 
+        //菜单列表
+        if(true) {
+            $.ajax({
+                type: "POST",
+                url: agdress.CONSTS.URL_BASE_API+"ss_modules/getModuleList",
+                data: {},
+                async: false,
+                success: function (data) {
+                    var selectList=data;
+                    console.log(data);
+                    for(var i=0 ; i <selectList.length ;i++){
+                         $(".modulesList").append("<tr> <td colspan='3'><input type='checkbox' class='cd' value='"+selectList[i].moduleId+"'>"+selectList[i].name+"</td> </tr>");
+                         var selectList2=selectList[i].list;
+                         for(var j=0 ; j <selectList2.length ;j++){
+                             var selectList3=selectList2[j].list;
+                             var str=" ";
+                             for(var h=0 ; h <selectList3.length ;h++){
+                                 str+="<input type='checkbox' class='cd' value='"+selectList3[h].moduleId+"'>"+selectList3[h].name+" ";
+                             }
+                             $(".modulesList").append("<tr> <td></td> <td><input type='checkbox' class='cd' value='"+selectList2[j].moduleId+"'>"+selectList2[j].name+"</td> <td>  "+str+"</td> </tr>");
+                         }
+
+                    }
+                }
+            });
+        }
+
+
     });
 
 
@@ -353,7 +336,6 @@
             },
             async: false,
             success: function (data) {
-//                console.log(data);
                 var modules=data.data;
                 if (data.message == "succeed") {
                     $(".cd").each(function(){

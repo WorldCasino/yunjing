@@ -17,7 +17,7 @@
     line-height: 1; 
   }
   .m-sports-vs>p:nth-of-type(2){
-    margin-top: .17333rem; font-size: .26666rem; color: #666;
+    margin-top: .09rem; font-size: .26666rem; color: #666;
   }
   .m-sports-item{
     text-align: left; 
@@ -28,6 +28,7 @@
   }
   .m-sports-img{
     width: 1.0666rem; margin-bottom: 5px;
+    position: relative; height: 100%;
   }
   .m-fl{
     float: left; clear: both;
@@ -48,7 +49,6 @@
     color: #666;
     line-height: 30px;
     background: #fff;
-    margin-top: 15px;
     text-align: left;
   }
   .type-wrapper {
@@ -91,6 +91,43 @@
     align-items: center;
     justify-content: center;
   }
+  .m-team-logo{
+    width: 1.066666rem;
+  }
+  
+  .m-sports-keTeam>.m-sports-img>div{
+    position: absolute; left: 50%;
+    word-break: keep-all; transform: translateX(-50%);
+  }
+  
+  .m-sports-mainTeam>.m-sports-img>div{
+    position: absolute; left: 50%;
+    word-break: keep-all; transform: translateX(-50%);
+  }
+  
+  .m-visit-word{
+    position: absolute;
+    right: -24px; top: 0;
+  }
+  
+  .m-home-word{
+    position: absolute;
+    left: -24px; top: 0;
+  }
+  
+  .notice-title{
+    font-size:14px;
+    color:#666;
+    margin:12px 0 0 12px;
+    text-align: left;
+  }
+
+  .notice-content{
+    font-size:14px;
+    color:#999;
+    text-align: left;
+    padding:4px 0 10px 12px;
+  }
 </style>
 
 <template>
@@ -101,7 +138,9 @@
           <img src="./../../assets/nav-back.png" class="back-nav" style="margin-top: 0px"/>
         </f7-link>
       </f7-nav-left>
-      <f7-nav-center>发布竞猜</f7-nav-center>
+      <f7-nav-center v-if="type == 1">发布标准盘竞猜</f7-nav-center>
+      <f7-nav-center v-else-if="type == 2">发布大小球竞猜</f7-nav-center>
+      <f7-nav-center v-else>发布让球竞猜</f7-nav-center>
     </f7-navbar>
     
 		<div class="pub-guess" ref="wrapper" :style="{height: height-44 + 'px'}">
@@ -118,20 +157,30 @@
           </div>
 
           <section class="m-sports-item">
-            <p class="m-sports-title">西甲 第十轮 08-11 19:45</p>
-
+            <p class="m-sports-title" v-if="ballType == 1">{{footballCurData.title}} {{openTime}}</p>
+            <p class="m-sports-title" v-else-if="ballType == 2">{{basketballCurData.title}} {{openTime}}</p>
             <div class="m-sports-can">
               <div class="m-sports-mainTeam">
-                <img src="../../../static/sports/a.jpg" class="m-sports-img m-fr"/>
-                <p class="m-fr"><span class="red">[主]</span> 巴塞罗拉</p>
+                <div class="m-sports-img m-fr">
+                  <img :src="footballCurData.homeTeamLogo" class="m-team-logo" v-if="ballType == 1"/>
+                  <img :src="basketballCurData.homeTeamLogo" class="m-team-logo" v-else-if="ballType == 2"/>
+                  <div v-if="ballType == 1"><p class="red m-home-word">[主]</p> {{footballCurData.homeTeamName}}</div>
+                  <div v-else-if="ballType == 2"><p class="red m-home-word">[主]</p> {{basketballCurData.homeTeamName}}</div>
+                </div>
               </div>
               <div class="m-sports-vs">
                 <p>VS</p>
-                <p>标准盘</p>
+                <p v-if="type == 1 || ballType == 2">标准盘</p>
+                <p v-if="type == 2 && itm.isDefault" v-for="itm in footballCurData.ballSize">大小球 ({{itm.concedePointsShow}})</p>
+                <p v-if="type == 3 && itm.isDefault" v-for="itm in footballCurData.letTheBall">让球 ({{itm.concedePointsShow}})</p>
               </div>
               <div class="m-sports-keTeam">
-                <img src="../../../static/sports/b.jpg" class="m-sports-img m-fl"/>
-                <p  class="m-fl">赫塔菲 <span class="blue">[客]</span></p>
+                <div class="m-sports-img m-fl">
+                  <img :src="footballCurData.awayTeamLogo" class="m-team-logo" v-if="ballType == 1"/>
+                  <img :src="basketballCurData.awayTeamLogo" class="m-team-logo" v-else-if="ballType == 2"/>
+                  <div v-if="ballType == 1">{{footballCurData.awayTeamName}} <p class="blue m-visit-word">[客]</p></div>
+                  <div v-else-if="ballType == 2">{{basketballCurData.awayTeamName}} <p class="blue m-visit-word">[客]</p></div>
+                </div>  
               </div>
             </div>
 
@@ -141,16 +190,27 @@
           <section>
             <div class="open-type">开奖方式</div>
             <div class="type-wrapper">
-              <div class="open-text">手动开奖</div>
-              <div class="open-des">自己选择答案开奖</div>
+              <div class="open-text">自动开奖</div>
+              <div class="open-des">比赛结束后，系统会自动开奖</div>
             </div>
             <div class="type-wrapper">
               <div class="time-des">下注截止时间</div>
-              <div class="time-text">2017-10-05 08:00</div>
+              <div class="time-text">{{endTime}}</div>
             </div>
           </section>
           
 				</div>
+				
+				<div class="part3" style="text-align: left;">
+          <div class="notice-title">发布须知</div>
+          <div class="notice-content">
+            1、体育竞猜的盘口和赔率可以自已设置<br>
+            2、为保证公正性，比赛开始前15分钟，自动停止下注<br>
+            3、比赛结束后，系统会根据实际赛果自动开奖<br>
+            4、暂时不支持滚球的玩法
+          </div>
+        </div>
+        
 			</div>
       <f7-button class="btn-next-step" @click="nextStep">下一步</f7-button>
 		</div>
@@ -161,39 +221,74 @@
 <script>
 
   import {mapState, mapGetters, mapActions} from 'vuex'
-  import { arrSort } from '../../utils/commom'
+  import { arrSort, formmat } from '../../utils/commom'
 
   export default {
     data () {
       return {
         height: '',
         desc: '',
-        textMax: 40
+        textMax: 40,
+        letBall: [],
+        letBallIndex: 0
       }
     },
     computed: {
       ...mapState({
-        token: state => state.token
+        token: state => state.token,
+        footballCurData: state => state.sports.footballCurData,
+        basketballCurData: state => state.sports.basketballCurData,
+        ballType: state => state.sports.ballType,
+        type: state => state.sports.type,
+        routeShake: state => state.sports.routeShake
       }),
       descAcount () {
         return this.desc.length >= 30 ? 'true' : false
+      },
+      endTime () {
+        if (this.ballType === 2) {
+          return formmat(new Date(new Date(this.basketballCurData.openTime.replace(/-/g, '/')).getTime() - 15 * 1000 * 60), '1')
+        }
+        return formmat(new Date(new Date(this.footballCurData.openTime.replace(/-/g, '/')).getTime() - 15 * 1000 * 60), '1')
+      },
+      openTime () {
+        var arr
+        if (this.ballType === 2) {
+          arr = this.basketballCurData.openTime.split('-')
+          arr.shift()
+          arr = arr.join('-').split(':')
+          arr.pop()
+          return arr.join(':')
+        }
+        arr = this.footballCurData.openTime.split('-')
+        arr.shift()
+        arr = arr.join('-').split(':')
+        arr.pop()
+        return arr.join(':')
       }
     },
     methods: {
+      letball (v) {
+        for (var i = 0; i < v.length; i++) {
+          if (v[i].isDefault) {
+            return v[i].ballNumber > 0 ? '+' + v[i].ballNumber : v[i].ballNumber
+          }
+        }
+      },
       nextStep () {
         if (this.desc.length > this.textMax) {
           return this.$dm.confirm({title: `提示`, mes: '竞猜描述字数请大于' + this.textMax + '个'})
         } else if (this.desc.length < 6) {
           return this.$dm.confirm({title: `提示`, mes: '竞猜描述字数请大于6个'})
         }
-        this.$store.state.sports.desc = escape(this.desc)
-        this.$f7.views.postPop.router.load({url: '/publish-sports-set/?type=1'})
+        this.$store.state.sports.desc = this.desc
+        this.$f7.views.postPop.router.load({url: '/publish-sports-set/'})
       }
     },
     mounted () {
       var height = document.documentElement.clientHeight
       this.height = parseInt(height)
-    }  
+    }
   }
 </script>
 

@@ -138,4 +138,15 @@ public class ActiveServiceImpl extends ServiceImpl<ActiveMapper,ActiveEntity> im
         return cnt;
     }
 
+    /**
+     * 用户是否参与过此竞猜
+     * @param params
+     * @return
+     * @throws ApiException
+     */
+    public int isSharedActive(Map<String, Object> params) throws ApiException {
+        int cnt=activeMapper.isSharedActive(params);
+        return cnt;
+    }
+
 }

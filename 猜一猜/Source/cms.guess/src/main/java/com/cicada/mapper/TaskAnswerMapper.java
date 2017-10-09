@@ -3,6 +3,7 @@ package com.cicada.mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.cicada.pojo.TaskAnswer;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,4 +16,8 @@ public interface TaskAnswerMapper extends BaseMapper<TaskAnswer> {
     int resetWrongAnswer(Map<String,Object> whereMap);
 
     int setRightAnswer(Map<String,Object> whereMap);
+
+    List<Long> selectWattingAnswerTasks();
+
+    int setRightAnswer2(long answerId);
 }

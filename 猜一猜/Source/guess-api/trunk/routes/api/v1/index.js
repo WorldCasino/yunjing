@@ -6,6 +6,7 @@ var router = express.Router();
 var path = require('path');
 var tasks = require('./task/last');
 var task_gambler = require('./task/gambler');
+var task_gambler2 = require('./task/gambler2');
 var profile = require('./user/profile');
 var judge = require('./user/judge');
 var app_switch = require('./user/app-switch');
@@ -18,6 +19,7 @@ router.get('/', function(req, res, next) {
 router.get('/tasks', tasks.latest);
 // 投注玩家页面
 router.get('/task/gamblers',task_gambler);
+router.get('/task/gamblers2',task_gambler2);
 // 页面详情
 router.get('/task/profile',require('./task/detail'));
 /**##################排行榜###############**/
@@ -84,6 +86,7 @@ router.get('/message/get',require('./message/get'));
 /**##################球赛展示信息###############**/
 // 球赛展示列表
 router.get('/ball/balllist',require('./ball/balllist'));
+router.get('/ball/balldetail',require('./ball/balldetail'));
 
 
 

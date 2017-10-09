@@ -54,7 +54,13 @@
         top.location.href = window.location.href;
 </script>
 <script>
+
+
     $(document).ready(function() {
+
+
+
+
         //登录表单验证
         $('#form_login').bootstrapValidator({
             message: '提交数据不能全为空',
@@ -118,7 +124,7 @@
 
         //验证图片点击后重新获取验证码
         $("#img_verify").on("click", function () {
-            $(this).attr("src", agdress.CONSTS.URL_BASE_CMS+"captcha-image?t=" + Math.random());
+            $(this).attr("src",  agdress.CONSTS.URL_BASE_CMS+"captcha-image?t=" + Math.random());
         });
 
         $("#img_verify").click();

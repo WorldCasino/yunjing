@@ -11,6 +11,7 @@ import VueLazyLoad from 'vue-lazyload'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import confirm from './plugin/confirm'
 import myDate from './plugin/datepick'
+import chatInput from './plugin/chatInput'
 
 Vue.prototype.$dm = {}
 Vue.prototype.$dm.confirm = confirm
@@ -18,6 +19,7 @@ Vue.prototype.$dm.confirm = confirm
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
 Vue.use(myDate)
+Vue.use(chatInput)
 // Import F7 iOS Theme Styles
 import Framework7Theme from 'framework7/dist/css/framework7.ios.min.css'
 import Framework7ThemeColors from 'framework7/dist/css/framework7.ios.colors.min.css'

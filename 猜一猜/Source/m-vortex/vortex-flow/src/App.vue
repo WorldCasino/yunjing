@@ -7,16 +7,23 @@
 
             <f7-navbar v-if="tabIndex === 1" class="nav-custom">
               <f7-nav-left>
-                <div v-if="userInfoData !== null && userInfoData.coin_balance != null" class="box-gold-info">
-                  <div><img class="item-gold-icon" src="./assets/ic_gold.png" width="24" height="24"/></div>
-                  <div class="item-gold-text">{{parseInt(userInfoData.coin_balance)}}</div>
-                </div>
+                <f7-link open-panel="right" href="/rank/">
+                  <img src="./../static/homepage/homepass_paihangbang.png" style="width: 22px;height: 22px; margin-left: 4px;"/>
+                </f7-link>
               </f7-nav-left>
               <f7-nav-center sliding>猜一猜</f7-nav-center>
               <f7-nav-right>
-                <f7-link open-panel="right" href="/rank/">
-                  <img src="./../static/homepage/homepass_paihangbang.png" style="width: 22px;height: 22px;"/>
-                </f7-link>
+                <div v-if="userInfoData !== null && userInfoData.coin_balance != null && userInfoData.bean_balance != null" class="box-gold-info">
+                  <div class="flex-row" @click="goMineGoldAll">
+                    <img class="item-gold-coin-l" src="../static/homepage/homepass_jinbi.png" width="13" height="14"/>
+                    <div class="item-gold-text">{{coinBanlaceFormat}}</div>
+                  </div>
+                  <div class="item-gold-su"></div>
+                  <div class="flex-row" @click="goMineGoldBean">
+                    <img class="item-gold-icon-r" src="../static/homepage/homepass_jindou.png" width="13" height="13"/>
+                    <div class="item-gold-text">{{BeanBanlaceFormat}}</div>
+                  </div>
+                </div>
               </f7-nav-right>
               <f7-subnavbar class="subnav-custom">
                 <div class="marquee" ref="marqueeRef">
@@ -30,7 +37,14 @@
 
             <f7-navbar v-if="tabIndex === 2" class="nav-custom">
               <f7-nav-left></f7-nav-left>
-              <f7-nav-center sliding>已猜</f7-nav-center>
+              <f7-nav-center sliding>体育</f7-nav-center>
+              <f7-subnavbar sliding>
+                  <f7-link tab-link="#tab2_1" class="sport-tab" :class="{'sport-tab-active': sportType === 1}" @click="selectSportTab(1)">足球</f7-link>
+                  <f7-link tab-link="#tab2_2" class="sport-tab" :class="{'sport-tab-active': sportType === 2}" @click="selectSportTab(2)">篮球</f7-link>
+              </f7-subnavbar>
+              <div v-if="sportType === 1" class="toolbar-opentime">{{oTTbFoot}}</div>
+              <div v-else-if="sportType === 2" class="toolbar-opentime">{{oTTbBask}}</div>
+
             </f7-navbar>
 
             <f7-navbar v-if="tabIndex === 3" class="nav-custom">
@@ -41,7 +55,7 @@
             <f7-navbar v-if="tabIndex === 4" class="nav-custom-tab4">
             </f7-navbar>
 
-            <f7-page-content tab id="tab1" active class="page-content-custom pull-to-refresh-content infinite-scroll" ref="homepage">
+            <f7-page-content tab id="tab1" active class="page-content-custom pull-to-refresh-content infinite-scroll content-homepage" ref="quizList">
               <div class="pull-to-refresh-layer">
                 <div class="preloader"></div>
                 <div class="pull-to-refresh-arrow"></div>
@@ -59,16 +73,52 @@
               <!--<Homepage/>-->
             <!--</f7-page-content>-->
 
-            <f7-page-content tab id="tab2" class="pull-to-refresh-content infinite-scroll" ref="related">
+            <!--备注的-->
+            <!--<f7-page-content v-if="sportType === 1" tab id="tab2" class="with-subnavbar pull-to-refresh-content infinite-scroll" ref="sport">
               <div class="pull-to-refresh-layer">
                 <div class="preloader"></div>
                 <div class="pull-to-refresh-arrow"></div>
               </div>
-              <div>
-                <Related/>
+              <div>show
+                <Footpage v-show="sportType === 1"/>
+                <Baskpage v-show="sportType === 2"/>
+              </div>
+              <div v-if="sportType === 1" class="infinite-scroll-preloader">
+                <div v-if="isAnyMoreSport1" class="preloader"></div>
+                <div v-else class="nomore">暂无更多</div>
+              </div>
+              <div v-if="sportType === 2" class="infinite-scroll-preloader">
+                <div v-if="isAnyMoreSport2" class="preloader"></div>
+                <div v-else class="nomore">暂无更多</div>
+              </div>
+            </f7-page-content>-->
+
+            <!--  体育频道  足球-->
+            <f7-page-content tab id="tab2_1" class="with-subnavbar page-content-custom pull-to-refresh-content infinite-scroll" ref="quizListFoot">
+              <div class="pull-to-refresh-layer">
+                <div class="preloader"></div>
+                <div class="pull-to-refresh-arrow"></div>
+              </div>
+              <div class="page-wrapper">
+                <Footpage/>
               </div>
               <div class="infinite-scroll-preloader">
-                <div v-if="isAnyMore2 && token" class="preloader"></div>
+                <div v-if="isAnyMoreSport1" class="preloader"></div>
+                <div v-else class="nomore">暂无更多</div>
+              </div>
+            </f7-page-content>
+
+            <!--  体育频道  蓝球-->
+            <f7-page-content tab id="tab2_2" class="with-subnavbar page-content-custom pull-to-refresh-content infinite-scroll" ref="quizListBask">
+              <div class="pull-to-refresh-layer">
+                <div class="preloader"></div>
+                <div class="pull-to-refresh-arrow"></div>
+              </div>
+              <div class="page-wrapper">
+                <Baskpage/>
+              </div>
+              <div class="infinite-scroll-preloader">
+                <div v-if="isAnyMoreSport2" class="preloader"></div>
                 <div v-else class="nomore">暂无更多</div>
               </div>
             </f7-page-content>
@@ -81,18 +131,20 @@
               <Mine/>
             </f7-page-content>
 
-            <f7-toolbar tabbar labels tabbar-labels-through>
-              <f7-link tab-link="#tab1" active @click="selectTab(1)" @click.once="loginDaily('')">
+            <f7-toolbar tabbar labels tabbar-labels-through class="tab-bar-wrapper">
+              <f7-link tab-link="#tab1" active @click="selectTab(1)">
                 <img v-if="tabIndex === 1" class="tab-bar-img" src="../static/tabbar/tab_icon1.png">
                 <img v-else class="tab-bar-img" src="../static/tabbar/tab_icon1-2.png">
                 <p class="tab-bar-p">首页</p>
               </f7-link>
-              <f7-link tab-link="#tab2" @click="selectTab(2)">
+
+              <f7-link :tab-link="'#tab2_' + sportType" @click="selectTab(2)">
                 <img v-if="tabIndex === 2" class="tab-bar-img" src="../static/tabbar/tab_icon2.png">
                 <img v-else class="tab-bar-img" src="../static/tabbar/tab_icon2-2.png" >
-                <RedDot :isShowDot="showRedDot" class="tab-bar-red-dot"></RedDot>
-                <p class="tab-bar-p">已猜</p>
+                <!--<RedDot :isShowDot="showRedDot" class="tab-bar-red-dot"></RedDot>-->
+                <p class="tab-bar-p">体育</p>
               </f7-link>
+
               <f7-link open-popup="#post" @click="selectPopup">
                 <img class="tab-item-publish-beyond" src="../static/tabbar/tab_icon3.png">
                 <p class="tab-bar-p">发布</p>
@@ -119,8 +171,8 @@
     <f7-popup id="post"  tablet-fullscreen>
       <f7-view name="postPop">
         <f7-pages>
-          <f7-page navbar-fixed tabs no-page-content style="background: #fff;">
-            
+          <f7-page navbar-fixed tabs no-page-content style="background: #fff;" name="pubPage">
+
             <f7-navbar class="nav-custom">
               <f7-nav-left>
                 <f7-link close-popup="#post">
@@ -128,33 +180,34 @@
                 </f7-link>
               </f7-nav-left>
               <f7-nav-center>发布竞猜</f7-nav-center>
-              <f7-subnavbar sliding class="">
-                <f7-link class="sport-tab" active :class="{'sport-tab-active': pubTab === 1}" tab-link="#pubTab1" @click="pubTab = 1">图文</f7-link>
-                <f7-link class="sport-tab" :class="{'sport-tab-active': pubTab === 2}" tab-link="#pubTab2" @click="pubTab = 2">足球</f7-link>
-                <f7-link class="sport-tab" :class="{'sport-tab-active': pubTab === 3}" tab-link="#pubTab3" @click="pubTab = 3">篮球</f7-link>
+              <f7-subnavbar sliding style="margin-top: 0px!important;">
+                <f7-link class="sport-tab" active :class="{'sport-tab-active': pubTab === 1}" tab-link="#pubTab1" @click="publishTab(1)">图文</f7-link>
+                <f7-link class="sport-tab" :class="{'sport-tab-active': pubTab === 2}" tab-link="#pubTab2" @click="publishTab(2)">足球</f7-link>
+                <f7-link class="sport-tab" :class="{'sport-tab-active': pubTab === 3}" tab-link="#pubTab3" @click="publishTab(3)">篮球</f7-link>
               </f7-subnavbar>
             </f7-navbar>
-            
-            <f7-page-content id="pubTab1" tab class="with-subnavbar infinite-scroll" active>
+            <header class="dateTime-show" v-show="$store.state.sports.isShowfDate && this.$store.state.sports.fScrollTop">{{this.$store.state.sports.showDate}}</header>
+            <header class="dateTime-show" v-show="$store.state.sports.isShowbDate && this.$store.state.sports.bScrollTop">{{this.$store.state.sports.showDate2}}</header>
+            <f7-page-content id="pubTab1" tab class="with-subnavbar appleScroll" active>
               <PubGuess/>
             </f7-page-content>
-            
-            <f7-page-content id="pubTab2" tab class="with-subnavbar infinite-scroll">
+
+            <f7-page-content id="pubTab2" tab class="with-subnavbar infinite-scroll appleScroll">
               <Football/>
               <div class="infinite-scroll-preloader">
                 <div v-if="isAnyMorefootball" class="preloader"></div>
                 <div v-else class="nomore">暂无更多</div>
               </div>
             </f7-page-content>
-            
-            <f7-page-content id="pubTab3" tab class="with-subnavbar infinite-scroll">
+
+            <f7-page-content id="pubTab3" tab class="with-subnavbar infinite-scroll appleScroll">
               <Basketball/>
               <div class="infinite-scroll-preloader">
                 <div v-if="isAnyMorebasketball" class="preloader"></div>
                 <div v-else class="nomore">暂无更多</div>
               </div>
             </f7-page-content>
-            
+
           </f7-page>
         </f7-pages>
       </f7-view>
@@ -226,7 +279,10 @@
     <audio src="../../static/audio/bet.mp3" preload class="bet-audio"></audio>
 
     <!-- 详情页更多 -->
-    <More></More>
+    <More/>
+
+    <!--  红包  -->
+    <LuckyMoney/>
   </div>
 </template>
 
@@ -239,6 +295,8 @@
   import Hello from './pages/Hello.vue'
   import Homepage from './pages/homepage/homepage.vue'
   import Related from './pages/related/related.vue'
+  import Footpage from './pages/homepage/footpage.vue'
+  import Baskpage from './pages/homepage/baskpage.vue'
   import QuizSubject from './components/quiz-sub.vue'
   import PubGuess from './pages/guess/pubguess.vue'
   import Mine from './pages/mine/mine.vue'
@@ -251,18 +309,21 @@
   import RedDot from './components/red-dot.vue'
   import Task from './pages/task/task.vue'
   import More from './components/more.vue'
+  import LuckyMoney from './components/lucky-money.vue'
   import Basketball from './pages/guess/basketball.vue'
   import Football from './pages/guess/football.vue'
   import { mapState, mapActions } from 'vuex'
   import io from 'socket.io-client'
 
   import * as storageTypes from './store/storage-types'
-  import {formmat} from './utils/commom'
+  import {formmat, balanceFormat} from './utils/commom'
   export default {
     name: 'app',
     components: {
       Homepage,
       Related,
+      Footpage,
+      Baskpage,
       Hello,
       QuizSubject,
       PubGuess,
@@ -276,6 +337,7 @@
       RedDot,
       Task,
       More,
+      LuckyMoney,
       Football,
       Basketball
     },
@@ -289,9 +351,13 @@
         tabIndex: 1,
         hasNavBar: true,
 
+        // 1足球 or 2篮球
+        sportType: 1,
+
 //        处理当没有更多数据时的情形
         isAnyMore: true,
-        isAnyMore2: true,
+        isAnyMoreSport1: true,
+        isAnyMoreSport2: true,
         isInfiniteLoading: false,
 
         socket: null,
@@ -351,6 +417,18 @@
         quizListLastCount: state => state.quizList.lastCount,
         quizListLimit: state => state.quizList.limit,
 
+        // sport
+        quizListFootStatus: state => state.quizListFoot.status,
+        quizListFootShake: state => state.quizListFoot.shake,
+        quizListFootLastCount: state => state.quizListFoot.lastCount,
+        quizListFootLimit: state => state.quizListFoot.limit,
+        quizListBaskStatus: state => state.quizListBask.status,
+        quizListBaskShake: state => state.quizListBask.shake,
+        quizListBaskLastCount: state => state.quizListBask.lastCount,
+        quizListBaskLimit: state => state.quizListBask.limit,
+        oTTbFoot: state => state.quizListFoot.openTimeToolbar,
+        oTTbBask: state => state.quizListBask.openTimeToolbar,
+
         // related
         relatedStatus: state => state.related.status,
         relatedShake: state => state.related.shake,
@@ -370,6 +448,9 @@
         currentPage: state => state.currentPage,
 
         watches: state => state.quizList.watches,
+        watchesBrgHome: state => state.quizList.watchesBrg,
+        watchesBrgFoot: state => state.quizListFoot.watchesBrg,
+        watchesBrgBask: state => state.quizListBask.watchesBrg,
 
 //        server addr init state
         serverInit: state => state.serverInit,
@@ -378,39 +459,73 @@
         isSwiper: state => state.quizDetail.isSwiper,
         imgs: state => state.quizDetail.imgs,
         imgIndex: state => state.quizDetail.imgIndex,
+
+        // 体育发布
         isAnyMorebasketball: state => state.sports.isAnyMorebasketball,
-        isAnyMorefootball: state => state.sports.isAnyMorefootball
-      })
+        isAnyMorefootball: state => state.sports.isAnyMorefootball,
+        btime: state => state.sports.btime,
+        ftime: state => state.sports.ftime,
+        basketballList: state => state.sports.basketballList,
+        footballList: state => state.sports.footballList
+      }),
+      coinBanlaceFormat () {
+        return balanceFormat(this.userInfoData.coin_balance)
+      },
+      BeanBanlaceFormat () {
+        return balanceFormat(this.userInfoData.bean_balance)
+      }
     },
     methods: {
       ...mapActions([
         'getQuizzes',
+        'getQuizzesFoot',
+        'getQuizzesBask',
         'getRelatedList',
         'relatedQuizDetail',
         'getShareJsSdkConf',
         'getUserInfo',
         'homepageQuizDetail',
         'getServAddr',
-        'getTaskData',
+        'getTaskDailyData',
+        'getTaskGrowData',
         'loginDaily',
         'getSportsPubList'
       ]),
-      publishTab (index) {
-        if (index === 2) {
-          this.$store.state.sports.isInfiniteScroll = true
-          this.getSportsPubList({match_type: 1, page: 1}) // 足球
-        } else if (index === 3) {
-          this.$store.state.sports.isInfiniteScroll = true
-          this.getSportsPubList({match_type: 2, page: 1}) // 篮球
+      goMineGoldAll () {
+        if (this.token !== null) {
+          this.$store.state.userCoin.type = 0
+          this.$f7.views.main.router.load({
+            url: '/mine-gold-all/'
+          })
         } else {
-          this.$store.state.sports.isInfiniteScroll = false
+          this.$f7.popup('#login-choose')
         }
-        this.$store.state.sports.tabIndex = index
+      },
+      goMineGoldBean () {
+        if (this.token !== null) {
+          this.$f7.views.main.router.load({
+            url: '/mine-goldbean/'
+          })
+        } else {
+          this.$f7.popup('#login-choose')
+        }
+      },
+      publishTab (index) {
+        this.pubTab = index
+        if (index === 1) {
+          this.$store.state.sports.isShowfDate = false
+          this.$store.state.sports.isShowbDate = false
+        } else if (index === 2) {
+          this.$store.state.sports.isShowfDate = true
+          this.$store.state.sports.isShowbDate = false
+        } else if (index === 3) {
+          this.$store.state.sports.isShowbDate = true
+          this.$store.state.sports.isShowfDate = false
+        }
       },
       onInfiniteScroll () {
         if (!this.isInfiniteScroll && this.isInfiniteFlag) {
           this.isInfiniteFlag = false
-          alert(1)
         }
       },
       connectTaskServer () {
@@ -422,12 +537,6 @@
           console.log('task socket on connected')
           self.$store.state.taskSocket = self.taskSocket
           self.taskSocket.emit('watch', JSON.stringify(self.watches))
-          if (self.token) {
-            setTimeout(function () {
-              console.log('向服务器发送observeActive------' + JSON.stringify({user_id: self.userInfoData.user_id}))
-              self.taskSocket.emit('observeActive', JSON.stringify({user_id: self.userInfoData.user_id}))
-            }, 300)
-          }
         })
         this.taskSocket.on('message', function (data) {
           let json = JSON.parse(data)
@@ -499,16 +608,16 @@
               self.homepageQuizDetail([json.award.task])
               break
             case 'chat':
-              console.log('聊天')
+              console.log('socket-chat:下注')
               console.log(json.chat.room)
               self.homepageQuizDetail([json.chat.room])
               break
             case 'observe':
-              console.log('观察')
-              if (self.tabIndex !== 2) {
-                self.showRedDot = true
-              }
-              self.relatedQuizDetail([json.observe.task])
+//              console.log('观察')
+//              if (self.tabIndex !== 2) {
+//                self.showRedDot = true
+//              }
+//              self.relatedQuizDetail([json.observe.task])
               break
             case 'observeActive':
               console.log('待领取奖励的任务个数为' + json.observeActive.cnt)
@@ -538,7 +647,68 @@
           // console.log('task socket on reconnect_failed')
         })
       },
+      pushWatches (watches) {
+        console.log(watches)
+        this.$store.state.quizList.watches = watches
+        this.taskSocket.emit('watch', JSON.stringify(watches))
+      },
+      selectSportTab (index) {
+        // 离开页面前，vuex保存当前页面可视窗口的wantches
+        switch (this.sportType) {
+          case 1 : // 足球
+            this.$store.state.quizListFoot.watchesBrg = this.watches
+            break
+          case 2 : // 篮球
+            this.$store.state.quizListBask.watchesBrg = this.watches
+            break
+        }
+
+        // 当前体育页面tab索引：index
+        switch (index) {
+          case 1 : // 足球
+            this.pushWatches(this.watchesBrgFoot)
+            break
+          case 2 : // 篮球
+            this.pushWatches(this.watchesBrgBask)
+            break
+        }
+        this.sportType = index
+      },
       selectTab (index) {
+        // 离开页面前，vuex保存当前页面可视窗口的wantches
+        switch (this.tabIndex) {
+          case 1 : // 首页
+            this.$store.state.quizList.watchesBrg = this.watches
+            break
+          case 2 : // 体育
+            switch (this.sportType) {
+              case 1 : // 足球
+                this.$store.state.quizListFoot.watchesBrg = this.watches
+                break
+              case 2 : // 篮球
+                this.$store.state.quizListBask.watchesBrg = this.watches
+                break
+            }
+            break
+        }
+
+        // 当前页面tab索引：index
+        switch (index) {
+          case 1 : // 首页
+            this.pushWatches(this.watchesBrgHome)
+            break
+          case 2 : // 体育
+            switch (this.sportType) {
+              case 1 : // 足球
+                this.pushWatches(this.watchesBrgFoot)
+                break
+              case 2 : // 篮球
+                this.pushWatches(this.watchesBrgBask)
+                break
+            }
+            break
+        }
+
         if (this.tabIndex === index) {
           // reselect 列表可以回到顶部 并重新刷新数据
         }
@@ -551,17 +721,18 @@
         }
 
         if (index === 3) {
-          this.getTaskData(this.$store.state.task.taskType)
+          this.getTaskDailyData()
+          this.getTaskGrowData()
         }
 
-        if (this.token === null && (index === 2 || index === 4 || index === 3)) {
+        if (this.token === null && (index === 4 || index === 3)) {
 //          如果未登录,弹出登录框
           this.$f7.popup('#login-choose')
         } else if (index === 4) {
           this.getUserInfo('')
         } else if (index === 2) {
-          this.showRedDot = false
-          this.getRelatedList([0])
+          // this.showRedDot = false
+          // this.getRelatedList([0])
         }
       },
       selectPopup () {
@@ -569,6 +740,7 @@
 //          如果未登录,弹出登录框
           this.$f7.popup('#login-choose')
         }
+        this.$f7.views.postPop.router.load({pageName: 'pubPage', animatePages: false})
         this.$store.state.uploadData.reset++
       },
       cleanLocalStorage () {
@@ -587,18 +759,19 @@
 
         self.initMainApp()
 
-        // history.pushState(null, null, document.URL)
-        // window.addEventListener('popstate', function () {
-        //   history.pushState(null, null, document.URL)
-        //   console.log(self.$f7)
-        //   // todo 记录所有push modal,然后处理返回功能
-        //   if (typeof self.$router !== 'undefined') {
-        //     console.log(self.$router)
-        //     self.$router.back()
-        //   } else {
-
-        //   }
-        // })
+//        history.pushState(null, null, document.URL)
+//        window.addEventListener('popstate', function () {
+//          history.pushState(null, null, document.URL)
+//          console.log(self.$f7)
+//          // todo 记录所有push modal,然后处理返回功能(之后得注解了)
+//          if (typeof self.$router !== 'undefined') {
+//            history.pushState(null, null, document.URL)
+//            console.log(self.$router)
+//            self.$router.back()
+//          } else {
+//            console.log('baba')
+//          }
+//        })
 
         if (typeof (chcp) !== 'undefined') {
           console.log('chcp exist')
@@ -626,15 +799,31 @@
         if (r != null) return unescape(r[2])
         return null
       },
+      watchScroll (pageRef) {
+        // 记录首页、足球、篮球的滚动条信息
+        const self = this
+        this.$refs[pageRef].$el.onscroll = function (e) {
+          self.$store.state[pageRef].visualHeight = this.clientHeight
+          self.$store.state[pageRef].scrollTop = this.scrollTop
+//          console.log(pageRef + '页滚动的高度', this.scrollTop)
+        }
+      },
       initMainApp () {
         let self = this
         // init
         let prtContent = this.Dom7('.pull-to-refresh-content')
         prtContent.on('ptr:refresh', function (e) {
-          if (e.target === self.$refs.homepage.$el) {
+          if (self.isInfiniteLoading) {
+            return
+          }
+          self.isInfiniteLoading = true
+
+          if (e.target === self.$refs.quizList.$el) {
             self.getQuizzes([0])
-          } else if (e.target === self.$refs.related.$el) {
-            self.getRelatedList([0])
+          } else if (e.target === self.$refs.quizListFoot.$el) {
+            self.getQuizzesFoot([0])
+          } else if (e.target === self.$refs.quizListBask.$el) {
+            self.getQuizzesBask([0])
           }
         })
         prtContent.on('infinite', function (e) {
@@ -643,21 +832,62 @@
           }
           self.isInfiniteLoading = true
 
-          if (e.target === self.$refs.homepage.$el) {
+          if (e.target === self.$refs.quizList.$el) {
             self.getQuizzes([1])
-          } else if (e.target === self.$refs.related.$el) {
-            self.getRelatedList([1])
+          } else if (e.target === self.$refs.quizListFoot.$el) {
+            self.getQuizzesFoot([1])
+          } else if (e.target === self.$refs.quizListBask.$el) {
+            self.getQuizzesBask([1])
           }
         })
 
-        this.$refs.homepage.$el.onscroll = function (e) {
-          self.$store.state.homepageVisualHeight = this.clientHeight
-          self.$store.state.homepageScrollTop = this.scrollTop
-        }
+        this.watchScroll('quizList')
+        this.watchScroll('quizListFoot')
+        this.watchScroll('quizListBask')
 
         // 设置定时器用于倒计时
         setInterval(function () {
           self.$store.state.now = new Date().getTime()
+
+          // 过期的体育发布自动移除
+          var sec = self.$store.state.now / 1000
+          var arr = []
+          var i = 0
+          var j = 0
+          for (i = 0; i < self.ftime.length; i++) {
+            if (sec + 30 * 60 >= self.ftime[i].time) {
+              arr.push(self.ftime[i].matchId)
+            }
+          }
+          var flist = self.$store.state.sports.footballList.slice(0)
+          for (i = 0; i < arr.length; i++) {
+            for (j = 0; j < flist.length; j++) {
+              if (arr[i] === flist[j].matchId) {
+                self.$store.state.sports.footballList.splice(j, 1)
+                if (!self.$store.state.sports.footballList.length) {
+                  self.$store.state.sports.isAnyMorefootball = false
+                }
+              }
+            }
+          }
+
+          arr = []
+          for (i = 0; i < self.btime.length; i++) {
+            if (sec + 30 * 60 >= self.btime[i].time) {
+              arr.push(self.btime[i].matchId)
+            }
+          }
+          var blist = self.$store.state.sports.basketballList.slice(0)
+          for (i = 0; i < arr.length; i++) {
+            for (j = 0; j < blist.length; j++) {
+              if (arr[i] === blist[j].matchId) {
+                self.$store.state.sports.basketballList.splice(j, 1)
+                if (!self.$store.state.sports.basketballList.length) {
+                  self.$store.state.sports.basketballList = false
+                }
+              }
+            }
+          }
         }, 1000)
 
 //        跑马灯
@@ -762,20 +992,43 @@
         if (!detailShare) {
           this.getShareJsSdkConf([servConf.WAP_ADDR])
         }
+
+        // 未登录，弹出红包
+        if (!this.token) {
+          this.$store.state.showLuckyMoney = true
+        }
       }
     },
     mounted () {
-      if (this.token) {
-        setTimeout(() => {
-          this.loginDaily('')
-        }, 500)
+      if (typeof (chcp) !== 'undefined') {
+        chcp.fetchUpdate(function (error, data) {
+          if (!error) {
+//            chcp.installUpdate(function (error) {
+//              if (!error) {
+//                console.log('chcp update succeed')
+//              } else {
+//                console.log('chcp update error')
+//                console.log(error)
+//              }
+//            })
+          } else {
+//            console.log('chcp check update.')
+//            console.log(error)
+          }
+        })
       }
     },
     watch: {
       userInfoShake: {
         handler: function (val) {
           if (this.userInfoStatus === null) {
+            if (this.tabIndex === 3) {
+              this.getTaskDailyData()
+              this.getTaskGrowData()
+            }
+            this.loginDaily('')
             if (this.taskSocket !== null) {
+              console.log('向服务器发送observeActive------' + JSON.stringify({user_id: this.userInfoData.user_id}))
               this.taskSocket.emit('observeActive', JSON.stringify({user_id: this.userInfoData.user_id}))
             }
           }
@@ -795,6 +1048,46 @@
             this.$f7.addNotification({
               title: '提示',
               message: this.quizListStatus.message,
+              closeOnClick: true,
+              hold: 3000
+            })
+          }
+        }
+      },
+      quizListFootShake: {
+        handler: function (val) {
+          this.$f7.pullToRefreshDone()
+          this.isInfiniteLoading = false
+          if (this.quizListFootStatus === null) {
+            if (this.quizListFootLastCount < this.quizListFootLimit) {
+              this.isAnyMoreSport1 = false
+            } else {
+              this.isAnyMoreSport1 = true
+            }
+          } else {
+            this.$f7.addNotification({
+              title: '提示',
+              message: this.quizListFootStatus.message,
+              closeOnClick: true,
+              hold: 3000
+            })
+          }
+        }
+      },
+      quizListBaskShake: {
+        handler: function (val) {
+          this.$f7.pullToRefreshDone()
+          this.isInfiniteLoading = false
+          if (this.quizListBaskStatus === null) {
+            if (this.quizListBaskLastCount < this.quizListBaskLimit) {
+              this.isAnyMoreSport2 = false
+            } else {
+              this.isAnyMoreSport2 = true
+            }
+          } else {
+            this.$f7.addNotification({
+              title: '提示',
+              message: this.quizListBaskStatus.message,
               closeOnClick: true,
               hold: 3000
             })
@@ -872,18 +1165,18 @@
       },
       serverInit: {
         handler: function (val) {
-          let self = this
-          self.$f7.hidePreloader()
-          if (val !== true) {
-            this.$f7.addNotification({
-              title: '提示',
-              message: '连接服务器失败',
-              closeOnClick: true,
-              hold: 3000
-            })
-            return
-          }
-          self.initMainApp()
+//          let self = this
+//          self.$f7.hidePreloader()
+//          if (val !== true) {
+//            this.$f7.addNotification({
+//              title: '提示',
+//              message: '连接服务器失败',
+//              closeOnClick: true,
+//              hold: 3000
+//            })
+//            return
+//          }
+//          self.initMainApp()
         }
       }
     }
@@ -905,7 +1198,13 @@
     justify-content: space-between;
     align-items: center;
   }
-
+  
+  input,textarea{
+    caret-color:#666;
+    -webkit-caret-color:#666;
+    -webkit-user-select: auto;
+  }
+  
   .seperator {
     height: 1px;
     width: 100%;
@@ -926,6 +1225,10 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     width: 100%;
+  }
+
+  .appleScroll{
+    -webkit-overflow-scrolling: touch;
   }
 
   .views {
@@ -980,6 +1283,26 @@
     height: 23px;
   }
 
+  /*.tab-bar-wrapper a:nth-child(1) .tab-bar-img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tab-bar-wrapper a:nth-child(2) .tab-bar-img {
+    width: 21px;
+    height: 24px;
+  }
+
+  .tab-bar-wrapper a:nth-child(3) .tab-bar-img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tab-bar-wrapper a:nth-child(4) .tab-bar-img {
+    width: 22px;
+    height: 19px;
+  }*/
+
   .tab-bar-p {
     margin-top: 2px;
     font-size: small;
@@ -1012,7 +1335,7 @@
     font-size: 14px !important;
   }
 
-  .page-content-custom {
+  .content-homepage {
     padding-top: 74px !important;
     /*margin-top: -14px;*/
     /*padding-bottom: 20px !important;*/
@@ -1074,11 +1397,27 @@
     vertical-align:middle;
   }
 
+  .item-gold-coin-l {
+    //margin-left: 5px;
+  }
+
+  .item-gold-icon-r {
+    vertical-align:middle;
+  }
+
+  .item-gold-su {
+    margin: 0 5px;
+    width: 1px;
+    height: 10px;
+    background: rgba(195,194,182,.3);
+  }
+
   .item-gold-text {
     line-height: 24px;
     text-align: center;
     font-size: 14px;
-    /*margin-left: 2px;*/
+    margin-left: 2px;
+    color: #333;
   }
 
   .box-gold-info {
@@ -1087,10 +1426,12 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    background: #fdf180;
+    background: #FFF9D0 ;
     /*text-align: center;*/
-    border-radius: 12px;
+    border-radius: 5px;
     padding-right: 4px;
+    padding-left: 5px;
+    margin-right: 4px;
   }
 
   /*导航栏*/
@@ -1102,10 +1443,7 @@
   .back-nav {
     width: 11px !important;
     height: 20px !important;;
-    /*background: orangered !important;;*/
-    padding-top: 4px !important;;
-    padding-bottom: 4px !important;;
-    padding-right: 8px !important;;
+    padding: 10px 30px 10px 0px;
   }
 
   /* 暂无更多 */
@@ -1148,7 +1486,7 @@
     background: red; color: white; font-size: 12px;
     text-align:center; line-height: .48rem;
   }
-  
+
   .m-nav {
     display: flex; width: 100%; background: #fff;
     height: 1.066rem; line-height: 1.066rem; font-size: 0.426rem;
@@ -1157,11 +1495,11 @@
   .m-nav-item {
     flex: 1; border-bottom: 2px solid #fff;
   }
-  
+
   .nav-item-active{
     border-color: #FC6868; color: #FC6868;
   }
-  
+
     /*体育切换 */
   div.subnavbar {
     background: #fff;
@@ -1181,5 +1519,32 @@
   div.subnavbar a.sport-tab-active {
     color: #FC6868;
     border-bottom: 2px solid #FC6868;
+  }
+  .dateTime-show{
+    position: absolute;
+    width: 100%; top: 88px;
+    height: .8rem; text-align: left;
+    line-height: .8rem; color: #333;
+    font-size: .333rem; padding-left: 12px; box-sizing: border-box;
+    background: #efeff4; z-index: 10000;
+  }
+
+  div.subnavbar:after{
+    background: rgb(239, 239, 239)!important;
+  }
+
+
+  .toolbar-opentime {
+    position: absolute;
+    top: 87px;
+    left: 0;
+    height: 32px;
+    line-height: 32px;
+    width: 100%;
+    background: #efefef;
+    padding-left: 12px;
+    text-align: left;
+    font-size: 12px;
+    color: #333;
   }
 </style>

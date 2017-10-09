@@ -13,7 +13,7 @@ BEGIN
 	if new.recharge_status = 1 and old.recharge_status != 1 then
 		select account_id into v_account_id
 		from t_user_account 
-		where user_id = new.user_id;
+		where user_id = new.user_id and coin_type = 0;
 		
 		-- 更新金额合计
 		update t_user_account 

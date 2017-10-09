@@ -3,23 +3,27 @@ package com.agdress.service.impl;
 import com.agdress.bgapi.GameRsp;
 import com.agdress.bgapi.IGameConnector;
 import com.agdress.commons.Exception.ApiException;
-import com.agdress.commons.secret.Authorization;
 import com.agdress.commons.utils.*;
 import com.agdress.entity.*;
-import com.agdress.entity.vo.UserResultVo;
 import com.agdress.enums.*;
 import com.agdress.mapper.*;
-import com.agdress.payapi.IPaymentConnector;
 import com.agdress.payapi.PaymentReq;
-import com.agdress.payapi.PaymentRsp;
+import com.agdress.redis.RedisHelper;
+import com.agdress.service.IMessageContentService;
+import com.agdress.service.IMessageProducerService;
+import com.agdress.service.IMessageService;
 import com.agdress.service.IRechargeService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.jms.Destination;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
@@ -31,6 +35,8 @@ import java.util.*;
 @Service
 @Transactional
 public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> implements IRechargeService{
+    private static final org.apache.log4j.Logger RECHARGE_LOGGER = LogManager.getLogger("recharge");
+
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
@@ -42,10 +48,6 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
     @Autowired
     private PaymentMapper paymentMapper;
     @Autowired
-    private CardMapper cardMapper;
-    @Autowired
-    private BankMapper bankMapper;
-    @Autowired
     private UserAccountDetailMapper accountDetailMapper;
     @Autowired
     private UserAccountMapper accountMapper;
@@ -54,6 +56,16 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
     @Autowired
     private AgentMapper agentMapper;
 
+    @Autowired
+    private IMessageProducerService producerService;
+    @Autowired
+    @Qualifier("payNotifyQueueDestination")
+    private Destination payDestination;
+
+    @Autowired
+    private IMessageService messageService;
+    @Autowired
+    private IMessageContentService messageContentService;
 
     /**
      * 请求支付
@@ -124,7 +136,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         paymentMapper.insert(detail);
 
         //支付后前端获取不到新宝的同步通知，不知道支付状态，因此充值申请的时候先生成支付中的交易记录，等充值成功后再更新交易状态为已完成
-        this.insertBalance(user.getUserId(),payAmount,RechargeStatusEnum.Paying,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值");
+        this.insertBalance(user.getUserId(),payAmount,RechargeStatusEnum.Paying,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值","");
 
         //新宝请求参数
         PaymentReq req = JSONObject.toJavaObject(params,PaymentReq.class);
@@ -189,24 +201,26 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         whereMap.put("recharge_code",orderCode);
         List<RechargeEntity> list = super.selectByMap(whereMap);
         if(list.size()==0){
-//            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s不存在！",orderCode));
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,"订单不存在",params.toJSONString()));
             return "ArgumentError";
         }
         RechargeEntity rechargeEntity = list.get(0);
         if(rechargeEntity.getRechargeStatus().getCode() != RechargeStatusEnum.Paying.getCode()){
-//            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s已通知，不能重复通知！",orderCode));
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,"订单已通知，不能重复通知",params.toJSONString()));
+            RedisHelper.delKey(ConstantInterface.KEY_RECHARGE_NOTIFY+orderCode);
             return "ok";
         }
         whereMap = new HashMap<>();
         whereMap.put("order_code",orderCode);
         List<PaymentRecordEntity> tempRecord = paymentRecordMapper.selectByMap(whereMap);
         if(tempRecord.size()==0 ){
-            //throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s不存在！",orderCode));
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,"订单不存在",params.toJSONString()));
             return "ArgumentError";
         }
         PaymentRecordEntity recordEntity = tempRecord.get(0);
         if(recordEntity.getPayStatus().getCode()!=PaymentStatusEnum.Paying.getCode()){
-//            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s已通知，不能重复通知！",orderCode));
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,"订单已通知，不能重复通知",params.toJSONString()));
+            RedisHelper.delKey(ConstantInterface.KEY_RECHARGE_NOTIFY+orderCode);
             return "ok";
         }
 
@@ -214,56 +228,108 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         whereMap.put("pay_id",recordEntity.getRecordId());
         List<PaymentEntity> tempPayment = paymentMapper.selectByMap(whereMap);
         if(tempPayment.size()==0 ){
-//            throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),String.format("订单%s不存在！",orderCode));
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,"订单不存在",params.toJSONString()));
             return "ArgumentError";
         }
 
-        if(code.equals("00")){
-            //交易成功
-            rechargeEntity.setRechargeStatus(RechargeStatusEnum.RechargeSuccess);
-            rechargeEntity.setSummery(params.toJSONString());
-            boolean result = super.updateById(rechargeEntity);
-            if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
-            for (PaymentEntity payment:tempPayment) {
-                if(payment.getPaymentStatus().getCode()!=PaymentStatusEnum.Paying.getCode()) continue;
+        RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>)SpringContextUtil.getBean("redisTemplate");
+        RedisLockUtil lock = new RedisLockUtil(redisTemplate, ConstantInterface.KEY_RECHARGE_LOCK + orderCode, 10000, 20000);
+        try{
+            if(lock.lock()) {
+                if(code.equals("00")){
+                    //交易成功
+                    rechargeEntity.setRechargeStatus(RechargeStatusEnum.RechargeSuccess);
+                    rechargeEntity.setSummery(params.toJSONString());
+                    rechargeEntity.setUpdateBy(rechargeEntity.getCreateBy());
+                    rechargeEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    boolean result = super.updateById(rechargeEntity);
+                    if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+                    for (PaymentEntity payment:tempPayment) {
+                        if(payment.getPaymentStatus().getCode()!=PaymentStatusEnum.Paying.getCode()) continue;
 
-                payment.setPaymentStatus(PaymentStatusEnum.PaySuccessed);
-                payment.setPaymentCode(tradeCode);
-                Integer rows = paymentMapper.updateById(payment);
-                if(rows.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+                        payment.setPaymentStatus(PaymentStatusEnum.PaySuccessed);
+                        payment.setPaymentCode(tradeCode);
+                        payment.setUpdateBy(rechargeEntity.getCreateBy());
+                        payment.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                        Integer rows = paymentMapper.updateById(payment);
+                        if(rows.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+                    }
+
+                    //开始充值
+                    insertBalance(rechargeEntity.getUserId(),rechargeEntity.getRechargeAmount(),rechargeEntity.getRechargeStatus(),rechargeEntity.getRechargeCode(),TradeTypeEnum.Recharge,rechargeEntity.getRechargeId(),"玩家充值","");
+
+                }else{
+                    //交易失败
+                    rechargeEntity.setRechargeStatus(RechargeStatusEnum.RechargeFailed);
+                    rechargeEntity.setUpdateBy(rechargeEntity.getCreateBy());
+                    rechargeEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    boolean result = super.updateById(rechargeEntity);
+                    if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+
+                    recordEntity.setPayStatus(PaymentStatusEnum.PayFailed);
+                    recordEntity.setUpdateBy(rechargeEntity.getCreateBy());
+                    recordEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    Integer acrow = paymentRecordMapper.updateById(recordEntity);
+                    if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+
+                    for (PaymentEntity payment:tempPayment) {
+                        if(payment.getPaymentStatus().getCode()!=PaymentStatusEnum.Paying.getCode()) continue;
+
+                        payment.setPaymentStatus(PaymentStatusEnum.PayFailed);
+                        payment.setUpdateBy(rechargeEntity.getCreateBy());
+                        payment.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                        acrow = paymentMapper.updateById(payment);
+                        if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
+                    }
+                }
+            }else {
+                RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,"redis锁获取失败",params.toJSONString()));
             }
-
-            //开始充值
-            insertBalance(rechargeEntity.getUserId(),rechargeEntity.getRechargeAmount(),rechargeEntity.getRechargeStatus(),rechargeEntity.getRechargeCode(),TradeTypeEnum.Recharge,rechargeEntity.getRechargeId(),"玩家充值");
-
-        }else{
-            //交易失败
-            rechargeEntity.setRechargeStatus(RechargeStatusEnum.RechargeFailed);
-            rechargeEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-            boolean result = super.updateById(rechargeEntity);
-            if(!result) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
-
-            recordEntity.setPayStatus(PaymentStatusEnum.PayFailed);
-            recordEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-            Integer acrow = paymentRecordMapper.updateById(recordEntity);
-            if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
-
-            for (PaymentEntity payment:tempPayment) {
-                if(payment.getPaymentStatus().getCode()!=PaymentStatusEnum.Paying.getCode()) continue;
-
-                payment.setPaymentStatus(PaymentStatusEnum.PayFailed);
-                acrow = paymentMapper.updateById(payment);
-                if(acrow==null || acrow.intValue()<1) throw new ApiException(ErrorCodeEnum.ExpiredDataException);
-            }
+        }catch (ApiException e) {
+            //e.printStackTrace();
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,e.getMessage(),params.toJSONString()),e);
+            throw e;
+        }catch (Exception e){
+            //e.printStackTrace();
+            RECHARGE_LOGGER.error(String.format("【%s】支付通知接收失败，原因：%s，参数：%s",orderCode,e.getMessage(),params.toJSONString()),e);
+            throw new ApiException(ErrorCodeEnum.SystemError);
+        }
+        finally {
+            //为了让分布式锁的算法更稳键些，持有锁的客户端在解锁之前应该再检查一次自己的锁是否已经超时，再去做DEL操作，因为可能客户端因为某个耗时的操作而挂起，
+            //操作完的时候锁因为超时已经被别人获得，这时就不必解锁了。 ————这里没有做
+            lock.unlock();
         }
 
+        RECHARGE_LOGGER.info(String.format("【%s】支付通知接收成功，充值%s，参数：%s",orderCode,code.equals("00")?"成功":"失败",params.toJSONString()));
+
+        try {
+            RedisHelper.delKey(ConstantInterface.KEY_RECHARGE_NOTIFY + orderCode);
+        }catch (Exception e){
+            //TODO 充值成功 redis移除失败不处理
+        }
         return "ok";
     }
 
     //充值通用接口
-    @Override
-    public void saveMoneyForUser(long userId,double addAmount,RechargeStatusEnum recharge_status,String recharge_code,long recharge_id,String remarks) {
-        insertBalance(  userId,  addAmount,  recharge_status,  recharge_code, TradeTypeEnum.SystemRecharge,  recharge_id,  remarks);
+    public void saveMoneyForUser(long userId,double addAmount,String remarks,String systemUserId) {
+        RechargeEntity entity = new RechargeEntity();
+        entity.setUserId(userId);
+        entity.setSummery(remarks);
+        entity.setRechargeAmount(addAmount);
+        entity.setCreateBy(1L);
+        entity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+        entity.setUpdateBy(1L);
+        entity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+        entity.setIsDelete(0);
+        entity.setRechargeCode(CodeFactory.generateRechargeCode());
+        //后台充值 直接成功状态
+        entity.setRechargeStatus(RechargeStatusEnum.RechargeSuccess);
+
+        super.insert(entity);
+
+        insertBalance(  userId,  addAmount,  entity.getRechargeStatus(),  entity.getRechargeCode(), TradeTypeEnum.SystemRecharge,  entity.getRechargeId(),  remarks,systemUserId);
+
+        RECHARGE_LOGGER.info(String.format("后台代充值，用户【%s】成功充值【%s】元",userId,entity.getRechargeAmount()));
     }
 
     /**
@@ -275,8 +341,11 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
      * @param tradeType
      * @param rechargeId
      * @param remarks
+     * @param systemUserId 系统充值的操作员ID
      */
-    public void insertBalance(long userId,double addAmount,RechargeStatusEnum recharge_status,String recharge_code,TradeTypeEnum tradeType,long rechargeId,String remarks){
+    public void insertBalance(long userId,double addAmount,
+                              RechargeStatusEnum recharge_status,String recharge_code,TradeTypeEnum tradeType,
+                              long rechargeId,String remarks,String systemUserId){
         UserAccountEntity account;
         Map<String,Object> whereMap = new HashMap<>();
         whereMap.put("user_id",userId);
@@ -319,6 +388,8 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         whereMap.put("user_id",userId);
         whereMap.put("trade_no",recharge_code);
         List<UserAccountDetailEntity> tempDetail = accountDetailMapper.selectByMap(whereMap);
+        long tradeId=0L;
+        String tradeNo="";
         if(tempDetail.size()==0) {
             UserAccountDetailEntity adEntity = new UserAccountDetailEntity();
             adEntity.setAccountId(account.getAccountId());
@@ -336,6 +407,8 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
             adEntity.setRemarks(remarks);
             adEntity.setIsDelete(0);
             accountDetailMapper.insert(adEntity);
+            tradeId=adEntity.getTradeId();
+            tradeNo=adEntity.getTradeNo();
         }else {
             UserAccountDetailEntity adEntity = tempDetail.get(0);
             adEntity.setNewBalance(account.getBalance());
@@ -347,12 +420,13 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
             adEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
             adEntity.setUpdateBy(userId);
             accountDetailMapper.updateById(adEntity);
+            tradeId=adEntity.getTradeId();
+            tradeNo=adEntity.getTradeNo();
         }
-
         //充值成功后需要更新BG
+        UserEntity userEntity=userMapper.selectById(userId);
         if(recharge_status.getCode() == RechargeStatusEnum.RechargeSuccess.getCode()) {
             try {
-                UserEntity userEntity = userMapper.selectById(userId);
                 AgentEntity agentEntity = agentMapper.selectById(userEntity.getAgentId());
                 GameRsp<Float> bgBalance = gameConnector.openBalanceTransfer(agentEntity.getBgPwd(),
                         userEntity.getBgLoginId(),
@@ -361,7 +435,74 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
 
                 System.out.println("BG账户余额：" + bgBalance.getResult());
             } catch (IOException e) {
+                RECHARGE_LOGGER.error(String.format("【%s】充值失败，原因：BG转账申请失败",recharge_code),e);
                 throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
+            }
+        }
+        //发送短信到管理
+        boolean flag=true;
+        String beUserName="";
+        String content="玩家["+userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname() +"]发起了一笔充值，金额："+addAmount+"，订单编号："+tradeNo +"。";
+        long roleId=RoleTypeEnum.admin.getCode();
+        long createBy=userEntity.getUserId();
+        int type=QueueMessageTypeEnum.UserRechargeMax.getCode();
+        if(!systemUserId.equals("")){
+            UserEntity be_userEntity=userMapper.selectById( Long.parseLong(systemUserId) );
+            if(be_userEntity != null){
+                beUserName=be_userEntity.getNickname();
+            }
+            type=QueueMessageTypeEnum.SystemRechargeMax.getCode();
+            roleId=be_userEntity.getRoleId();
+            content="客服"+be_userEntity.getNickname()+"在后台给玩家["+userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname()+"]充值了"+addAmount+"元，订单编号："+tradeNo +"。";
+            createBy=be_userEntity.getUserId();
+        }else{
+            if(systemConfig.getRECHARGE_MONEY_MAX() < addAmount ) {
+                flag=false;
+            }
+        }
+        if(flag){
+            UserEntity admin_userEntity=userMapper.selectById( SystemIdEnum.admin.getCode());
+            if(admin_userEntity != null){
+                try{
+                    //新增充值记录
+                    MessageEntity messageEntity=new MessageEntity();
+                    messageEntity.setIcon("fa fa-users text-aqua");
+                    messageEntity.setMessageType(TradeTypeEnum.Recharge);
+                    messageEntity.setTradeId(tradeId);
+                    messageEntity.setCreateBy(createBy);
+                    messageEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    messageEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    messageEntity.setIsDelete(0);
+                    messageService.insert(messageEntity);
+                    ///新增充值记录
+                    MessageContentEntity messageContentEntity=new MessageContentEntity();
+                    messageContentEntity.setStatus(0);
+                    messageContentEntity.setTradeId(tradeId);
+                    messageContentEntity.setUserId(admin_userEntity.getUserId());
+                    messageContentEntity.setRoleId(admin_userEntity.getRoleId());
+                    messageContentEntity.setCreateBy(createBy);
+                    messageContentEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                    messageContentEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                    messageContentEntity.setIsDelete(0);
+                    messageContentEntity.setContent(content);
+                    messageContentService.insert(messageContentEntity);
+                    if(admin_userEntity.getPhone() != null){
+                        JSONObject json = new JSONObject();
+                        json.put("type", type);
+                        json.put("phone",admin_userEntity.getPhone());
+                        json.put("userName",userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname());
+                        json.put("amount",addAmount);
+                        json.put("tradeNo",tradeNo);
+                        json.put("beUserName",beUserName);
+                        //加入消息队列，等待业务逻辑处理
+                        String messagekey=DateUtil.getDayshms();
+                        json.put("messagekey",messagekey);
+                        producerService.sendMessagePhone(messagekey,this.payDestination,json.toJSONString());
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         }
     }
@@ -444,7 +585,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
             paymentMapper.insert(detail);
 
             //支付后前端获取不到新宝的同步通知，不知道支付状态，因此充值申请的时候先生成支付中的交易记录，等充值成功后再更新交易状态为已完成
-            this.insertBalance(user.getUserId(),item.getPrice(),RechargeStatusEnum.RechargeSuccess,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值");
+            this.insertBalance(user.getUserId(),item.getPrice(),RechargeStatusEnum.RechargeSuccess,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值","");
         }catch (ApiException e){
             e.printStackTrace();
             throw e;
@@ -452,6 +593,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
             e.printStackTrace();
             throw new ApiException(ErrorCodeEnum.IapRechargeError);
         }
+        RECHARGE_LOGGER.info(String.format("苹果支付，用户【%s】成功充值【%s】元，充值单号：【%s】",user.getUserId(),entity.getRechargeAmount(),entity.getRechargeCode()));
         return entity;
     }
 

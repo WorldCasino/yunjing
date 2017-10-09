@@ -25,7 +25,7 @@
           #{roleIds}  LIKE CONCAT(CONCAT('%',a.role_id),'%')
           and module_type = '1'
           and status='1'
-        ORDER BY c.id
+        ORDER BY c.seq
     </select>
 
 

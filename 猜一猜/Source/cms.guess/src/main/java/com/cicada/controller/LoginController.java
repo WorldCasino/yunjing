@@ -46,7 +46,7 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> loginPost(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if (false) {//!(user.getValidCode().equalsIgnoreCase(session.getAttribute("code").toString()))
+		if (!(user.getValidCode().equalsIgnoreCase(session.getAttribute("code").toString()))) {
 			result.put("msg", "验证码不正确");
 		}else{
 			Subject sybject = SecurityUtils.getSubject();

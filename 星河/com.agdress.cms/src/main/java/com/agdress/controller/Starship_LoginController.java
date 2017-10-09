@@ -52,6 +52,9 @@ public class Starship_LoginController {
 				} catch (RuntimeException e) {
 					e.printStackTrace();
 					result.put("msg", "未知错误,请联系管理员");
+				}catch (Exception e){
+					e.printStackTrace();
+					result.put("msg", "未知错误,请联系管理员");
 				}
 			}
 		}catch (Exception e){

@@ -7,6 +7,8 @@ const state = {
   isShowRadio: false,
   isDefaultSelect: true,
   isJudge: true,
+  judgePassive: '取消',
+  judgePostive: '确定',
   title: '',
   text: '',
   //  是否为下注的提示框,及其数据

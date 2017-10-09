@@ -9,7 +9,7 @@
       <f7-nav-center>手机号登录</f7-nav-center>
     </f7-navbar>
     <div class="login-phone">
-      <div class="input-content" @click="focus">
+      <div class="input-content" @touchend="focus">
         <p>手机号</p>
         <input class="mobile-input" placeholder="请输入手机号码" maxlength="11" type="number" pattern="[0-9]*" id="mobile">
       </div>

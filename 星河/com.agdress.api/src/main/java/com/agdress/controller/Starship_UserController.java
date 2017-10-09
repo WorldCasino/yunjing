@@ -1,8 +1,7 @@
 package com.agdress.controller;
 
-import com.agdress.commons.utils.DateFormatUtil;
-import com.agdress.commons.utils.ResponseWrapper;
-import com.agdress.commons.utils.StringUtils;
+import com.agdress.commons.Exception.ApiException;
+import com.agdress.commons.utils.*;
 import com.agdress.entity.*;
 import com.agdress.entity.vo.Starship_UserVo;
 import com.agdress.enums.*;
@@ -14,6 +13,7 @@ import com.agdress.service.Starship_IUserAccountService;
 import com.agdress.service.Starship_IUserCardService;
 import com.agdress.service.Starship_IUserService;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -42,6 +43,8 @@ public class Starship_UserController extends BaseController {
 
 	@Autowired
 	private Starship_IUserAccountService userAccountService;
+
+
 
 
 
@@ -117,10 +120,10 @@ public class Starship_UserController extends BaseController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/updateUserBalance",method = RequestMethod.POST)
-	public ResponseEntity updateUserBalance(String addbalance,String userId,String remarks) throws IOException{
+	public ResponseEntity updateUserBalance(String addbalance,String userId,String remarks,String updateBy) throws IOException{
 		ResponseWrapper result;
 		try {
-			userAccountService.updateUserBalance(addbalance,userId,remarks);
+			userAccountService.updateUserBalance(addbalance,userId,remarks,updateBy);
   			result = ResponseWrapper.succeed(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,8 +132,32 @@ public class Starship_UserController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
+
 	/**
-	 * 业务员列表
+	 * 获取客服列表--ajax全部时间
+	 * @return
+	 * @throws IOException
+	 * ss_agent/getBeUserList
+	 */
+	@RequestMapping(value = "/getBeUserList",method = RequestMethod.POST)
+	public ResponseEntity getBeUserList() throws IOException {
+		ResponseWrapper result;
+		try {
+ 			Starship_UserEntity userEntity=new Starship_UserEntity();
+			userEntity.setIsDelete(0);
+			userEntity.setRoleId((long) RoleTypeEnum.Salesman.getCode());
+			EntityWrapper<Starship_UserEntity> wrapper = new EntityWrapper<Starship_UserEntity>(userEntity);
+			List<Starship_UserEntity> userEntities=userService.selectList(wrapper);
+			result = ResponseWrapper.succeed(userEntities);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 客服列表
 	 * @param params
 	 * @return
 	 */
@@ -173,6 +200,36 @@ public class Starship_UserController extends BaseController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	}
 
+
+	/**
+	 * 判断当前登录账号是否存在
+	 * @param loginName
+	 * @return
+	 * @throws IOException
+	 * ss_user/loginNameIsHave
+	 */
+	@RequestMapping(value = "/loginNameIsHave",method = RequestMethod.POST)
+	public ResponseEntity updateUserForXt(String loginName ) throws IOException{
+		ResponseWrapper result;
+		try {
+			Starship_UserEntity starship_userEntity=new Starship_UserEntity();
+			starship_userEntity.setLoginName(loginName);
+			EntityWrapper<Starship_UserEntity> wrapper = new EntityWrapper<Starship_UserEntity>(starship_userEntity);
+			List<Starship_UserEntity> selectList = userService.selectList(wrapper);
+			boolean flag=true;
+			if(selectList.size() >0){
+				flag=false;
+			}
+			result = ResponseWrapper.succeed(flag);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return ResponseEntity.ok(result);
+	}
+
+
+
 	/**
 	 * 新增用户信息
 	 * @param userEntity
@@ -185,7 +242,6 @@ public class Starship_UserController extends BaseController {
 		try {
 			userEntity.setCreateDate( new Timestamp(new Date().getTime()));
 			userEntity.setPassWord(StringUtils.getMD5String(userEntity.getPassWord()));
-			userEntity.setNickName(userEntity.getLoginName());
 			boolean n=userService.insert(userEntity);
 			result = ResponseWrapper.succeed(n);
 		} catch (Exception e) {
@@ -210,6 +266,28 @@ public class Starship_UserController extends BaseController {
 			}
 			boolean n=userService.updateById(userEntity);
 			result = ResponseWrapper.succeed(n);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return ResponseEntity.ok(result);
+	}
+
+
+	/**
+	 * 修改用户密码
+	 * @param userId
+	 * @param passWord
+	 * @param messageCode
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/updatePassword",method = RequestMethod.POST)
+	public ResponseEntity updatePassword(String userId,String passWord,String messageCode) throws IOException{
+		ResponseWrapper result;
+		try {
+			userService.updatePassword(userId,passWord,messageCode);
+ 			result = ResponseWrapper.succeed(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

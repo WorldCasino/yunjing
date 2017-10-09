@@ -20,7 +20,7 @@
           <button class="time-btn" v-else @click="getCaptcha">点击重新发送</button>
         </div>
         <div class="inputs">
-          <input class="code-input" v-for="n in 4" key="n-input" maxlength="1"  type="number" pattern="[0-9]*">
+          <input class="code-input" v-for="n in 4" :key="n" maxlength="1" type="number" pattern="[0-9]*">
         </div>
       </div>
 
@@ -34,6 +34,7 @@
 
 <script>
   import { mapState, mapGetters, mapActions } from 'vuex'
+  import { IsPC } from '../../utils/commom.js'
 
   export default {
     name: 'login-verify',
@@ -43,7 +44,8 @@
         now: 0,
         second: 60,
         captchaSucceed: true,
-        taskType: this.$store.state.task.taskType
+        taskType: this.$store.state.task.taskType,
+        timer: null
       }
     },
     computed: {
@@ -68,7 +70,8 @@
       ...mapActions([
         'sendCaptcha',
         'login',
-        'getTaskData',
+        'getTaskDailyData',
+        'getTaskGrowData',
         'getUserInfo',
         'loginDaily',
         'loginVerify',
@@ -88,7 +91,13 @@
         this.sendCaptcha(this.mobile)
       },
       nextStep () {
+        this.code = []
+        var self = this
+        this.Dom7('.code-input').each(function () {
+          self.code.push(this.value)
+        })
         let captcha = this.code.join('')
+//      captcha = '8090'
         if (!captcha) {
           this.$f7.addNotification({
             title: '提示',
@@ -106,6 +115,14 @@
           })
           return
         }
+        this.timer = setTimeout(() => {
+          this.$f7.addNotification({
+            title: '提示',
+            message: '请求未响应，请稍后重试',
+            closeOnClick: true,
+            hold: 2000
+          })
+        }, 2000)
         this.$store.state.login.captchaLocal = captcha
         if (this.sendCaptchaData && this.sendCaptchaData.isNewUser) {
 //                新用户跳转到完善信息页面
@@ -113,9 +130,11 @@
             phone: this.mobile,
             captcha: captcha,
             success: (data) => {
+              clearTimeout(this.timer)
               this.$router.load({url: '/login-fill-info/'})
             },
             error: (err) => {
+              clearTimeout(this.timer)
               this.$f7.addNotification({
                 title: '提示',
                 message: err.message,
@@ -126,37 +145,36 @@
           })
         } else {
 //                老用户直接登录
-          this.login([this.mobile, captcha, () => {
-            setTimeout(() => {
-              this.getTaskData(this.taskType)
-              this.getUserInfo('')
-              this.loginDaily('')
-            }, 100)
-          }])
+          this.login([this.mobile, captcha])
         }
       }
     },
     mounted () {
       let self = this
-
-//      验证码输入逻辑
-      let inputDom = this.Dom7('.code-input')
-      for (let i = 0; i < inputDom.length; i++) {
-        let input = inputDom[i]
-
-        input.oninput = function (e) {
-          self.code[i] = this.value
-
-          if (this.value.length !== 0) {
-            if (i < inputDom.length - 1) {
-//              跳转下一个输入框
-              inputDom[i + 1].focus()
-            } else {
-
-            }
+//    验证码输入逻辑
+      this.Dom7('.inputs').on('touchend', '.code-input', function (e) {
+        self.Dom7(this).focus()
+      })
+      this.Dom7('.code-input').on('keydown', function (e) {
+        var keyCode = e.keyCode || e.which
+        if (keyCode >= 96 && keyCode <= 105) {
+          setTimeout(() => {
+            self.Dom7(this).next().focus()
+          }, 30)
+        } else if (keyCode >= 48 && keyCode <= 57) {
+          setTimeout(() => {
+            self.Dom7(this).next().focus()
+          }, 30)
+        } else if (keyCode === 8) {
+          if (!this.value) {
+            setTimeout(() => {
+              self.Dom7(this).prev().focus()
+            }, 30)
           }
+        } else {
+          e.preventDefault()
         }
-      }
+      })
 
 //      获取验证码
       self.now = new Date().getTime()
@@ -197,8 +215,9 @@
         handler: function (val) {
           let self = this
           if (this.loginStatus === null) {
+            clearTimeout(this.timer)
             this.$store.state.token = this.loginData.token
-
+            this.getUserInfo('')
             if (typeof (xgpush) !== 'undefined') {
               xgpush.registerPush('get-device-token')
                 .then(function (data) {
@@ -220,6 +239,7 @@
 //                ignoreCache: true
 //              })
           } else {
+            clearTimeout(this.timer)
             this.$f7.addNotification({
               title: '提示',
               message: this.loginStatus.message,
@@ -278,11 +298,11 @@
     height: 50px;
     font-size: large;
     background-color: white;
-    /*border: 0 solid;*/
     border: none;
     text-align: center;
     border-radius: 0;
     padding: 0;
+    -webkit-user-select:auto!important;
   }
 
   .submit-content {

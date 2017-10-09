@@ -55,21 +55,25 @@
           <div class="part1">
             <div class="part1-title">设置赔率</div>
             <div class="seperater1"></div>
-            <div class="amount-content">
-              <h5>盘口</h5>
+            <div class="amount-content" v-if="type != 1">
+              <h5 v-if="type == 2">盘口</h5>
+              <h5 v-else-if="type == 3">让球</h5>
               <div class="select-content">
                 <div class="minus-btn" @click="handicapReduce">
-                  <img src="../../../static/guess/fabu_jian.png">
+                  <img src="../../../static/task/jiantou.png" class="rotate180" v-if="i > 0">
+                  <img src="../../../static/task/jiantou_01.png" v-else>
                 </div>
-                <div class="select-input-p">{{handicapArr[i]}}</div>
+                <input class="select-input" v-model="handicapArr[i]" disabled style="opacity: 1; color: #000;"/>
                 <div class="add-btn" @click="handicapAdd">
-                  <img src="../../../static/guess/fabu_jia.png">
+                  <img src="../../../static/task/jiantou.png" v-if="i < handicapArr.length - 1">
+                  <img src="../../../static/task/jiantou_01.png" class="rotate180" v-else>
                 </div>
               </div>
             </div>
             <div class="seperater1"></div>
             <div class="amount-content">
-              <h5>主胜</h5>
+              <h5 v-if="type != 2 || ballType == 2">主胜</h5>
+              <h5 v-else-if="type == 2">大球</h5>
               <div class="select-content">
                 <div class="minus-btn" @click="onBtnClickMinusTrueRefund">
                   <img src="../../../static/guess/fabu_jian.png">
@@ -80,22 +84,11 @@
                 </div>
               </div>
             </div>
-            <div class="seperater2"></div>
-            <div class="amount-content">
-              <h5>平</h5>
-              <div class="select-content">
-                <div class="minus-btn" @click="averageReduce">
-                  <img src="../../../static/guess/fabu_jian.png">
-                </div>
-                <input class="select-input" v-model="averagefund" type="number" @blur="averageFu">
-                <div class="add-btn" @click="averageAdd" >
-                  <img src="../../../static/guess/fabu_jia.png">
-                </div>
-              </div>
-            </div>
+            
             <div class="seperater2"></div>
 						<div class="amount-content">
-              <h5>客胜</h5>
+              <h5 v-if="type != 2">客胜</h5>
+              <h5 v-else-if="type == 2">小球</h5>
               <div class="select-content">
                 <div class="minus-btn" @click="onBtnClickMinusFalseRefund">
                   <img src="../../../static/guess/fabu_jian.png">
@@ -142,7 +135,7 @@
           </p>
         </div>
         <!--open-popup="#pub-succeed"-->
-        <f7-link class="submit" @click="submitPub" >
+        <f7-link class="submit" @click="submitPub">
           <p style="margin-top: 0px">确认发布</p>
         </f7-link>
       </div>
@@ -155,11 +148,59 @@
 
   import {mapState, mapGetters, mapActions} from 'vuex'
   import { arrSort } from '../../utils/commom'
-
+  import * as servConf from '../../api/server-config'
   export default {
     name: 'pub-sports-setting',
+    mounted () {
+      var height = document.documentElement.clientHeight
+      this.height = parseInt(height)
+      var i = 0
+      var point
+      if (this.ballType === 1 && this.type === 1) {
+        for (i = 0; i < this.footballCurData.standardPlate.length; i++) {
+          if (this.footballCurData.standardPlate[i].isDefault) {
+            this.trueRefund = this.footballCurData.standardPlate[i].hisOdds.toFixed(2)
+            this.averagefund = this.footballCurData.standardPlate[i].tieOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.standardPlate[i].winOdds.toFixed(2)
+            break
+          }
+        }
+      } else if (this.ballType === 1 && this.type === 2) {
+        for (i = 0; i < this.footballCurData.ballSize.length; i++) {
+          if (this.footballCurData.ballSize[i].isDefault) {
+            this.trueRefund = this.footballCurData.ballSize[i].bigBallOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.ballSize[i].smallBallOdds.toFixed(2)
+            this.i = this.handicapArr.indexOf(this.footballCurData.ballSize[i].concedePointsShow)
+            break
+          }
+        }
+      } else if (this.ballType === 1 && this.type === 3) {
+        for (i = 0; i < this.footballCurData.letTheBall.length; i++) {
+          if (this.footballCurData.letTheBall[i].isDefault) {
+            this.trueRefund = this.footballCurData.letTheBall[i].hisOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.letTheBall[i].winOdds.toFixed(2)
+            point = this.footballCurData.letTheBall[i].concedePointsShow
+            this.i = this.handicapArr.indexOf(point)
+            break
+          }
+        }
+      } else if (this.ballType === 2) {
+        for (i = 0; i < this.basketballCurData.standardPlate.length; i++) {
+          if (this.basketballCurData.standardPlate[i].isDefault) {
+            this.trueRefund = this.basketballCurData.standardPlate[i].hisOdds.toFixed(2)
+            this.falseRefund = this.basketballCurData.standardPlate[i].winOdds.toFixed(2)
+            break
+          }
+        }
+      }
+      if (this.type === 3 || this.type === 2 || this.ballType === 2) {
+        this.averagefund = 0
+      }
+    },
     data () {
       return {
+        desc: '',
+        textMax: 40,
         amount: 10,
         count: 50,
         trueRefund: 1.80,
@@ -174,18 +215,28 @@
         isAbleBean: true,
         height: 0,
 
-        averagefund: 3.48,
-        handicapArr: [1.5, 2.5, 3.5],
+        averagefund: 1.80,
         i: 0
       }
     },
     computed: {
       ...mapState({
         isablebean: state => state.userInfo.data.isablebean,
-        ispersonal: state => state.userInfo.data.ispersonal
+        ispersonal: state => state.userInfo.data.ispersonal,
+        footballCurData: state => state.sports.footballCurData,
+        basketballCurData: state => state.sports.basketballCurData,
+        pubShake: state => state.sports.pubShake,
+        pubResult: state => state.sports.pubResult,
+        ballType: state => state.sports.ballType,
+        type: state => state.sports.type,
+        status: state => state.sports.status
       }),
+      ...mapGetters(['quizDetail']),
       amountAllCaculate () {
         return this.amount * this.count
+      },
+      descAcount () {
+        return this.desc.length >= 30 ? 'true' : false
       },
       getProfit () {
         // 可获利的错误人数比率公式：(正确答案赔率  -  1) / 正确答案赔率
@@ -195,22 +246,54 @@
       freezeMoney () {
         var max = Math.max(this.trueRefund, this.averagefund, this.falseRefund)
         return (max - 1) * this.amountAllCaculate
+      },
+      handicapArr () {
+        var arr = []
+        if (this.type === 2) {
+          for (var i = 0; i < this.footballCurData.ballSize.length; i++) {
+            arr[i] = this.footballCurData.ballSize[i].concedePointsShow
+          }
+        }
+        if (this.type === 3) {
+          for (i = 0; i < this.footballCurData.letTheBall.length; i++) {
+            arr[i] = this.footballCurData.letTheBall[i].concedePointsShow
+          }
+        }
+        return arr
       }
     },
     methods: {
       ...mapActions([
-        'getTaskData',
+        'getTaskDailyData',
+        'getTaskGrowData',
         'isAblePop',
-        'getQuizzes'
+        'getQuizzes',
+        'sportsPublish',
+        'getQuizzesFoot',
+        'getQuizzesBask'
       ]),
       handicapAdd () {
         if (this.i < this.handicapArr.length - 1) {
           this.i++
+          if (this.type === 2) {
+            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds
+            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds
+          } else if (this.type === 3) {
+            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds
+            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds
+          }
         }
       },
       handicapReduce () { 
         if (this.i !== 0) {
           this.i--
+          if (this.type === 2) {
+            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds
+            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds
+          } else if (this.type === 3) {
+            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds
+            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds
+          }
         }
       },
       averageFu (event) {
@@ -275,7 +358,64 @@
         }
       },
       submitPub () {
-        
+        var PubData = {}
+        this.$f7.showPreloader('发布中...')
+        if (this.ballType === 1) {
+          PubData = { // 发布
+            task_type: 1, // 1足球 2篮球
+            match_type: 1, // 比赛类型 1足球 2篮球
+            match_id: this.footballCurData.matchId, // 球赛id
+            play_type: this.type, // 下注类型 1标准盘 2让球 3大小球
+            concede_points_show: this.handicapArr[this.i], // 让球或大小球口
+            home: this.footballCurData.homeTeamName, // 主
+            visit: this.footballCurData.awayTeamName, // 客
+            odds_home: this.trueRefund, // 主陪
+            odds_tie: this.averagefund, // 平陪
+            odds_visit: this.falseRefund, // 客陪
+            settle_time: this.footballCurData.settleTime,
+            lock_time: this.footballCurData.lockTime,
+            lottery_type: 0,
+            personal: this.isPrivate ? 1 : 0,
+            like_peas: this.isAbleBean ? 1 : 0,
+            content: this.$store.state.sports.desc, // 描述
+            price: this.amount, // 单注价格
+            quantity: this.count, // 总注数 
+            home_logo: this.footballCurData.homeTeamLogo,
+            visit_logo: this.footballCurData.awayTeamLogo
+          }
+          if (this.type === 1) {
+            PubData.concede_points_show = 0
+          } else if (this.type === 2) {
+            PubData.play_type = 3 // 大小球
+            delete PubData.odds_tie
+          } else if (this.type === 3) {
+            PubData.play_type = 2 // 让球
+          }
+        } else if (this.ballType === 2) {
+          PubData = { // 发布
+            task_type: 2, // 1足球 2篮球
+            match_type: 2, // 比赛类型 1足球 2篮球
+            match_id: this.basketballCurData.matchId,
+            play_type: 1, // 下注类型 1标准盘 2让球 3大小球
+            concede_points_show: 0, // 让球或大小球口
+            home: this.basketballCurData.homeTeamName, // 主
+            visit: this.basketballCurData.awayTeamName, // 客
+            odds_home: this.trueRefund, // 主陪
+            odds_visit: this.falseRefund, // 客陪
+            settle_time: this.basketballCurData.settleTime,
+            lock_time: this.basketballCurData.lockTime,
+            lottery_type: 0,
+            personal: this.isPrivate ? 1 : 0,
+            like_peas: this.isAbleBean ? 1 : 0,
+            content: this.$store.state.sports.desc, // 描述
+            price: this.amount, // 单注价格
+            quantity: this.count, // 总注数 
+            home_logo: this.basketballCurData.homeTeamLogo,
+            visit_logo: this.basketballCurData.awayTeamLogo
+          }
+        }
+        this.$store.state.sports.PubData = PubData
+        this.sportsPublish(this.$store.state.sports.PubData)
       },
       onBtnClickAddAmount () {
         // 总金额不超过20000
@@ -359,7 +499,6 @@
         if (result != null) {
           this.count = parseInt(event.target.value)
           this.countBridge = this.count
-          // console.log('1111', this.count)
           if (this.amountAllCaculate >= this.amountMax) {
             this.count = Math.floor(this.amountMax / this.amount)
           } else if (this.count < 5) {
@@ -367,7 +506,6 @@
           }
         } else {
           this.count = this.countBridge
-          // console.log('222222', this.count)
         }
       },
       inputTrueRefund (event) {
@@ -404,10 +542,43 @@
       }
     },
     watch: {
-    },
-    mounted () {
-      var height = document.documentElement.clientHeight
-      this.height = parseInt(height)
+      pubShake () {
+        this.$f7.hidePreloader()
+        if (this.pubResult && this.status === 200) {
+          this.getTaskDailyData()
+          this.getTaskGrowData()
+          this.$f7.closeModal('#post')
+          this.$f7.popup('#pub-succeed')
+          this.$f7.mainView.router.load({url: '/quiz-detail/'})
+          this.$store.state.quizDetail.taskId = this.pubResult.task_id
+          if (this.ballType === 1) {
+            this.getQuizzesFoot([0])
+          } else if (this.ballType === 2) {
+            this.getQuizzesBask([0])
+          } 
+        } else if (this.pubResult.id === 1001) {
+          this.$dm.confirm({
+            title: `提示`,
+            mes: '金币不足，购买金币后再发布',
+            confirmCb: () => {
+              if (servConf.APP === 0) {
+                this.$f7.views.postPop.router.load({url: '/buy-gold/'})
+              } else if (servConf.VISITOR === 0) {
+                this.$f7.views.postPop.router.load({url: '/buy-gold-app/'})
+              } else {
+                this.$f7.views.postPop.router.load({url: '/buy-gold-iap/'})
+              }
+            }
+          })
+        } else {
+          this.$f7.addNotification({
+            title: '提示',
+            message: this.pubResult.message,
+            closeOnClick: true,
+            hold: 3000
+          })
+        }
+      }
     },
     destroyed () {
       
@@ -491,7 +662,7 @@
   }
 
   .part1 {
-    width: 100%;
+    width: 100%; position: relative;
     background-color: white;
   }
 
@@ -683,6 +854,7 @@
     height: 14px;
     border: 1px solid #666;
     border-radius: 50%;
+    margin-top: -3px;
     font-size: 11px;
     line-height: 14px;
     font-family: 'Microsoft yahei';
@@ -695,5 +867,55 @@
     line-height:29px; margin:0 4px;
     background: #f6f6f6;
   }
+  
+  .rotate180{
+    transform: rotateY(180deg);
+  }
+  
+  .desc-input {
+    background-color: #f6f6f6;
+    border-width: 0;
+    border-radius: 6px;
+    border:1px solid transparent;
+    width: 90%;
+    max-width: 90%;
+    padding: 12px 12px;
+    height: 90px;
+    max-height: 90px;
+    /*font-size: small;*/
+    margin-top: 10px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    resize: none;
+    font-size: 14px;
+  }
+  .desc-warn{
+    border: 1px solid #ff3c3c;
+  }
+  
+  .text-count{
+    color:#FAA719;
+    font-size: 12px;
+  }
 
+  span.text-warn{
+    color:#ff3c3c;
+  }
+  .text-center{
+    font-size: 16px;
+    color:#999;
+    vertical-align: middle;
+    margin:2px -2px 0;
+  }
+
+  .text-max{
+    color:#999;
+    font-size: 12px;
+  }
+  
+  .text-wrapper{
+    position:absolute;
+    right:16px;
+    top:104px;
+  }
 </style>

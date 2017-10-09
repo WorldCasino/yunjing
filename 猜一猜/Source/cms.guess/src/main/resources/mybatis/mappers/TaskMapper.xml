@@ -195,27 +195,6 @@
     </select>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!--更新竞猜项目状态-->
     <update id="updateTaskStatus" parameterType="com.cicada.pojo.Task">
         UPDATE t_tasks
@@ -299,7 +278,7 @@
         select home_score,away_score from t_matches where match_id=#{matchId}
     </select>
     <!--获取让球数或盘口-->
-    <select id="selectConcedePoints" parameterType="java.lang.Long" resultType="java.lang.Integer" >
+    <select id="selectConcedePoints" parameterType="java.lang.Long" resultType="java.lang.Double" >
         select concede_points from t_tasks where task_id=#{taskId}
     </select>
     <!--定时任务查询待处理比分的竞猜-->
@@ -309,4 +288,6 @@
         left join t_task_answers c on b.task_id=c.task_id and c.is_right=1
         GROUP BY a.match_id,b.task_id,c.answer_id having b.task_id is not null and c.answer_id is null
     </select>
+
+
 </mapper>

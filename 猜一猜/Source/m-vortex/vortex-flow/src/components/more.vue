@@ -30,7 +30,7 @@
 
         <!--出现的条件判断先注解了，等接口-->
 
-        <div v-if="isPf" class="item" @click="copyPub">
+        <div v-if="(isPf || isSport) && !isBanker" class="item" @click="copyPub">
           <img v-if="!isToLocktime" src="../../static/homepage/Forward.png" alt="">
           <img v-else src="../../static/homepage/Forward_disable.png" alt="">
           <div class="item-text">转发为我的竞猜</div>
@@ -108,7 +108,9 @@
         drawShake: state => state.quizDetail.drawShake,
         reportStatus: state => state.quizDetail.reportStatus,
         reportShake: state => state.quizDetail.reportShake,
-        wxJsConf: state => state.uploadData.wxJsConfData
+        wxJsConf: state => state.uploadData.wxJsConfData,
+        sportDetailShake: state => state.sports.sportDetailShake,
+        sportDetailStatus: state => state.sports.sportDetailStatus
       }),
       ...mapGetters([
         'quizDetail',
@@ -121,6 +123,10 @@
           return false
         }
         return this.quizDetail.user.type === 0
+      },
+      // 是否是体育
+      isSport () {
+        return this.quizDetail.task_type === 1 || this.quizDetail.task_type === 2
       },
       // 普通用户转发平台的竞猜
       isPfCopy () {
@@ -152,7 +158,7 @@
           return false
         }
         let lockTime = new Date(this.quizDetail.lock_time.replace(/-/g, '/'))
-        let lockTimeStamp = lockTime.getTime()
+        let lockTimeStamp = lockTime.getTime() - 15 * 60 * 1000
         let nowStamp = new Date().getTime()
         let time = nowStamp - lockTimeStamp
         return time >= 0 ? 'true' : false
@@ -163,7 +169,8 @@
         'handleDraw',
         'report',
         'shareQuiz',
-        'getQuizDetail'
+        'getQuizDetail',
+        'getSportsDetail'
       ]),
       shareWx (shareWhere) {
         this.$store.state.quizDetail.isShowMore = false
@@ -180,15 +187,31 @@
         if (this.isToLocktime) {
           return
         }
+        this.$store.state.sports.isCopy = true
         this.$store.state.quizDetail.isShowMore = false
         // 复制平台的竞猜
-        console.log('bababa')
-        this.$store.state.uploadData.copyTaskId = this.taskId
-        this.$store.state.uploadData.copyTaskType = this.quizDetail.task_type
-        this.$store.state.uploadData.copyTaskData = this.quizDetail
-        this.$f7.views.main.router.load({
-          url: '/pub-guess-set-copy/'
-        })
+        if (this.quizDetail.task_type === 1) {
+          this.$store.state.sports.ballType = 1
+          if (this.quizDetail.play_type === 2) {
+            this.$store.state.sports.type = 3
+          } else if (this.quizDetail.play_type === 3) {
+            this.$store.state.sports.type = 2
+          } else if (this.quizDetail.play_type === 1) {
+            this.$store.state.sports.type = 1
+          }
+          this.getSportsDetail({match_id: this.quizDetail.match_id})
+        } else if (this.quizDetail.task_type === 2) {
+          this.$store.state.sports.ballType = 2
+          this.$store.state.sports.type = 1
+          this.getSportsDetail({match_id: this.quizDetail.match_id})
+        } else {
+          this.$store.state.uploadData.copyTaskId = this.taskId
+          this.$store.state.uploadData.copyTaskType = this.quizDetail.task_type
+          this.$store.state.uploadData.copyTaskData = this.quizDetail
+          this.$f7.views.main.router.load({
+            url: '/pub-guess-set-copy/'
+          })
+        }
       },
       showDraw () {
         if (!this.token) {
@@ -273,8 +296,17 @@
           // 开奖成功
         }
       },
-      isShowMore (val) {
-
+      sportDetailShake () {
+        if (this.sportDetailStatus === true) {
+          this.$f7.mainView.router.load({url: '/publish-sports-set-copy/'})
+        } else {
+          this.$f7.addNotification({
+            title: '提示',
+            message: this.sportDetailStatus.message,
+            closeOnClick: true,
+            hold: 3000
+          })
+        }
       }
     }
   }

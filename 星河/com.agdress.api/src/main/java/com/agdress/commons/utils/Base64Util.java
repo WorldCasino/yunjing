@@ -48,4 +48,11 @@ public class Base64Util {
         }
         return result;
     }
+
+
+
+
+    public static void main(String[] str){
+        System.out.println(decode("KQseJhsEBzIwFg4ZECwiKAMTBRQ="));
+    }
 }

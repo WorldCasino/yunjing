@@ -21,13 +21,7 @@ public interface IUserService extends IService<UserEntity> {
      * @param code 验证码
      * @return
      */
-    LoginResultVo fastLogin(String phone, String code) throws ApiException;
-
-    void logout(UserEntity userEntity) throws ApiException;
-
-    UserResultVo getUserInfo(UserEntity userEntity) throws ApiException;
-
-    int updateUserInfo(UserEntity userEntity, String nickname) throws ApiException;
+    LoginResultVo fastLogin(String phone, String code,String agent_id) throws ApiException;
 
     /**
      * 游客登录
@@ -35,7 +29,25 @@ public interface IUserService extends IService<UserEntity> {
      * @return
      * @throws ApiException
      */
-    LoginResultVo visitorLogin(String device) throws ApiException;
+    LoginResultVo visitorLogin(String device,String agent_id) throws ApiException;
+
+
+
+    void logout(UserEntity userEntity) throws ApiException;
+
+    UserResultVo getUserInfo(UserEntity userEntity) throws ApiException;
+
+    /**
+     * 获取账户余额
+     * @param userId
+     * @return
+     * @throws ApiException
+     */
+    Float refreshUserBalance(long userId) throws ApiException;
+
+    int updateUserInfo(UserEntity userEntity, String nickname) throws ApiException;
+
+
 
     String uploadHeadImage(UserEntity userEntity, MultipartFile file) throws ApiException;
 }

@@ -35,6 +35,8 @@ public interface TaskMapper extends BaseMapper<Task> {
     int selectMatchStatus(long taskId);
     int selectRightAnswer(long taskId);
     Map<String,Object> selectScore(long matchId);
-    Integer selectConcedePoints(long taskId);
+    double selectConcedePoints(long taskId);
     List<Long> selectWattingScoreTasks();
+
+
 }

@@ -163,7 +163,11 @@ module.exports = function (req, res, next) {
 
             pd.checkState(answers[0].cnt === 1, '系统开小差了');//答案编号不正确
             pd.checkState(status === 20, '竞猜已经开奖，不能下注了');
-            pd.checkState((myLeft - locked) >= (quantity * price), '金币不足，购买金币后再下注',1001);
+            if(coin_type==0){
+                pd.checkState((myLeft - locked) >= (quantity * price), '金币不足，购买金币后再下注',1001);
+            }else if(coin_type==1){
+                pd.checkState((myLeft) >= (quantity * price), '金币不足，购买金币后再下注',1001);
+            }
             pd.checkState(quantity <= (total - sold), '注数已经下满了');
             pd.checkState(lockTime == null || lockTime > new Date(), '下注已经截止，不能下注了');
         });
@@ -255,6 +259,12 @@ module.exports = function (req, res, next) {
                     throw error;
                 });
             }).then(function () {
+                //下注更新竞猜的update_date
+                return Q.ninvoke(mysql, 'query', {
+                    sql: 'UPDATE t_tasks SET update_date = ?,update_by = ? WHERE task_id = ?',
+                    values: [operate_time, user_id, task_id]
+                })
+            }).then(function () {
                 // 根据下注数量将下注操作加入操作日志表
                 return Q.fcall(function () {
                     // 添加记录到t_operate_log
@@ -337,17 +347,32 @@ module.exports = function (req, res, next) {
             // 解锁表
             // Q.ninvoke(conn, 'query', 'UNLOCK TABLES'); //TODO
             conn.release();
-            //
-            res.pkg.data = {
-                tord_id: insertId,
-                task_id: task_id,
-                quantity: quantity,
-                answer_id: answer_id,
-                price: price,
-                cost: quantity * price
-            };
+
+            var win_expect=0;
+            Q.fcall(function () {
+                return Q.ninvoke(mysql, 'query', {
+                    sql :  "select odds from t_task_answers where answer_id=?",
+                    values: [answer_id]
+                });
+            }).then(function (result) {
+                console.log(result[0]);
+                var odds=result[0][0].odds;
+                win_expect=odds*price;
+            }).then(function () {
+                res.pkg.data = {
+                    tord_id: insertId,
+                    task_id: task_id,
+                    quantity: quantity,
+                    answer_id: answer_id,
+                    price: price,
+                    cost: quantity * price,
+                    win_expect:win_expect,
+                    coin_type:coin_type
+                };
+            });
+
             return res.pkg;
-        })
+        });
     }).then(function () {
         // 发送下注状态到后台处理 开奖
         return Q.ninvoke(redisPub, 'publish', 'lottery_queue_online', JSON.stringify({

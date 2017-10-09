@@ -5,9 +5,9 @@ package com.cicada.enums;
  * Created by Administrator on 2017/7/12.
  */
 public enum MatchesStatusEnum implements CodeBaseEnum {
-    NotStarted(0,"未开赛"),
-    Underway(1,"正在进行"),
-    IsOver(2,"已结束");
+    NotStarted(1,"未开赛"),
+    Underway(2,"正在进行"),
+    IsOver(3,"已结束");
 
     private final int code;
     private final String desc;

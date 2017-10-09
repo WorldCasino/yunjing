@@ -8,6 +8,15 @@ import java.io.Serializable;
 public class LoginResultVo implements Serializable{
     private long userId;
     private String token;
+    private String agent_id;
+
+    public String getAgent_id() {
+        return agent_id;
+    }
+
+    public void setAgent_id(String agent_id) {
+        this.agent_id = agent_id;
+    }
 
     public long getUserId() {
         return userId;

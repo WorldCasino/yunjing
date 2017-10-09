@@ -61,9 +61,6 @@ const actions = {
       .then(function (data) {
         localStorage.setItem(storageTypes.LOGIN_DATA, JSON.stringify(data.token))
         commit(types.LOGIN_SUCCEED, data)
-        if (typeof payload[2] === 'function') {
-          payload[2]()
-        }
       })
       .catch(function (err) {
         localStorage.removeItem(storageTypes.LOGIN_DATA)

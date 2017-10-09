@@ -17,3 +17,6 @@ export const LOGIN_FOR_CODE = 'LOGIN_FOR_CODE'
 
 export const BET_TIP = 'BET_TIP'
 
+// 设置提醒：是否优先选用金豆下注
+export const BEAN_PREFER = 'BEAN_PREFER'
+

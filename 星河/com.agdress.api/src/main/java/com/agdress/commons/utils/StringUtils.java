@@ -121,7 +121,11 @@ public class StringUtils extends org.springframework.util.StringUtils{
 
 
     public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        System.out.println(get10NUmber());
+        //收到用户充值通知
+        String str="【星河娱乐】玩家[userName]发起了一笔提现申请，金额：amount元，订单编号：tradeId。".replaceAll("userName","拉拉");
+        str=str.replaceAll("amount","1000");
+        str=str.replaceAll("tradeId","123456789");
+        System.out.println(str);
     }
 
 }

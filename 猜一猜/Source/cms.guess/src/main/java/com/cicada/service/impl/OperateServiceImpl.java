@@ -56,6 +56,18 @@ public class OperateServiceImpl extends ServiceImpl<OperateMapper,OperateEntity>
     }
 
     @Override
+    public int isSharedActive(OperateVo operateVo) throws ApiException {
+        Map<String,Object> Params=new HashMap<String,Object>();
+        long userId = operateVo.getUserId();
+        long taskId = operateVo.getTaskId();
+        Params.put("userId",userId);
+        Params.put("taskId",taskId);
+
+        int cnt=activeService.isSharedActive(Params);
+        return cnt;
+    }
+
+    @Override
     public void deleteOperateLog(OperateVo operateVo) throws ApiException {
         operateMapper.deleteOperateLogById(operateVo.getOperateId());
     }

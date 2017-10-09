@@ -121,6 +121,15 @@
             maximumSelectionLength: 3  //最多能够选择的个数
         });
 
+        var GB2312UnicodeConverter = {
+            ToUnicode: function (str) {
+                return escape(str).toLocaleLowerCase().replace(/%u/gi, '\\u');
+            }
+            , ToGB2312: function (str) {
+                return unescape(str.replace(/\\u/gi, '%u'));
+            }
+        };
+
         $("#fromType").on('change',function () {
             var selList = $("#fromType").select2("data");
             var ids = "";
@@ -170,7 +179,7 @@
             {
                 "data": 'taskContent',
                 "render": function (data,type,rowData,callback) {
-                    return cicada.isNullOrEmpty(data)? "": "<a id='taskLink' src='' style='cursor: pointer;'>"+data+"</a>"
+                    return cicada.isNullOrEmpty(data)? "": "<a id='taskLink' src='' style='cursor: pointer;'>"+GB2312UnicodeConverter.ToGB2312(data)+"</a>"
                 }
             },
             {

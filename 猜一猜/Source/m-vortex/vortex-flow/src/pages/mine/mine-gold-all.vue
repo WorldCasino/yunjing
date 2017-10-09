@@ -17,7 +17,7 @@
       </div>
       <div class="user-data">
         <f7-link href="" class="data-title">我的金币</f7-link>
-        <f7-link href="" class="data-title">冻结金币</f7-link>
+        <f7-link href="" class="data-title m-frezz-gold">冻结金币 <div class="doubt-icon" @click="popwin">?</div></f7-link>
         <f7-link href="" v-if="userCoinData !== null && userCoinData.coin_balance != null" class="data-number" style="color: #f9a400">{{parseInt(userCoinData.coin_balance)}}</f7-link>
         <f7-link v-else class="data-number" style="color: #f9a400">0</f7-link>
         <f7-link href="" v-if="userCoinData !== null && userCoinData.coin_locked != null" class="data-number" style="color: #ff3c3c">{{parseInt(userCoinData.coin_locked)}}</f7-link>
@@ -70,12 +70,22 @@
       },
       goBuyGold () {
         if (servConf.APP === 0) {
-          self.$f7.mainView.router.load({url: '/buy-gold/'})
+          this.$f7.mainView.router.load({url: '/buy-gold/'})
         } else if (servConf.VISITOR === 0) {
-          self.$f7.mainView.router.load({url: '/buy-gold-app/'})
+          this.$f7.mainView.router.load({url: '/buy-gold-app/'})
         } else {
-          self.$f7.mainView.router.load({url: '/buy-gold-iap/'})
+          this.$f7.mainView.router.load({url: '/buy-gold-iap/'})
         }
+      },
+      popwin () {
+        this.$dm.confirm({
+          title: `冻结金币`,
+          textAlign: 'left',
+          mes: '发布竞猜时，需要从你的账户冻结部分金币。<br/>竞猜开奖后，将使用这部分金币和参与的用户进行结算。',
+          confirmCb: () => {
+            
+          }
+        })
       }
     },
     mounted () {
@@ -85,7 +95,20 @@
 </script>
 
 <style scoped>
-
+  .m-frezz-gold{
+    padding-left: 22px; box-sizing: border-box;
+  }
+  .doubt-icon {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #666;
+    border-radius: 50%;
+    font-size: 11px;
+    line-height: 14px;
+    font-family: 'Microsoft yahei';
+    display: inline-block;
+  }
+  
   .nav-right {
     font-size: 16px;
   }

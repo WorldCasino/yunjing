@@ -57,7 +57,8 @@
 		<property name="maxIdle" value="${redis.maxIdle}" /> <!-- 最大能够保持idel状态的对象数  -->
 		<property name="maxWaitMillis" value="${redis.maxWait}" /> <!-- 最大的等待时间 -->
 		<property name="maxTotal" value="${redis.maxTotal}" /> <!-- 最大分配的对象数 -->
-		<property name="testOnBorrow" value="${redis.testOnBorrow}"/> <!-- 当调用borrow Object方法时，是否进行有效性检查 -->
+		<property name="testOnBorrow" value="${redis.testOnBorrow}"/> <!-- 在borrow一个jedis实例时，是否提前进行validate操作，如果为true，则得到的jedis实例均是可用的 -->
+		<property name="testOnReturn" value="true"/> <!-- 在return一个jedis实例时，是否提前进行validate操作 -->
 	</bean>
 
 	<bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">
@@ -65,7 +66,7 @@
 		<constructor-arg index="1" value="${redis.host}" />
 		<constructor-arg index="2" value="${redis.port}" type="int" />
 		<!--TIMEOUT-->
-		<constructor-arg index="3" value="10000" type="int"/>
+		<constructor-arg index="3" value="5000" type="int"/>
 		<!--AUTH-->
 		<constructor-arg index="4" value="${redis.password}"/>
 	</bean>

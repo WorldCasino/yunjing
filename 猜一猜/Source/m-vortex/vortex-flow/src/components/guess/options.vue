@@ -7,11 +7,20 @@
         <img src="../../assets/quiz_chat.png" height="20px" class="discuss-img">
         <div class="discuss-number">{{discuss}}</div>
       </div>
-
+      <!--:class="{'published-right-answer': isPublished && option.is_right, 'to-lock-time': toLockTime, published: isPublished}"-->
       <div class="list-wrapper">
-        <div v-for="(option, index) in options" class="box-choice-block" :class="{ispublished: isPublished}" @click="bet(option, index)" v-on:touchstart="betStart(option, index)" v-on:touchend="betEnd(option, index)" ref="block">
+        <div v-for="(option, index) in options"
+             class="box-choice-block"
+             :class="{'published-right-answer': isPublished && option.is_right, 'color-eee': lockBtn, 'btn-down': btnDown && btnIndex === index}"
+             @click="bet(option, index)"
+             v-on:touchstart="betStart(option, index)"
+             v-on:touchend="betEnd(option, index)"
+             ref="block">
+
           <!--字母-->
           <div class="item-choice-letter">{{optionLetters[index]}}</div>
+
+          <!-- 内容区 -->
           <div class="item-choice-wrapper" ref="wrapper">
             <div v-if="!isBanker" class="item-choice-odds">
               赔率{{option.odds.toFixed(2)}}<span v-if="showDetail && mineBets[index] > 0">，猜中得{{parseInt(option.odds * gold) * mineBets[index]}}</span>
@@ -26,12 +35,13 @@
               {{option.answer}}
             </div>
           </div>
-          <div v-if="showDetail && mineBets[index] > 0" class="bet_amount-wrapper">
-            <div v-if="mineBetsCoin[index] > 0 && mineBetsBean[index] === 0" class="bet_amount" style="background: url(../../../static/homepage/bet_amount_coin.png) no-repeat center / contain;">{{mineBets[index] * gold}}</div>
-            <div v-else-if="mineBetsCoin[index] === 0 && mineBetsBean[index] > 0" class="bet_amount" style="background: url(../../../static/homepage/bet_amount_bean.png) no-repeat center / contain;">{{mineBets[index] * gold}}</div>
-            <div v-else-if="mineBetsCoin[index] > 0 && mineBetsBean[index] > 0" class="bet_amount" style="background: url(../../../static/homepage/bet_amount_hybrid.png) no-repeat center / contain;">{{mineBets[index] * gold}}</div>
-          </div>
-          <!-- <img v-if="isPublished && option.is_right && !isBanker" src="../../assets/quiz_right.png" width="24" height="24" class="item-choice-right"> -->
+
+          <!-- 下注金额 -->
+          <!--<div v-if="showDetail && mineBets[index] > 0" class="bet_amount-wrapper">
+            <div v-if="mineBetsCoin[index] > 0 && mineBetsBean[index] === 0" class="bet_amount">{{mineBets[index] * gold}}</div>
+            <div v-else-if="mineBetsCoin[index] === 0 && mineBetsBean[index] > 0" class="bet_amount">{{mineBets[index] * gold}}</div>
+            <div v-else-if="mineBetsCoin[index] > 0 && mineBetsBean[index] > 0" class="bet_amount">{{mineBets[index] * gold}}</div>
+          </div>-->
         </div>
       </div>
 
@@ -42,12 +52,20 @@
 <script>
 
   import { mapState } from 'vuex'
+  import * as servConf from '../../api/server-config'
 
   export default {
     data () {
       return {
         // 目前最多三个
-        optionLetters: [ 'A', 'B', 'C' ]
+        optionLetters: [ 'A', 'B', 'C' ],
+
+        // 是否到锁定时间
+        isToLockTime: false,
+
+        // 按钮按下变色
+        btnDown: false,
+        btnIndex: 0
       }
     },
     props: {
@@ -113,78 +131,47 @@
       gold: { type: Number, required: false },
 
       // 1手动开奖，0自动开奖
-      lotteryType: { type: Number, required: false }
+      lotteryType: { type: Number, required: false },
+      lock_time: {required: false, default: null}
     },
     computed: {
       ...mapState({
-        shake: state => state.quizDetail.shake
-      })
+        shake: state => state.quizDetail.shake,
+        now: state => state.now
+      }),
+      toLockTime () {
+        if (!this.lock_time) return false
+        let lockTime = new Date(this.lock_time.replace(/-/g, '/')).getTime()
+        return lockTime - this.now < 0 ? 'true' : false
+      },
+      // 按钮锁定变灰
+      lockBtn () {
+        return this.toLockTime || this.total === this.count || this.isPublished
+      }
     },
     methods: {
-//      bet: function (option, payload) {
-//        this.$emit('bet', [option, payload])
-//      },
       bet: function (option, index) {
         // 下注声音提示（audio想要动态响应触发play方法，必须先在js事件（可在点击事件）下至少触发一次play）
         const oBetAudio = document.querySelector('.bet-audio')
-        oBetAudio.play()
+        oBetAudio.play().catch(() => {})
         oBetAudio.pause()
         // 停止上一次的声音
         oBetAudio.src = ''
         this.$emit('bet', [option, this.optionLetters[index]])
       },
       betStart: function (option, index) {
-        // console.log('数量down', this.count, this.total)
-        /* if (this.total !== this.count) {
-          this.$refs.block[index].style.border = '1px solid #ddc425'
-          this.$refs.wrapper[index].style.background = '#ddc425'
-        } */
-        if (!this.isPublished) {
-          this.$refs.block[index].style.border = '1px solid #ddc425'
-          this.$refs.wrapper[index].style.background = '#ddc425'
+        if (!this.lockBtn) {
+//          this.$refs.block[index].style.border = '1px solid #ddc425'
+//          this.$refs.wrapper[index].style.background = '#ddc425'
+          this.btnDown = true
+          this.btnIndex = index
         }
       },
       betEnd: function (option, index) {
-        // console.log('数量up', this.count, this.total)
-        if (!this.isPublished) {
-          this.$refs.block[index].style.border = '1px solid gold'
-          this.$refs.wrapper[index].style.background = 'gold'
-        }
+        this.btnDown = false
       }
     },
     watch: {
-      isPublished (val) {
-        //  如果已经开奖了
-        if (val) {
-          for (let i = 0; i < this.$refs.block.length; i++) {
-            this.$refs.block[i].style.border = '1px solid #eee'
-            this.$refs.wrapper[i].style.background = '#eee'
-          }
-        } else {
-          for (let i = 0; i < this.$refs.block.length; i++) {
-            this.$refs.block[i].style.border = '1px solid gold'
-            this.$refs.wrapper[i].style.background = 'gold'
-          }
-        }
-      },
-      shake () {
-        if (!this.$refs.block) {
-          return
-        }
-        // console.log('开奖了吗options', this.taskId, this.isPublished)
-        // 异步获取此猜详情数据后，再作判断
-        if (this.isPublished) {
-          for (let i = 0; i < this.$refs.block.length; i++) {
-            this.$refs.block[i].style.border = '1px solid #eee'
-            this.$refs.wrapper[i].style.background = '#eee'
-          }
-        } else {
-          for (let i = 0; i < this.$refs.block.length; i++) {
-            this.$refs.block[i].style.border = '1px solid gold'
-            this.$refs.wrapper[i].style.background = 'gold'
-          }
-        }
-      }
     },
     mounted () {
 
@@ -208,7 +195,7 @@
     /*height: 70%;*/
     /*margin-top: 0px;*/
     margin-left: 12px;
-    margin-right: 8px;
+    margin-right: 12px;
     /*padding-top: 24px;*/
     font-size: 10px;
 
@@ -219,6 +206,7 @@
     display: -webkit-flex;
     display: flex;
     justify-content: space-between;
+    color: #333;
   }
   .box-choice-block {
     height: 38px;
@@ -236,6 +224,10 @@
     position: relative;
     border: 1px solid gold;
   }
+
+  .box-choice-block:first-child {
+    margin-left: 0;
+  }
   .item-choice-letter {
     display: -webkit-flex;
     display: flex;
@@ -249,25 +241,23 @@
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
     font-size: 14px;
-    color:#333;
+    //color:#333;
   }
   .item-choice-title {
     padding-left: 8px;
     font-size: 13px;
     text-align: left;
-    color: #666666;
     word-wrap: break-word;
     word-break: break-all;
     line-height: 13px;
-    color:#333;
+    //color:#333;
   }
   .item-choice-odds {
     font-size: 10px;
-    color: #666666;
     padding-left: 8px;
     text-align: left;
     line-height: 12px;
-    color:#333;
+    //color:#333;
     padding-bottom: 3px;
   }
   .item-choice-right {
@@ -294,14 +284,31 @@
     line-height: 10px;
   }
 
-  /* 开奖之后按钮变灰 */
-  div.ispublished {
+  .btn-dowm {
+    border : 1px solid #ddc425;
+  }
+
+  .btn-down .item-choice-wrapper {
+    background: #ddc425;
+  }
+
+  /* 下注截止之后按钮变灰 */
+  div.color-eee {
     border : 1px solid #eee;
   }
 
-  div.ispublished .item-choice-wrapper {
+  div.color-eee .item-choice-wrapper {
     background: #eee;
+  }
 
+  /* 开奖之后正确答案的按钮变红 */
+  .list-wrapper div.published-right-answer {
+    border : 1px solid #FC6868;
+    color: #fff;
+  }
+
+  .list-wrapper div.published-right-answer .item-choice-wrapper {
+    background: #FC6868;
   }
 
   .bet_amount-wrapper {
@@ -320,6 +327,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .bet_amount:nth-child(1) {
+    background: url("../../../static/homepage/bet_amount_coin.png") no-repeat center / contain;
+  }
+
+  .bet_amount:nth-child(2) {
+    background: url("../../../static/homepage/bet_amount_bean.png") no-repeat center / contain;
+  }
+
+  .bet_amount:nth-child(3) {
+    background: url("../../../static/homepage/bet_amount_hybrid.png") no-repeat center / contain;
   }
   /* .box-choice-block {
     display: flex;

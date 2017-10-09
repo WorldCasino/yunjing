@@ -9,6 +9,8 @@ import * as getters from './getters'
 import * as types from './mutation-types'
 import * as storageTypes from './storage-types'
 import quizList from './modules/quiz-list'
+import quizListFoot from './modules/quiz-list-foot'
+import quizListBask from './modules/quiz-list-bask'
 import userInfo from './modules/user-info'
 import userCoin from './modules/user-coin'
 import publisherInfo from './modules/publisher-info'
@@ -26,8 +28,11 @@ import related from './modules/related'
 import minePublish from './modules/mine-publish'
 import confirm from './modules/confirm'
 import buyGoldIap from './modules/buy-gold-iap'
+import buyGoldApp from './modules/buy-gold-app'
+import appPush from './modules/app-push'
 import task from './modules/task'
 import sports from './modules/sports'
+import setTip from './modules/set-tip'
 
 Vue.use(Vuex)
 
@@ -50,15 +55,15 @@ const state = {
   // 当前页面参数对应当前页面标识
   currentPageParam: null,
 
-  homepageScrollTop: 0,
-  homepageVisualHeight: 0,
-
   // 下注提醒
   betTip: JSON.parse(localStorage.getItem(storageTypes.BET_TIP)),
 
   // 分享弹窗
   showShare: false,
   shareType: 0,
+  // 红包
+  showLuckyMoney: false,
+  luckyMoneyDetail: false,
 
   serverInit: false,
   serverInitStatus: null
@@ -96,6 +101,8 @@ export default new Vuex.Store({
   mutations,
   modules: {
     quizList,
+    quizListFoot,
+    quizListBask,
     userInfo,
     publisherInfo,
     quizPlayers,
@@ -114,6 +121,9 @@ export default new Vuex.Store({
     confirm,
     buyGoldIap,
     task,
-    sports
+    sports,
+    buyGoldApp,
+    appPush,
+    setTip
   }
 })

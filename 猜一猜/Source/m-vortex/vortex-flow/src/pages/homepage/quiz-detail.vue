@@ -3,7 +3,7 @@
  * Description: 竞猜，足彩详情页
  */
 <template>
-  <f7-page navbar-fixed toolbar-fixed pull-to-refresh @ptr:refresh="onRefresh" ref="quizDetailRef" class="page-quiz-detail">
+  <f7-page navbar-fixed toolbar-fixed pull-to-refresh @ptr:refresh="onRefresh" ref="quizDetailRef" class="page-quiz-detail" id="page-detail">
     <f7-navbar sliding class="nav-custom">
       <f7-nav-left>
         <f7-link back>
@@ -23,23 +23,23 @@
 
     <div class="box-info" v-if="quizDetail">
       <Publisher :userId="quizDetail.user_id" :avatar="quizDetail.user.head_url" :username="quizDetail.user.nick" :is-male="quizDetail.user.gender"  :is-hot="quizDetail.hot"
-                 :refresh-time="quizDetail.update_date" :is-published="isPublished" :publish-time="quizDetail.settle_time"></Publisher>
+                 :refresh-time="quizDetail.update_date" :is-published="isPublished" :publish-time="quizDetail.settle_time" :task_type="quizDetail.task_type" :quizDetail="quizDetail" :showOpenTimeType="1"></Publisher>
       <Describe :desc="quizDetail.task_content" :gold="quizDetail.sale_price"></Describe>
       <QuizReferences v-if="quizDetail.task_type === 0 || quizDetail.task_type === 3" :result-placeholder="quizDetail.pics[0]" :references="quizDetail.pics.slice(1, 4)" :browserMode="calcBrowserMode" :status="status" :is-published="isPublished"></QuizReferences>
-      <FootballTeam v-if="quizDetail.task_type === 1 || quizDetail.task_type === 2" :teams="quizDetail.teams"></FootballTeam>
+      <ReferencesSport v-if="quizDetail.task_type === 1 || quizDetail.task_type === 2" :teams="quizDetail.teams" :title="quizDetail.title" :play_type="quizDetail.play_type" :concede_points_show="quizDetail.concede_points_show" :is-published="isPublished" :quizDetail="quizDetail"></ReferencesSport>
       <BetProgress class="progress" :total="quizDetail.quantity" :count="currentCount"></BetProgress>
-      <Options :total="quizDetail.quantity" :count="currentCount" :is-published="isPublished" :showDiscuss=false :discuss="quizDetail.message_count" :options="quizDetail.answer"
-               :show-detail=true :mine-bets="calcMineBetsAll" :mine-bets-coin="calcMineBetsCoin" :mine-bets-bean="calcMineBetsBean" :is-banker="isBanker" :taskId="taskId" :gold="quizDetail.sale_price" :lottery-type="quizDetail.lottery_type" @bet="bet"></Options>
-      <Players :gamblers="quizDetail.gamblers"></Players>
+      <Options :quizDetail="quizDetail" :total="quizDetail.quantity" :count="currentCount" :is-published="isPublished" :showDiscuss=false :discuss="quizDetail.message_count" :options="quizDetail.answer"
+               :show-detail=true :mine-bets="calcMineBetsAll" :mine-bets-coin="calcMineBetsCoin" :mine-bets-bean="calcMineBetsBean" :is-banker="isBanker" :taskId="taskId" :gold="quizDetail.sale_price" :lottery-type="quizDetail.lottery_type" :lock_time="quizDetail.lock_time" @bet="bet"></Options>
       <Result :is-published="isPublished" :gold="quizDetail.sale_price" :options="quizDetail.answer" :mine-bets="calcMineBetsAll" :mine-bets-coin="calcMineBetsCoin" :mine-bets-bean="calcMineBetsBean" :is-banker="isBanker" :lotteryVo="quizDetail.lotteryVo ? quizDetail.lotteryVo : {}"></Result>
+      <Players :gamblers="quizDetail.gamblers"></Players>
     </div>
 
     <div class="box-fixed" v-if="quizDetail && showAll">
       <BetProgress :total="quizDetail.quantity" :count="currentCount"></BetProgress>
-      <Options :total="quizDetail.quantity" :count="currentCount" :is-published="isPublished" :showDiscuss=false :discuss="quizDetail.message_count" :options="quizDetail.answer"
-               :show-detail=true :mine-bets="calcMineBetsAll" :is-banker="isBanker" :taskId="taskId" :gold="quizDetail.sale_price" :lottery-type="quizDetail.lottery_type" @bet="bet"></Options>
-      <Players :gamblers="quizDetail.gamblers"></Players>
+      <Options :quizDetail="quizDetail" :total="quizDetail.quantity" :count="currentCount" :is-published="isPublished" :showDiscuss=false :discuss="quizDetail.message_count" :options="quizDetail.answer"
+               :show-detail=true :mine-bets="calcMineBetsAll" :is-banker="isBanker" :taskId="taskId" :gold="quizDetail.sale_price" :lottery-type="quizDetail.lottery_type" :lock_time="quizDetail.lock_time" @bet="bet"></Options>
       <Result :is-published="isPublished" :gold="quizDetail.sale_price" :options="quizDetail.answer" :mine-bets="calcMineBetsAll" :mine-bets-coin="calcMineBetsCoin" :mine-bets-bean="calcMineBetsBean" :is-banker="isBanker" :lotteryVo="quizDetail.lotteryVo ? quizDetail.lotteryVo : {}"></Result>
+      <Players :gamblers="quizDetail.gamblers"></Players>
     </div>
 
     <div class="box-chat">
@@ -64,8 +64,6 @@
       </div>
     </div>
 
-    <f7-messagebar style="position: fixed;left: 0;bottom: 0;" id="input" @focus="inputFocus" class="message-bar-custom" placeholder="说点什么" send-link="发送" @submit="onSubmit" @input="inputMessage" ref="messageBar"></f7-messagebar>
-
     <f7-fab v-if="!isSubscribeWx" color="white" @click="subscribeWx" class="subscribe-wx">
       <img class="subscribe-img" src="../../../static/homepage/homepass_gongzhonghao.png">
     </f7-fab>
@@ -88,12 +86,12 @@
 
   import BetProgress from '../../components/guess/bet-progress.vue'
   import Describe from '../../components/guess/describe.vue'
-  import FootballTeam from '../../components/guess/football-team.vue'
   import Options from '../../components/guess/options.vue'
   import Result from '../../components/guess/result.vue'
   import Players from '../../components/guess/players.vue'
   import Publisher from '../../components/guess/publisher.vue'
   import QuizReferences from '../../components/guess/quiz-references.vue'
+  import ReferencesSport from '../../components/guess/references-sport.vue'
 
   // chat
   import OtherPeople from '../../components/chat/other-people.vue'
@@ -111,7 +109,6 @@
     components: {
       BetProgress,
       Describe,
-      FootballTeam,
       Options,
       Result,
       Players,
@@ -121,7 +118,8 @@
       Mine,
       HistoryTip,
       TimeTip,
-      SysPrompt
+      SysPrompt,
+      ReferencesSport
     },
     data () {
       return {
@@ -233,7 +231,6 @@
     beforeDestroy () {
       this.$store.state.currentPage = ''
       this.$store.state.currentPageParam = null
-
       let self = this
 
       if (this.loginCheck(true)) {
@@ -285,12 +282,12 @@
       })
     },
     mounted () {
-      // console.log('quiz-detail组件mounted了', this.taskId, this.isPublished, this.quizDetail)
       var self = this
-      this.$refs.quizDetailRef.$el.onscroll = function (e) {
-        console.log('quiz detail refresh')
-      }
-
+      this.$message({
+        send (val) {
+          self.onSubmit(val)
+        }
+      })
       // 聊天框被遮挡问题
       var screenWidth = parseInt(screen.width)
       if (screenWidth === 414) {
@@ -345,7 +342,7 @@
         } else {
           self.showAll = true
         }
-        console.log('quiz detail 滚下去', oPage.scrollTop, top, self.showAll)
+//        console.log('quiz detail 滚下去', oPage.scrollTop, top, self.showAll)
       })
       this.wxUserSubscribed([])
     },
@@ -400,6 +397,10 @@
                   scene: Wechat.Scene.SESSION
                 }, function () {
                   console.log('share succeed')
+                  if (self.token) {
+                    self.operateType = 16
+                    self.shareQuiz({taskId: self.taskId, operateType: 16, taskType: self.$store.state.quizDetail.data.task_type})
+                  }
                 }, function (reason) {
                   console.log('share failed:' + reason)
                 })
@@ -416,6 +417,10 @@
                   scene: Wechat.Scene.TIMELINE
                 }, function () {
                   console.log('share succeed')
+                  if (self.token) {
+                    self.operateType = 17
+                    self.shareQuiz({taskId: self.taskId, operateType: 17, taskType: self.$store.state.quizDetail.data.task_type})
+                  }
                 }, function (reason) {
                   console.log('share failed:' + reason)
                 })
@@ -446,6 +451,7 @@
       shake: {
         handler: function (val) {
           const self = this
+          console.log(this.quizDetail.task_id)
           this.$f7.pullToRefreshDone()
           if (this.status === null) {
 //            let temp = this.quizDetail.pics[0].pic_url
@@ -486,7 +492,11 @@
             self.getUserInfo('')
             // 下注声音提示
             const oBetAudio = document.querySelector('.bet-audio')
-            oBetAudio.src = '../../static/audio/bet.mp3'
+            if (servConf.APP === 1) {
+              oBetAudio.src = 'audio/bet.mp3'
+            } else {
+              oBetAudio.src = '../../static/audio/bet.mp3'
+            }
             oBetAudio.volume = 0.2
             oBetAudio.play()
           } else {
@@ -569,7 +579,11 @@
             } else if (self.quizDetail.task_type === 1) {
               title = self.quizDetail.teams[0].team_name + 'VS' + self.quizDetail.teams[1].team_name + ',猜一猜谁会赢! ——来自猜一猜'
               imgUrl = servConf.WAP_FOOTBALL_LOGO_ADDR
-              desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer + 'C.' + self.quizDetail.answer[2].answer
+              if (self.quizDetail.answer[2]) {
+                desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer + 'C.' + self.quizDetail.answer[2].answer
+              } else {
+                desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer
+              }
             } else if (self.quizDetail.task_type === 2) {
               title = self.quizDetail.teams[0].team_name + 'VS' + self.quizDetail.teams[1].team_name + ',猜一猜谁会赢! ——来自猜一猜'
               imgUrl = servConf.WAP_BASKETBALL_LOGO_ADDR
@@ -667,6 +681,7 @@
       calcMineBets: function (type) {
         // coin_type === 0金币 ===1金豆 不传为所有
 //        我下注的总数量（包括金豆下的和金币下的）
+        // if (!this.quizDetail) return
         let mineBets = [0, 0, 0]
         let _type = type
 
@@ -799,62 +814,22 @@
       trimMessage (str) {
         return str.replace(/(^\s*)|(\s*$)/g, '')
       },
-      inputFocus () {
-        var self = this
-        if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
-          if (self.isEndInput) {
-            self.isEndInput = false
-            setTimeout(function () {
-              document.querySelector('#input a').scrollIntoView()
-              document.body.scrollTop = document.body.scrollTop - self.spaceHeight
-            }, 300)
-            return false
-          }
-        } else if (navigator.userAgent.match(/android/i)) {
-          // alert('android终端')
-        }
-        //  ios有用，android弹ios终端
-        /* if (this.bstop) {
-          setTimeout(function () {
-            document.querySelector('#input a').scrollIntoView({
-              block: 'end'
-            })
-            document.body.scrollTop = document.body.scrollTop - self.spaceHeight
-          }, 200)
-        } */
-      },
-      onSubmit () {
-        // 按钮变灰
-        let oBtn = document.querySelector('.messagebar a')
-        oBtn.style.cssText = 'background: #dddee2;'
-
-        // 发送消息后获取焦点
-        let oTextarea = document.querySelector('#input textarea')
-        this.bstop = false
-        oTextarea.focus()
-        this.isEndInput = false
-        console.log('我是输入框', oTextarea)
-        /* // 滚动到最下面
-        let oWrapper = document.querySelector('.page-quiz-detail .page-content')
-        console.log('我要滚动到最下面', oWrapper.scrollBottom) */
-
+      onSubmit (message) {
         window.scrollBottom = 0
         if (!this.loginCheck(false)) {
-          return
+          return false
         }
-
-        if (this.socket !== null && this.trimMessage(this.inputMsg) !== '') {
+        if (this.socket !== null && message) {
           let msg = JSON.stringify({
             type: 'message',
             room: this.taskId,
             sender: { id: this.userInfoData.user_id, nick: this.userInfoData.nickname },
-            payload: escape(this.inputMsg),
+            payload: escape(message),
             context: { headUrl: this.userInfoData.head_url }
           })
           this.socket.send(msg)
-          this.inputMsg = ''
-          this.$refs.messageBar.setValue('')
         }
+        return false
       },
       decodePayload (payload) {
         return unescape(payload)

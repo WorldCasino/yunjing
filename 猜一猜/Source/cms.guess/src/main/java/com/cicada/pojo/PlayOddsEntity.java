@@ -22,13 +22,13 @@ public class PlayOddsEntity {
     private Long oddsId;
 
     @TableField(value = "play_id")
-    private MatchesPlayTypeEnum matchesPlayTypeEnum;
-
-    @TableField(value = "play_id")
     private Long playId;
 
     @TableField(value = "ball_number")
-    private String ball_number;
+    private Double ballNumber;
+
+    @TableField(value = "concede_points_show")
+    private String concedePointsShow;
 
     @TableField(value = "his_odds")
     private Double hisOdds;
@@ -45,6 +45,28 @@ public class PlayOddsEntity {
     @TableField(value = "match_id")
     private Long matchId;
 
+    @TableField(exist = false)
+    private Integer isDefault;
+
+    @TableField(exist = false)
+    private Integer concede_id;
+
+    public String getConcedePointsShow() {
+        return concedePointsShow;
+    }
+
+    public void setConcedePointsShow(String concedePointsShow) {
+        this.concedePointsShow = concedePointsShow;
+    }
+
+    public Integer getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Integer isDefault) {
+        this.isDefault = isDefault;
+    }
+
     public Long getPlayId() {
         return playId;
     }
@@ -53,12 +75,12 @@ public class PlayOddsEntity {
         this.playId = playId;
     }
 
-    public String getBall_number() {
-        return ball_number;
+    public Double getBallNumber() {
+        return ballNumber;
     }
 
-    public void setBall_number(String ball_number) {
-        this.ball_number = ball_number;
+    public void setBallNumber(Double ballNumber) {
+        this.ballNumber = ballNumber;
     }
 
     public Long getOddsId() {
@@ -67,14 +89,6 @@ public class PlayOddsEntity {
 
     public void setOddsId(Long oddsId) {
         this.oddsId = oddsId;
-    }
-
-    public MatchesPlayTypeEnum getMatchesPlayTypeEnum() {
-        return matchesPlayTypeEnum;
-    }
-
-    public void setMatchesPlayTypeEnum(MatchesPlayTypeEnum matchesPlayTypeEnum) {
-        this.matchesPlayTypeEnum = matchesPlayTypeEnum;
     }
 
     public Double getHisOdds() {
@@ -129,15 +143,16 @@ public class PlayOddsEntity {
     public String toString() {
         return "PlayOddsEntity{" +
                 "oddsId=" + oddsId +
-                ", matchesPlayTypeEnum=" + matchesPlayTypeEnum +
                 ", playId=" + playId +
-                ", ball_number='" + ball_number + '\'' +
+                ", ballNumber=" + ballNumber +
+                ", concedePointsShow='" + concedePointsShow + '\'' +
                 ", hisOdds=" + hisOdds +
                 ", winOdds=" + winOdds +
                 ", tieOdds=" + tieOdds +
                 ", bigBallOdds=" + bigBallOdds +
                 ", smallBallOdds=" + smallBallOdds +
                 ", matchId=" + matchId +
+                ", isDefault=" + isDefault +
                 '}';
     }
 }

@@ -123,7 +123,7 @@ public class RechargeServiceImpl extends ServiceImpl<RechargeMapper,RechargeEnti
             entity.setIsDelete(0);
             super.insertOrUpdate(entity);
 
-            //直接处理充值结果
+            //直接处理充值结果，更新状态 触发器会触发生成收支明细
             entity.setPayTime(new Timestamp(System.currentTimeMillis()));
             entity.setIapReceipt(iapReceipt);
             entity.setRechargeStatus(RechargeStatusEnum.PaySuccess);

@@ -86,9 +86,19 @@ public class Starship_ViewController {
 	}
 
 
+	/**
+	 * 代理商管理页
+	 * @return
+	 */
+	@RequestMapping("/ss_agent/dataGrid")
+	public String agentdataGrid() {
+		return "agent/allagent";
+	}
+
+
 
 	/**
-	 * 业务员管理页
+	 * 客服管理页
 	 * @return
 	 */
 	@RequestMapping("/ss_user/ywmanager")
@@ -134,12 +144,42 @@ public class Starship_ViewController {
 
 
 	/**
+	 * 出金审核
+	 * @return
+	 */
+	@RequestMapping("/audit/withdrawal")
+	public String auditWithdrawal() {
+		return "allaccountdetail/auditWithdrawal";
+	}
+
+
+	/**
 	 * 出金明细
 	 * @return
 	 */
 	@RequestMapping("/ss_ac_detail/upmanager")
 	public String upmanager() {
 		return "allaccountdetail/upaccount";
+	}
+
+
+	/**
+	 * 游戏管理页
+	 * @return
+	 */
+	@RequestMapping("/ss_games/dataGrid")
+	public String gamesdataGrid() {
+		return "games/gameslist";
+	}
+
+
+	/**
+	 * 消息管理页
+	 * @return
+	 */
+	@RequestMapping("/message/dataGrid")
+	public String messagedataGrid() {
+		return "message/messagelist";
 	}
 
 

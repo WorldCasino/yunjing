@@ -2,16 +2,22 @@ package com.agdress.service.impl;
 
 
 import com.agdress.commons.Exception.ApiException;
+import com.agdress.commons.utils.ConstantInterface;
+import com.agdress.commons.utils.MD5Util;
+import com.agdress.commons.utils.StringUtils;
 import com.agdress.commons.utils.cmsUtil;
 import com.agdress.entity.BankEntity;
 import com.agdress.entity.Starship_UserCardEntity;
 import com.agdress.entity.Starship_UserEntity;
+import com.agdress.entity.vo.Starship_AgentrVo;
 import com.agdress.entity.vo.Starship_UserVo;
 import com.agdress.entity.vo.Starship_UserlistVo;
 import com.agdress.enums.ErrorCodeEnum;
+import com.agdress.enums.RoleTypeEnum;
 import com.agdress.mapper.BankMapper;
 import com.agdress.mapper.Starship_UserMapper;
 import com.agdress.result.DatatablesResult;
+import com.agdress.service.IUserService;
 import com.agdress.service.Starship_IUserCardService;
 import com.agdress.service.Starship_IUserService;
 import com.alibaba.fastjson.JSONObject;
@@ -22,6 +28,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +46,15 @@ public class Starship_UserService extends ServiceImpl<Starship_UserMapper,Starsh
 
     @Autowired
     private Starship_UserMapper userMapper;
-
     @Autowired
     private BankMapper bankMapper;
-
-     @Autowired
+    @Autowired
     private Starship_IUserCardService userCardService;
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private JedisPool jedisPool;
 
-    @Override
     public void updateUserSomeInfor(Starship_UserVo userVo) {
         //判断是否有银行卡
         Starship_UserCardEntity cardEntity=new Starship_UserCardEntity();
@@ -75,13 +83,22 @@ public class Starship_UserService extends ServiceImpl<Starship_UserMapper,Starsh
         }
     }
 
-    @Override
+    /**
+     * 查看用户详情
+     *
+     * @param userId
+     * @return
+     */
     public Starship_UserVo selectByUserId(Long userId) {
-         Starship_UserVo user=userMapper.selectByUserId(userId);
+        //先刷新账户余额
+        userService.refreshUserBalance(userId);
+
+        Starship_UserVo user = userMapper.selectByUserId(userId);
+
         //获取未被删除记录的业务员列表
         Starship_UserEntity userEntity=new Starship_UserEntity();
         userEntity.setIsDelete(0);
-        userEntity.setRoleId((long) 3);
+        userEntity.setRoleId((long) RoleTypeEnum.Salesman.getCode());
         EntityWrapper<Starship_UserEntity> wrapper = new EntityWrapper<Starship_UserEntity>(userEntity);
         List<Starship_UserEntity> bulist=userMapper.selectList(wrapper);
         user.setBeuserList(bulist);
@@ -90,16 +107,14 @@ public class Starship_UserService extends ServiceImpl<Starship_UserMapper,Starsh
         bankMap.put("is_delete", 0);
         List<BankEntity> bankEntityList = bankMapper.selectByMap(bankMap);
         user.setBankEntityList(bankEntityList);
-         return user;
+        return user;
     }
-
 
     /**
      * 根据用户名称获取实体
      * @param userVo
      * @return
      */
-    @Override
     public Starship_UserEntity selectByLoginName(Starship_UserVo userVo) {
         Starship_UserEntity user = new Starship_UserEntity();
         user.setLoginName(userVo.getLoginNumber());
@@ -107,7 +122,6 @@ public class Starship_UserService extends ServiceImpl<Starship_UserMapper,Starsh
         user=userMapper.selectOne(user);
         return user;
     }
-
 
     /**
      * 获取用户列表
@@ -117,7 +131,6 @@ public class Starship_UserService extends ServiceImpl<Starship_UserMapper,Starsh
      * @param draw
      * @return
      */
-    @Override
     public DatatablesResult<Starship_UserlistVo> selectUserVo(JSONObject params, Integer page, Integer rows, Integer draw) {
         PageHelper.startPage(page, rows);
         Map<String,String> whereMap = cmsUtil.toHashMap(params);
@@ -131,10 +144,30 @@ public class Starship_UserService extends ServiceImpl<Starship_UserMapper,Starsh
         return pageResult;
     }
 
+    @Override
+    public void updatePassword(String userId, String passWord, String messageCode) {
+        Starship_UserEntity userEntity=userMapper.selectById(Long.parseLong(userId));
+        if(userEntity == null){
+            throw new ApiException(ErrorCodeEnum.UserNotFind);
+        }
+        if(userEntity.getRoleId() == RoleTypeEnum.Agent.getCode()){String key = ConstantInterface.KEY_SMS_CAPTCHA + userEntity.getPhone();
+            String captcha = jedisPool.getResource().get(key);
+            if (StringUtils.isEmpty(captcha)) {
+                throw new ApiException(ErrorCodeEnum.CaptchaInvalidError);
+            }else if(!captcha.equals(messageCode)){
+                throw new ApiException(ErrorCodeEnum.CaptchaErrorException);
+            }
+        }
+        userEntity.setPassWord(MD5Util.getMD5Str(passWord));
+        int n=userMapper.updateById(userEntity);
+        if(n ==0){
+            throw new ApiException(ErrorCodeEnum.RepetitiveException);
+        }
+    }
 
-
-
-
-
-
+    @Override
+    public Starship_AgentrVo getAgentLoginId(String bgLoginId) {
+        Starship_AgentrVo starship_agentrVo=userMapper.getAgentId(bgLoginId);
+         return starship_agentrVo;
+    }
 }

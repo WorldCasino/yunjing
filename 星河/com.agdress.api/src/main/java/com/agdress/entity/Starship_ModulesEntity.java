@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import java.util.List;
+
 /**
  * 角色关联菜单
  */
@@ -46,6 +48,28 @@ public class Starship_ModulesEntity  {
 
     @TableField(value = "status")
     private Long status;
+
+    @TableField(exist = false)
+    private List<Starship_ModulesEntity> list;
+
+    @TableField(exist = false)
+    private String moduleId;
+
+    public String getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
+    }
+
+    public List<Starship_ModulesEntity> getList() {
+        return list;
+    }
+
+    public void setList(List<Starship_ModulesEntity> list) {
+        this.list = list;
+    }
 
     public Long getId() {
         return id;

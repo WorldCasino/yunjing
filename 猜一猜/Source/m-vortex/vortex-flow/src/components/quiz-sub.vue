@@ -1,15 +1,15 @@
 <!-- 竞猜主体部分 -->
 <template>
-  <div style="background: white; width: 100%; height: 100%; margin-top: 10px">
+  <div class="quiz-item">
     <div @click="goDetail()">
       <Publisher :userId="user_id" :avatar="user.head_url" :username="user.nick" :is-male="user.gender" :is-hot="hot" :is-published="isPublished"
-                 :refresh-time="update_date" :publish-time="settle_time"></Publisher>
+                 :refresh-time="update_date" :publish-time="settle_time" :task_type="task_type" :open_time="quizDetail.open_time" :quizDetail="quizDetail"></Publisher>
       <Describe :desc="task_content" :gold="sale_price"></Describe>
       <QuizReferences v-if="(task_type === 0 || task_type === 3) &&  typeof pics !== 'undefined'" :result-placeholder="pics[0]" :references="pics.slice(1, 4)" :is-published="isPublished"></QuizReferences>
-      <FootballTeam v-if="(task_type === 1 || task_type === 2) && typeof teams !== 'undefined'" :teams="teams"></FootballTeam>
+      <ReferencesSport v-if="(task_type === 1 || task_type === 2) && typeof teams !== 'undefined'" :teams="teams" :title="title" :play_type="play_type" :concede_points_show="concede_points_show" :is-published="isPublished" :quizDetail="quizDetail"/>
       <BetProgress :total="quantity" :count="currentCount"></BetProgress>
     </div>
-    <Options :total="quantity" :count="currentCount" :discuss="message_count" :options="answer" :is-published="isPublished" @bet="bet"></Options>
+    <Options :quizDetail="quizDetail" :total="quantity" :count="currentCount" :discuss="message_count" :options="answer" :is-published="isPublished" :lock_time="lock_time" @bet="bet"></Options>
   </div>
 </template>
 
@@ -19,7 +19,7 @@
   import * as StorageHelper from '../store/storage-helper'
   import BetProgress from './guess/bet-progress.vue'
   import Describe from './guess/describe.vue'
-  import FootballTeam from './guess/football-team.vue'
+  import ReferencesSport from './guess/references-sport.vue'
   import Options from './guess/options.vue'
   import Publisher from './guess/publisher.vue'
   import QuizReferences from './guess/quiz-references.vue'
@@ -30,10 +30,10 @@
     components: {
       BetProgress,
       Describe,
-      FootballTeam,
       Options,
       Publisher,
-      QuizReferences
+      QuizReferences,
+      ReferencesSport
     },
     data () {
       return {
@@ -57,14 +57,19 @@
       pics: Array,
       answer: Array,
       message_count: Number,
-      quizDetail: Object
+      quizDetail: Object,
+      title: String,
+      play_type: Number,
+      concede_points_show: String,
+      lock_time: String
     },
     computed: {
       ...mapState({
         token: state => state.token,
         betShake: state => state.quizList.betShake,
         betStatus: state => state.quizList.betStatus,
-        userInfoData: state => state.userInfo.data
+        userInfoData: state => state.userInfo.data,
+        beanPrefer: state => state.setTip.beanPrefer
       }),
       ...mapGetters([
         'showBetTip',
@@ -177,4 +182,10 @@
 
 <style scoped>
 
+  .quiz-item {
+    background: white;
+    width: 100%;
+    height: 100%;
+    margin-top: 10px
+  }
 </style>

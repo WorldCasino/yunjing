@@ -9,7 +9,7 @@
           <img class="back-nav" src="./../../assets/nav-back.png" style="width: 11px;height: 20px"/>
         </f7-link>
       </f7-nav-left>
-      <f7-nav-center>商城</f7-nav-center>
+      <f7-nav-center>金币兑换</f7-nav-center>
     </f7-navbar>
 
     <div class="store">

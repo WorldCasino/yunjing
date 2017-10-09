@@ -8,6 +8,7 @@ import com.agdress.commons.utils.DateFormatUtil;
 import com.agdress.entity.Starship_UserAccountDetailEntity;
 import com.agdress.entity.Starship_UserAccountEntity;
 import com.agdress.enums.*;
+import com.agdress.mapper.RechargeMapper;
 import com.agdress.mapper.Starship_UserAccountMapper;
 import com.agdress.service.IRechargeService;
 import com.agdress.service.Starship_IUserAccountService;
@@ -26,16 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class Starship_UserAccountService extends ServiceImpl<Starship_UserAccountMapper,Starship_UserAccountEntity> implements Starship_IUserAccountService {
 
-
-
     @Autowired
     private IRechargeService rechargeService;
 
     @Override
-    public void updateUserBalance(String addbalance,String userId,String remarks) {
+    public void updateUserBalance(String addbalance,String userId,String remarks,String systemUserId) {
 
-        rechargeService.saveMoneyForUser(Long.parseLong(userId),Double.parseDouble(addbalance),RechargeStatusEnum.RechargeSuccess, CodeFactory.generateRechargeCode(),99999999,remarks);
-
+        rechargeService.saveMoneyForUser(Long.parseLong(userId),Double.parseDouble(addbalance),remarks,systemUserId);
     }
 
 

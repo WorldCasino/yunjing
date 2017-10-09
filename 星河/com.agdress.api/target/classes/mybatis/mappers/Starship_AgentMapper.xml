@@ -3,23 +3,33 @@
 <mapper namespace="com.agdress.mapper.Starship_AgentMapper">
 
 
-    <!--查询业务员的分页查询-->
-    <select id="selectAgentListPage" parameterType="java.util.Map"   resultType="com.agdress.entity.Starship_AgentEntity">
+    <!--查询代理商的分页查询-->
+    <select id="selectAgentListPage" parameterType="java.util.Map"   resultType="com.agdress.entity.vo.Starship_AgentrVo">
         SELECT
-            a.agent_id,
-            a.agent_name,
-            a.qq
+            a.agent_id as agentId,
+            a.agent_name as agentName,
+            a.email,
+            a.remarks,
+            a.bg_agent_id,
+            a.defection_proportion as defectionProportion,
+            b.user_id as userId,
+            b.phone ,
+            b.login_name as agentNumber
         FROM
-             m_agents a
+             m_agents a JOIN t_users b on a.agent_id=b.agent_id and b.role_id=5
         where
-            is_delete = 0
-            <if test=" agentId != null and agentId != '' ">
-              and  a.agent_id = #{agentId}
+            a.is_delete = 0
+            <if test=" agentNumber != null and agentNumber != '' ">
+                and   b.login_name = #{agentNumber}
             </if>
-            <if test=" qq != null and qq != '' ">
-              and  a.qq = #{qq}
+            <if test=" loginagentId != null and loginagentId != '' ">
+                and   a.agent_id  = #{loginagentId}
             </if>
-     </select>
+        order by a.create_date desc
+      </select>
+
+
+
 
 
 </mapper>

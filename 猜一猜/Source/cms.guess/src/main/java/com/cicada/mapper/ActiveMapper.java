@@ -21,4 +21,5 @@ public interface ActiveMapper extends BaseMapper<ActiveEntity> {
 
     int getActiveReward(long userId);
     int isParticipationActive(Map<String, Object> params);
+    int isSharedActive(Map<String, Object> params);
 }

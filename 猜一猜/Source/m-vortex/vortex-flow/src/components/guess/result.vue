@@ -1,8 +1,7 @@
 <!-- 竞猜结果 -->
 <template>
-  <div style="background: white">
+  <div style="background: white; margin-top: 6px;" class="result-wrapper">
 
-    <!--<div v-if="isPublished && lotteryVo !== null">-->
     <div v-if="isPublished">
       <!-- 正常开奖，庄家显示结果 -->
       <div v-if="lotteryVo.lotteryType === 1 && isBanker" class="box-published-banker box1">
@@ -27,9 +26,9 @@
             <div class="box-published-user">
               <div>
                 <!--正确答案icon-->
-                <img v-if="option.is_right" src="../../assets/quiz_correct.png" width="13" height="13">
+                <img v-if="option.is_right" src="../../assets/quiz_correct.png" class="result-win-icon">
                 <!--错误答案icon-->
-                <img v-else src="../../assets/quiz_error.png" width="13" height="13">
+                <img v-else src="../../assets/quiz_error.png" class="result-win-icon">
               </div>
               <div class="item-published-left">
                 已购买答案{{optionLetters[index]}}: {{mineBets[index]}}注; 共{{Math.abs(calcMineGainedGold(index, false, mineBetsCoin))}}金币
@@ -53,13 +52,29 @@
 
       <!-- 超时开奖，个人投注结果 -->
       <div v-if="lotteryVo.lotteryType === 2 && !isBanker" class="box-published-user flex-row box4">
-        <img src="../../assets/quiz_correct.png" width="13" height="13">
+        <img src="../../assets/quiz_correct.png" class="result-win-icon">
         <div style="margin-left: 8px;">发布者未按时开奖，冻结金币被平分</div>
         <div class="item-published-right-win">+{{parseInt(lotteryVo.userCoins)}}</div>
       </div>
     </div>
 
+    <!--未开奖-->
+    <div v-else>
+      <div class="box2">
+        <div v-for="(option, index) in options">
+          <div v-if="mineBets[index] > 0">
+            <div class="box-published-user">
+              <div class="item-published-left">
+                已购买答案{{optionLetters[index]}}: {{mineBets[index]}}注; 共{{Math.abs(calcMineGainedGold(index, false, mineBetsCoin))}}金币
+                {{Math.abs(calcMineGainedGold(index, false, mineBetsBean))}}金豆
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+  </div>
 </template>
 
 <script>
@@ -180,6 +195,9 @@
 </script>
 
 <style scoped>
+  .result-wrapper {
+    color: #333;
+  }
   .box-published-banker {
     background: white;
     display: -webkit-flex;  /* safari */
@@ -205,11 +223,10 @@
     margin-left: 12px;
     margin-right: 12px;
     margin-top: 4px;
-    font-size: 15px;
+    font-size: 14px;
   }
   .item-published-left {
-    margin-left: 4px;
-    font-size: 15px;
+    font-size: 14px;
   }
   .item-published-right-win {
     margin-left: auto;
@@ -226,5 +243,11 @@
     font-size: 12px;
     border-radius: 4px;
     padding: 1px 4px;
+  }
+
+  .result-win-icon {
+    width: 13px;
+    height: 13px;
+    margin-right: 4px;
   }
 </style>

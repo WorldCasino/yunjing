@@ -28,7 +28,7 @@
       <div @click="goMineGoldAll" v-if="userInfoData !== null && userInfoData.coin_balance != null" class="data-number" style="color: #f9a400">{{parseInt(userInfoData.coin_balance)}}</div>
       <div @click="goMineGoldAll" v-else class="data-number" style="color: #f9a400">0</div>
 
-      <div @click="goMineGoldBean" v-if="userInfoData !== null && userInfoData.bean_balance != null" class="data-number" style="color: #f9a400">{{userInfoData.bean_balance}}</div>
+      <div @click="goMineGoldBean" v-if="userInfoData !== null && userInfoData.bean_balance != null" class="data-number" style="color: #f9a400">{{parseInt(userInfoData.bean_balance)}}</div>
       <div @click="goMineGoldBean" v-else class="data-number" style="color: #f9a400">0</div>
 
       <div @click="goMineGoldToday" v-if="userInfoData !== null && userInfoData.profit != null && userInfoData.profit < 0" class="data-number" style="color: #45c53c">{{parseInt(userInfoData.profit)}}</div>
@@ -40,10 +40,13 @@
     <div class="mine-op">
       <f7-list>
 
-      	 <f7-list-item link="/store"
-                      title="兑换商品"
-                      class="item-link"
+        <f7-list-item link="/store"
+                      title="金币兑换"
+                      class="item-link hot-icon-wrapper"
                       v-show="showStore">
+          <div class="hot-icon-wrap">
+            <img src="../../../static/mine/hot.gif" alt="" class="hot-icon">
+          </div>
         </f7-list-item>
 
         <f7-list-item @click="goBuyGold"
@@ -56,9 +59,15 @@
 
     <div class="mine-op">
       <f7-list>
-
-        <f7-list-item title="提醒设置" class="item-link" @click="goSet"></f7-list-item>
+        <f7-list-item title="我的参与" @click="goMineRelated" class="item-link"></f7-list-item>
         <f7-list-item title="我的发布" @click="goMinePublish" class="item-link"></f7-list-item>
+      </f7-list>
+    </div>
+
+    <div class="mine-op">
+      <f7-list>
+
+        <f7-list-item title="设置" class="item-link" @click="goSet"></f7-list-item>
         <f7-list-item title="帮助与反馈" link="/setting-help"></f7-list-item>
         <f7-list-item title="关于猜一猜" link="/setting-about"></f7-list-item>
 
@@ -88,11 +97,12 @@
     data () {
       return {
         isLogin: false,
-        version: '1.0.0',
+        version: '1.3.0',
         versionimg: './../../assets/ic_logo.png',
         maleimg: './../../assets/male.png',
         femaleimg: './../../assets/female.png',
-        checked: false
+        checked: false,
+        showStore: true
       }
     },
     computed: {
@@ -109,10 +119,7 @@
         'userCoinData',
         'getUserCoinStatus',
         'showBetTip'
-      ]),
-      showStore: function () {
-        return servConf.VISITOR === 0
-      }
+      ])
     },
     methods: {
       ...mapActions([
@@ -176,6 +183,15 @@
           this.$f7.popup('#login-choose')
         }
       },
+      goMineRelated () {
+        if (this.token !== null) {
+          this.$f7.views.main.router.load({
+            url: '/mine-related/'
+          })
+        } else {
+          this.$f7.popup('#login-choose')
+        }
+      },
       goMinePublish () {
         if (this.token !== null) {
           this.$f7.views.main.router.load({
@@ -230,18 +246,18 @@
           this.checked = val
         }
       },
-//      serverInit: {
+      serverInit: {
 //        immediate: true,
-//        handler: function (val) {
-//          if (val === true && this.token !== null) {
-//            this.isLogin = true
-//            this.revertUserInfo()
-//          } else {
-//            this.isLogin = false
-//            this.$store.state.userInfo.data = null
-//          }
-//        }
-//      },
+        handler: function (val) {
+          if (val) {
+            if (servConf.VISITOR === 0) {
+              this.showStore = true
+            } else {
+              this.showStore = false
+            }
+          }
+        }
+      },
       token: {
         immediate: true,
         handler: function (val) {
@@ -322,7 +338,6 @@
     float: left;
     width: 33.3%;
     font-size: medium;
-    color: red;
     border-width: 0px;
   }
 
@@ -355,4 +370,16 @@
     width: 20px;height: 20px;
     position: absolute;
   }
+
+  .hot-icon {
+    width: 14px;
+    height: 23px;
+    margin-left: 4px;
+  }
+
+  .hot-icon-wrap {
+    flex: 1;
+    text-align: left;
+  }
+
 </style>

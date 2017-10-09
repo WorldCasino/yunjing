@@ -3,7 +3,10 @@ package com.cicada.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.cicada.commons.Exception.ApiException;
 import com.cicada.enums.ErrorCodeEnum;
+import com.cicada.enums.TaskStatusEnum;
 import com.cicada.mapper.TaskAnswerMapper;
+import com.cicada.mapper.TaskMapper;
+import com.cicada.pojo.Task;
 import com.cicada.pojo.TaskAnswer;
 import com.cicada.service.ITaskAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.Map;
 public class TaskAnswerServiceImpl extends ServiceImpl<TaskAnswerMapper,TaskAnswer> implements ITaskAnswerService{
     @Autowired
     private TaskAnswerMapper taskAnswerMapper;
+    @Autowired
+    private TaskMapper taskMapper;
 
     /**
      * 设定正确答案
@@ -35,6 +40,9 @@ public class TaskAnswerServiceImpl extends ServiceImpl<TaskAnswerMapper,TaskAnsw
             //检查是否已经有正确答案
             Map<String, Object> whereMap = new HashMap<>();
             whereMap.put("task_id", taskId);
+            Task task = taskMapper.selectById(taskId);
+            if(task.getTaskStatus()!= TaskStatusEnum.Published) throw new ApiException(ErrorCodeEnum.ArgumentException);
+
             whereMap.put("is_right", 1);
             List<TaskAnswer> temp = taskAnswerMapper.selectByMap(whereMap);
             if (null != temp && temp.size() > 0)
@@ -47,5 +55,15 @@ public class TaskAnswerServiceImpl extends ServiceImpl<TaskAnswerMapper,TaskAnsw
         }catch (Exception e){
             throw new ApiException(ErrorCodeEnum.SystemError.getCode(),e.getMessage());
         }
+    }
+
+    @Override
+    public List<Long> selectWattingAnswerTasks() throws ApiException {
+        return taskAnswerMapper.selectWattingAnswerTasks();
+    }
+
+    @Override
+    public void setRightAnswer(long answerId) throws ApiException {
+        taskAnswerMapper.setRightAnswer2(answerId);
     }
 }

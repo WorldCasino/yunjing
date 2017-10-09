@@ -28,6 +28,41 @@ export function formatGoldDetailItemTime (date) {
 }
 
 /**
+ * 格式化时间：(体育模块：开奖时间)
+ * describe：当前时间显示
+ * @param (date时间戳, [hh:mm])
+ * @return {*} MM/dd day hh:mm or MM/dd hh:mm
+ */
+export function formatSportItemTime (date, conf) {
+  if (typeof date !== 'string') {
+    return false
+  }
+  let oDate = new Date(date.replace(/-/g, '/'))
+  let time = oDate.getTime()
+  let month = oDate.getMonth() + 1
+  let dateToday = oDate.getDate()
+  let hours = formatDoubleDigit(parseInt(oDate.getHours()))
+  let minutes = formatDoubleDigit(parseInt(oDate.getMinutes()))
+
+  if (time > getTodayStartTime() && time < getTomorrowStartTime()) {
+    if (conf === 'hh:mm') {
+      return '今天 ' + month + '月' + dateToday + '日' + ' ' + hours + ':' + minutes
+    }
+    return '今天 ' + month + '月' + dateToday + '日' + ' ' + formatDay(oDate)
+  } else if (time > getTomorrowStartTime() && time < getAfterTomorrowStartTime()) {
+    if (conf === 'hh:mm') {
+      return '明天 ' + month + '月' + dateToday + '日' + ' ' + hours + ':' + minutes
+    }
+    return '明天 ' + month + '月' + dateToday + '日' + ' ' + formatDay(oDate)
+  } else {
+    if (conf === 'hh:mm') {
+      return month + '月' + dateToday + '日' + ' ' + hours + ':' + minutes
+    }
+    return month + '月' + dateToday + '日' + ' ' + formatDay(oDate)
+  }
+}
+
+/**
  * 格式化输出日期
  * @param date yyyy-MM-dd hh:mm:ss
  * @return {*}
@@ -105,10 +140,41 @@ export function getYesterdayStartTime () {
   return today - oneDay
 }
 
+export function getTomorrowStartTime () {
+  let today = getTodayStartTime()
+  let oneDay = 1000 * 60 * 60 * 24
+  return today + oneDay
+}
+export function getAfterTomorrowStartTime () {
+  let today = getTodayStartTime()
+  let oneDay = 1000 * 60 * 60 * 24
+  return today + 2 * oneDay
+}
+
 export function formatDoubleDigit (number) {
   if (number < 10) {
     return '0' + number
   } else {
     return number
+  }
+}
+
+export function formatDay (date) {
+  let day = new Date(date).getDay()
+  switch (day) {
+    case 0 :
+      return '周日'
+    case 1 :
+      return '周一'
+    case 2 :
+      return '周二'
+    case 3 :
+      return '周三'
+    case 4 :
+      return '周四'
+    case 5 :
+      return '周五'
+    case 6 :
+      return '周六'
   }
 }

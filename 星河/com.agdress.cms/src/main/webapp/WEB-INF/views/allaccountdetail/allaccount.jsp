@@ -9,38 +9,21 @@
     <!-- 查询、添加、批量删除、导出、刷新 -->
     <div class="row-fluid">
         <form id="queryForm" class="form-horizontal" action="" method="post">
+            <input type="hidden" name="userId"   class="form-control">
+            <input type="hidden" name="loginbeUserId" id="loginbeUserId" value="<shiro:principal property="limitBeUserId"/>">
+            <input type="hidden" name="loginagentId" id="loginagentId" value="<shiro:principal property="limitAgentId"/>">
             <div class="form-group">
-                <label for="bgLoginId" class="col-sm-1 control-label">用户ID</label>
+                <label for="bgLoginId" class="col-sm-2 control-label">用户ID</label>
                  <div class="col-sm-2" >
                     <input type="text" name="bgLoginId" id="bgLoginId" class="form-control">
                 </div>
-                <label for="date1" class="col-sm-1 control-label">创建时间</label>
+                <label for="date1" class="col-sm-2 control-label">创建时间</label>
                 <div class="col-sm-2" >
-                    <input type="text" name="date1" id="date1" class="form-control" style="width: 100%;">
+                    <input type="text" name="date1" id="date1" class="form-control" style="width: 120%;">
                     <input type="text" id = "createStartTime" name="createStartTime" class="form-control" style="display: none"/>
                     <input type="text" id = "createEndTime" name="createEndTime" class="form-control" style="display: none;"/>
                 </div>
-             </div>
-            <div class="form-group">
-                <label for="tradeKind" class="col-sm-1 control-label">事件</label>
-                <div class="col-sm-2">
-                    <select id ="tradeKind" name="tradeKind" class="form-control">
-                        <option value="">全部</option>
-                        <option value="1">入金</option>
-                        <option value="-1">出金</option>
-                     </select>
-                </div>
-                <label for="tradeType" class="col-sm-1 control-label">出入金方式</label>
-                <div class="col-sm-2">
-                    <select id ="tradeType" name="tradeType" class="form-control">
-                        <option value="">全部</option>
-                        <option value="1011">充值</option>
-                        <option value="20">游戏转码</option>
-                        <option value="3040">游戏赢利/赔付</option>
-                         <option value="50">提现</option>
-                    </select>
-                </div>
-                <label for="tradeStatus" class="col-sm-1 control-label">状态</label>
+                <label for="tradeStatus" class="col-sm-2 control-label">状态</label>
                 <div class="col-sm-2">
                     <select id ="tradeStatus" name="tradeStatus" class="form-control">
                         <option value="">全部</option>
@@ -48,8 +31,22 @@
                         <option value="1">审核不通过</option>
                         <option value="3">审核通过</option>
                         <option value="2">已完成</option>
-                      </select>
+                    </select>
                 </div>
+             </div>
+            <div class="form-group">
+                <label for="tradeKind" class="col-sm-2 control-label">出入金</label>
+                <div class="col-sm-2">
+                    <select id ="tradeKind" name="tradeKind" class="form-control">
+                        <option value="">全部</option>
+                        <option value="1">入金</option>
+                        <option value="-1">出金</option>
+                     </select>
+                </div>
+                <%--<label for="tradeNo" class="col-sm-2 control-label">订单编号</label>--%>
+                <%--<div class="col-sm-2" >--%>
+                    <%--<input type="text" name="tradeNo" id="tradeNo" value="" style="width: 120%;">--%>
+                <%--</div>--%>
               </div>
          </form>
         <div class="pull-right" style="margin-top: 5px;">
@@ -72,6 +69,7 @@
     <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed" align="center">
         <thead>
         <tr class="info">
+            <th style="width: 10%;">订单编号</th>
             <th style="width: 10%;">用户ID</th>
             <th style="width: 10%;">昵称</th>
             <th style="width: 10%;">事件</th>
@@ -79,155 +77,10 @@
             <th style="width: 10%;">金额</th>
             <th style="width: 10%;">状态</th>
             <th style="width: 10%;">创建时间</th>
-            <th style="width: 10%;">操作</th>
-        </tr>
+         </tr>
         </thead>
         <tbody></tbody>
     </table>
-</div>
-
-
-
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width:30%;">
-        <div class="modal-content" style=" width: 100%; ">
-             <div class="modal-header" style=" width: 100%; ">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                    <span class="sr-only"></span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">出金审核</h4>
-            </div>
-
-            <div class="modal-body" style=" width: 100%; ">
-                <form role="form" class="form-horizontal" id="detailForm" style=" width: 100%; ">
-                    <input type="hidden"  class="tradeId" value="">
-                     <%--个人信息--%>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label" >用户信息</label>
-                     </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">用户ID</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control bgLoginId"  disabled >
-                            <input type="hidden" class="form-control userId"  disabled >
-                        </div>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">用户名称</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control nickName"  disabled >
-                        </div>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">用户手机号</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control phone"  disabled >
-                        </div>
-                    </div>
-
-                    <%--账户信息--%>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label" >账户信息</label>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">账户余额</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control balance"  disabled >
-                        </div>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">可转出余额</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control actionTotle"  disabled >
-                        </div>
-                    </div>
-                     <%--卡号信息--%>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label" >银行卡信息</label>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">卡号</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control cardNo"  disabled >
-                        </div>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">持卡人</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control cardName"  disabled >
-                        </div>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">开户行</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control cardBank"  disabled >
-                        </div>
-                    </div>
-                    <div class="form-group"  >
-                        <label class="col-sm-4 control-label">申请转出金额</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control amount"  disabled >
-                        </div>
-                    </div>
-                </form>
-
-                <div class="text-center" style="margin-top: 50px">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary btn-lg" id="goEditRemarks">
-                            审核
-                        </button>
-                    </div>
-                     <button type="button" class="btn btn-default btn-lg" id="btnCancel">
-                            返回列表
-                    </button>
-                </div>
-            </div>
-         </div>
-    </div>
-</div>
-
-<div class="modal fade" id="editRemark" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header" >
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                    <span class="sr-only"></span>
-                </button>
-                <h4 class="modal-title">添加备注</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal"  id="editRemarkForm"  action="" method="post">
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label"></label>
-                        <div class="col-sm-9">
-                            <textarea  style="margin: 0px; width: 100%; height: 100px;" class="remarks" name="remarks"></textarea>
-                        </div>
-
-                    </div>
-                </form>
-                <!-- modal-body END -->
-                <div class="text-center">
-                    <shiro:hasPermission name="5examine">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-lg" id="okOne">
-                                审核通过
-                            </button>
-                        </div>
-                        <div class="btn-group" >
-                            <button type="button" class="btn btn-primary btn-lg" id="errorOne">
-                                审核不通过
-                            </button>
-                        </div>
-                    </shiro:hasPermission>
-                    <button type="button" class="btn btn-default btn-lg " id="backdetail">
-                        返回详情
-                    </button>
-                </div>
-            </div>
-         </div>
-    </div>
 </div>
 
 </body>
@@ -245,16 +98,21 @@
         var id = agdress.getQueryString("userId");
         $("input[name=userId]").val(id);
         var tradeType = agdress.getQueryString("tradeType");
-        $("#tradeType").val(tradeType);
-        //添加、修改异步提交地址
-        var str = "";
-        <shiro:hasPermission name="5examine">
-        str+= "<div class='btn-group'>" +
-            "<button   class='btn btn-danger btn-sm audit' type='button'> 审核</button>" +
-            "</div>"
-        </shiro:hasPermission>
+        if(tradeType != null && tradeType != ''){
+            $("#tradeType").val(tradeType);
+        }
+        var bgLoginId = agdress.getQueryString("bgLoginId");
+        $("input[name=bgLoginId]").val(bgLoginId);
+        if(bgLoginId != null && bgLoginId != ''){
+            $("input[name=bgLoginId]").attr("readonly","readonly");
+        }
 
-        var role_ids=<shiro:principal property="rolesstr" />+"";
+        //消息记录用到的
+        var messageContentId = agdress.getQueryString("messageContentId");
+//        var tradeNo = agdress.getQueryString("tradeNo");
+//        if(tradeNo != null && tradeNo != ''){
+//            $("#tradeNo").val(tradeNo);
+//        }
 
         var tables = $("#dataTable").dataTable(
             //URL
@@ -263,6 +121,7 @@
                 'queryForm',
                 //对应上面thead里面的序列
                 [
+                    {"data": "tradeNo"},
                     {"data": "bgLoginId"},
                     {"data": "nickName"},
                     {
@@ -289,13 +148,7 @@
                         "render": function (data, type, full, callback) {
                             return agdress.timeStamp2String(data)
                         }
-                    },
-                    {
-                        "data": 'tradeStatusEnum',
-                        "render": function (data, type, full, callback) {
-                            return data.code == 0  && full.tradeTypeEnum.code ==50 && role_ids.indexOf(full.roleId) >= 0?str:''
-                           }
-                     }
+                    }
                 ],
                 //行操作按钮定义
                 [
@@ -326,117 +179,26 @@
             tables.fnDraw(false);//刷新保持分页状态
         });
 
-        //返回列表
-        $("#btnCancel").on("click", function () {
-            window.location.reload();
-        });
-
-        //返回详情
-        $("#backdetail").on("click", function () {
-            $("#editRemark").modal("hide");
-        });
-
-        //查看详情
-        $("#dataTable tbody").on("click", ".audit", function () {
-            var data = tables.api().row($(this).parents("tr")).data();
-            $("#myModalLabel").html(data.nickName+"的账单明细");
-            showDetailUpdate(data.tradeId);
-        });
-
-        function showDetailUpdate(tradeId){
-             $.ajax({
-                 type: "POST",
-                url: agdress.CONSTS.URL_BASE_API + "ss_ac_detail/findById",
-                data:  {
-                        "tradeId" : tradeId
-                },
-                async: false,
-                success: function (data) {
-                     if (data.message == "succeed") {
-                         var tradepd=data.data;
-                         console.log(tradepd);
-                         $(".tradeId").val(tradepd.tradeId);
-                         $(".userId").val(tradepd.userId);
-                         $(".bgLoginId").val(tradepd.bgLoginId);
-                         $(".nickName").val(tradepd.nickName);
-                         $(".phone").val(tradepd.phone);
-                         //银行卡
-                         $(".cardBank").val(tradepd.cardBank);
-                         $(".cardNo").val(tradepd.cardNo);
-                         $(".cardName").val(tradepd.cardName);
-                          //余额以及总额
-                         $(".balance").val(tradepd.balance);
-                         $(".actionTotle").val(tradepd.actionTotle);
-                         $(".amount").val(tradepd.amount);
-                         $("#editModal").modal("show");
-                    }else{
-                        alert("信息有误");
-                    }
-                }
-            });
-         }
-
-        /**
-         * 开启修改备注页面
-         */
-        $("#goEditRemarks").on("click", function () {
-            $("#editRemark").modal("show");
-        });
-
-
-        //审核通过按钮
-        $("#okOne").on("click", function () {
-            layer.confirm('<span style="color:red">确定审核通过吗？</span>', {
-                title:"警告",
-                btn: ['确认','取消'] //按钮
-            }, function(index){
-                 changeTradeStatus("true");
-                 layer.close(index);
-            } , function(index){
-                layer.close(index);
-            });
-
-        });
-
-        //审核不通过通过按钮
-        $("#errorOne").on("click", function () {
-            layer.confirm('<span style="color:red">确定不通过审核吗？</span>', {
-                title:"警告",
-                btn: ['确认','取消'] //按钮
-            }, function(index){
-                if($(".remarks").val() == ""){
-                    layer.msg("备注信息不能为空", {icon: 2});
-                }else{
-                    changeTradeStatus("false");
-                }
-                layer.close(index);
-            } , function(index){
-                layer.close(index);
-            });
-
-        });
-        //改变审核状态
-        function changeTradeStatus(flag){
+        //判断是否是从消息中进入的
+        if(messageContentId != ""){
+            changeStatus(messageContentId)
+        }
+        function changeStatus(messageContentId){
             $.ajax({
                 type: "POST",
-                url: agdress.CONSTS.URL_BASE_API +"ss_ac_detail/updateAccountDetailInfor",
+                url: agdress.CONSTS.URL_BASE_API + "message/updateStatus",
                 data: {
-                    "tradeId":$(".tradeId").val(),
-                    "examine":flag,
-                    "remarks":$(".remarks").val(),
-                    "updateBy"  : <shiro:principal property="id"/>
+                    "messageContentId": messageContentId,
+                    "status": "1"
                 },
                 async: false,
                 success: function (data) {
-                    $("#okOne").remove();
-                    $("#errorOne").remove();
-                    layer.msg('审核处理完成！');
-                },error: function(error) {
+                    window.parent.messageList();
+                }, error: function (error) {
                     layer.msg(error.responseText, {icon: 2});
                 }
             });
         }
-
 
 
      });

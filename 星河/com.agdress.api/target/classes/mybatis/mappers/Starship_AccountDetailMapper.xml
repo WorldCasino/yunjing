@@ -2,32 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.agdress.mapper.Starship_AccountDetailMapper">
 
-    <sql id="search">
-        a.is_delete = 0
-        <if test=" userId != null and userId != '' ">
-            and   a.user_id = #{userId}
-        </if>
-        <if test=" bgLoginId != null and bgLoginId != '' ">
-            and   a.bg_login_id = #{bgLoginId}
-        </if>
-         <if test=" tradeKind != null and tradeKind != '' ">
-            and   a.trade_kind = #{tradeKind}
-        </if>
-        <if test=" tradeType != null and tradeType != '' ">
-            and   #{tradeType} LIKE CONCAT('%',CONCAT(a.trade_type,'%') )
-        </if>
-         <if test=" tradeStatus != null and tradeStatus != '' ">
-            and   a.trade_status = #{tradeStatus}
-        </if>
-        <if test=" createStartTime != null and createStartTime != '' ">
-            <![CDATA[ and TO_DAYS(a.create_date)  >= TO_DAYS( #{createStartTime}) ]]>
-        </if>
-        <if test=" createEndTime != null and createEndTime != '' ">
-            <![CDATA[ and TO_DAYS(a.create_date) <= TO_DAYS( #{createEndTime})]]>
-        </if>
-    </sql>
-
-
     <resultMap id="accountResultMap" type="com.agdress.entity.vo.Starship_AccountDetaillistVo">
         <id column="trade_id" property="tradeId" jdbcType="BIGINT"/>
         <result column="trade_kind" property="tradeKindEnum" jdbcType="INTEGER" javaType="com.agdress.enums.TradeKindEnum"/>
@@ -35,8 +9,10 @@
         <result column="trade_type" property="tradeTypeEnum" jdbcType="INTEGER" javaType="com.agdress.enums.TradeTypeEnum"/>
         <result column="trade_currency" property="tradeCurrency" jdbcType="INTEGER"/>
         <result column="amount" property="amount" jdbcType="FLOAT"/>
+        <result column="new_balance" property="newBalance" jdbcType="FLOAT"/>
         <result column="user_id" property="userId" jdbcType="BIGINT"/>
         <result column="bg_login_id" property="bgLoginId" jdbcType="VARCHAR"/>
+        <result column="trade_no" property="tradeNo" jdbcType="VARCHAR"/>
         <result column="agent_id" property="agentId" jdbcType="BIGINT"/>
         <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
@@ -47,17 +23,53 @@
          <result column="balance" property="balance" jdbcType="FLOAT"/>
         <result column="account_id" property="accountId" jdbcType="BIGINT"/>
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="roleTypeEnum" property="roleTypeEnum" jdbcType="INTEGER" javaType="com.agdress.enums.RoleTypeEnum"/>
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
 
+    <sql id="search">
+        <if test=" userId != null and userId != '' ">
+            and   a.user_id = #{userId}
+        </if>
+        <if test=" tradeKind != null and tradeKind != '' ">
+            and   a.trade_kind = #{tradeKind}
+        </if>
+        <if test=" tradeType != null and tradeType != '' ">
+            and   #{tradeType} LIKE CONCAT('%',CONCAT(a.trade_type,'%') )
+        </if>
+        <if test=" tradeStatus != null and tradeStatus != '' ">
+            and   a.trade_status = #{tradeStatus}
+        </if>
+        <if test=" createStartTime != null and createStartTime != '' ">
+            <![CDATA[ and TO_DAYS(a.create_date)  >= TO_DAYS( #{createStartTime}) ]]>
+        </if>
+        <if test=" createEndTime != null and createEndTime != '' ">
+            <![CDATA[ and TO_DAYS(a.create_date) <= TO_DAYS( #{createEndTime})]]>
+        </if>
+        <if test=" bgLoginId != null and bgLoginId != '' ">
+            and   b.bg_login_id = #{bgLoginId}
+        </if>
+        <if test=" agentId != null and agentId != '' ">
+            and   b.agent_id = #{agentId}
+        </if>
+        <if test=" tradeNo != null and tradeNo != '' ">
+            and   #{tradeNo} LIKE CONCAT('%',CONCAT(a.trade_no,'%') )
+        </if>
+        <if test=" loginbeUserId != null and loginbeUserId != '' ">
+            and   b.be_user_id = #{loginbeUserId}
+        </if>
+        <if test=" loginagentId != null and loginagentId != '' ">
+            and   b.agent_id  = #{loginagentId}
+        </if>
 
-
+    </sql>
 
     <!--查询流水的分页查询-->
     <select id="selectAccountDetailListVoPage" parameterType="java.util.Map"   resultMap="accountResultMap">
         SELECT
             a.trade_id,
+            a.trade_no,
             a.trade_kind,
             a.trade_type,
             a.trade_status,
@@ -73,16 +85,18 @@
             d.card_bank,
             d.card_no,
             d.card_name,
-            ifnull(e.role_id,'9999') as role_id
+            ifnull(e.role_id,'9999') as role_id,
+            ifnull(e.role_id,'9999') as roleTypeEnum
          from
             t_user_account_detail a
             LEFT JOIN t_users b on a.user_id=b.user_id
             LEFT JOIN t_user_account c on a.account_id=c.account_id
-            LEFT JOIN t_user_cards d on a.user_id=d.user_id
+            LEFT JOIN t_user_cards d on a.user_id=d.user_id and d.is_delete=0
             LEFT JOIN t_audit_template_step e on e.flow_id=a.flow_id
         where
+            <![CDATA[ a.is_delete = 0 and a.trade_status <> 5 ]]>
             <include refid="search"/>
-        order by a.update_date desc
+        order by a.create_date desc
      </select>
 
 
@@ -96,6 +110,7 @@
             a.trade_currency,
             a.amount,
             a.create_date,
+            a.new_balance,
             b.user_id,
             b.bg_login_id,
             b.login_name,
@@ -107,16 +122,16 @@
             d.card_bank,
             d.card_no,
             d.card_name,
-            ifnull(e.role_id,'9999') as role_id
+            ifnull(e.role_id,'9999') as role_id,
+            ifnull(e.role_id,'9999')  as roleTypeEnum
          from
             t_user_account_detail a
             LEFT JOIN t_users b on a.user_id=b.user_id
             LEFT JOIN t_user_account c on a.account_id=c.account_id
-            LEFT JOIN t_user_cards d on a.user_id=d.user_id
+            LEFT JOIN t_user_cards d on a.user_id=d.user_id and d.is_delete=0
             LEFT JOIN t_audit_template_step e on e.flow_id=a.flow_id
           WHERE
              a.trade_id = #{trade_id}
-       limit 1
     </select>
 
 
@@ -131,7 +146,9 @@
           a.trade_kind
         from
             t_user_account_detail a
+             LEFT JOIN t_users b on a.user_id=b.user_id
         where
+          a.is_delete = 0 and a.trade_status = 2
            <include refid="search"/>
         GROUP  BY a.trade_kind
     </select>

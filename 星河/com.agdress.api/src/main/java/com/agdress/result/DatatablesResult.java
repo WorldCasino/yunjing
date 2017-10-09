@@ -14,6 +14,16 @@ public class DatatablesResult<T> {
 	private Double allcome_onmoney;//入金总额
 	private Double allexpendmoney;//出金总额
 
+	private Double allzhuanmoney;//转码量
+
+	public Double getAllzhuanmoney() {
+		return allzhuanmoney;
+	}
+
+	public void setAllzhuanmoney(Double allzhuanmoney) {
+		this.allzhuanmoney = allzhuanmoney;
+	}
+
 	public Double getAllcome_onmoney() {
 		return allcome_onmoney;
 	}

@@ -1,5 +1,6 @@
 package com.agdress.entity.vo;
 
+import com.agdress.enums.RoleTypeEnum;
 import com.agdress.enums.TradeKindEnum;
 import com.agdress.enums.TradeStatusEnum;
 import com.agdress.enums.TradeTypeEnum;
@@ -11,11 +12,13 @@ import java.sql.Timestamp;
 public class Starship_AccountDetaillistVo implements Serializable{
 
 	private Long tradeId;//交易唯一标识ID
+	private String tradeNo;
  	private TradeKindEnum tradeKindEnum;
   	private TradeStatusEnum tradeStatusEnum;
   	private Long tradeCurrency;//支付类型：1-支付宝，2-微信，3-银行卡
  	private TradeTypeEnum tradeTypeEnum;
  	private Double amount;//交易金额
+	private Double newBalance;//交易后的余额
 	private Timestamp createDate;//创建时间
 
 
@@ -36,6 +39,32 @@ public class Starship_AccountDetaillistVo implements Serializable{
 	private Double actionTotle;//合计输赢收入当前可转余额
 
 	private Long roleId;//审核角色相关的ID
+
+	private RoleTypeEnum roleTypeEnum;
+
+	public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+	public RoleTypeEnum getRoleTypeEnum() {
+		return roleTypeEnum;
+	}
+
+	public void setRoleTypeEnum(RoleTypeEnum roleTypeEnum) {
+		this.roleTypeEnum = roleTypeEnum;
+	}
+
+	public Double getNewBalance() {
+		return newBalance;
+	}
+
+	public void setNewBalance(Double newBalance) {
+		this.newBalance = newBalance;
+	}
 
 	public Long getRoleId() {
 		return roleId;

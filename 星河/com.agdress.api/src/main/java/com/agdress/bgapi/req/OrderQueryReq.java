@@ -24,10 +24,10 @@ public class OrderQueryReq extends SignReq {
     private String agentLoginId;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Date startTime;
+    private String startTime;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Date endTime;
+    private String endTime;
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int moduleId;
@@ -53,7 +53,7 @@ public class OrderQueryReq extends SignReq {
     public OrderQueryReq() {}
 
     public OrderQueryReq(String random, String sign, String sn, List<Long> userIds, List<String> loginIds,
-                         long agentId, String agentLoginId, Date startTime, Date endTime, int moduleId,
+                         long agentId, String agentLoginId, String startTime, String endTime, int moduleId,
                          int gameId, int issueId, String playerId, int pageIndex, int pageSize, String etag) {
         super(random, sign, sn);
         this.userIds = userIds;
@@ -87,11 +87,11 @@ public class OrderQueryReq extends SignReq {
         this.agentLoginId = agentLoginId;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -139,11 +139,11 @@ public class OrderQueryReq extends SignReq {
         return agentLoginId;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 

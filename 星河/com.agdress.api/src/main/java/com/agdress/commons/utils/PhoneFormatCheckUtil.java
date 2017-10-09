@@ -42,4 +42,18 @@ public class PhoneFormatCheckUtil {
         return m.matches();
     }
 
+    public static boolean isCommonPhoneLegal(String phone) throws PatternSyntaxException {
+        if (phone.length() == 11) {
+            if (phone.startsWith("1")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (phone.length() == 8 || phone.length() == 10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

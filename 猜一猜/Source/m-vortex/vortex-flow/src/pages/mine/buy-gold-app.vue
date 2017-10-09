@@ -218,27 +218,41 @@
       },
       aliAppWebPayShake: {
         handler: function (val) {
+          let self = this
+
           if (this.aliAppWebPayStatus === null) {
 //            let params = JSON.stringify(this.aliAppWebPayData)
             let url = 'https://openapi.alipay.com/gateway.do?' + this.aliAppWebPayData
             console.log(url)
             window.location.href = url
 
-            this.$store.state.confirm.context = 'buy-gold-app'
-            this.$store.state.confirm.isConfirm = true
-            this.$store.state.confirm.isShowRadio = false
-            this.$store.state.confirm.isDefaultSelect = false
-            this.$store.state.confirm.isJudge = true
-            this.$store.state.confirm.title = '提示'
-            this.$store.state.confirm.text = '是否已完成支付？'
-            this.$store.state.confirm.contextData = []
+//            this.$store.state.confirm.context = 'buy-gold-app'
+//            this.$store.state.confirm.isConfirm = true
+//            this.$store.state.confirm.isShowRadio = false
+//            this.$store.state.confirm.isDefaultSelect = false
+//            this.$store.state.confirm.isJudge = true
+//            this.$store.state.confirm.judgePassive = '已取消'
+//            this.$store.state.confirm.judgePositive = '已完成'
+//            this.$store.state.confirm.title = '提示'
+//            this.$store.state.confirm.text = '是否已完成支付？'
+//            this.$store.state.confirm.contextData = []
+
+            this.$dm.confirm({
+              title: `提示`,
+              mes: `是否已完成支付？`,
+              btnType: 'bet',
+              btnText: '完成',
+              confirmCb () {
+                self.getUserInfo()
+              }
+            })
           }
         }
       },
       confirmResult: {
         handler: function (val) {
           if (this.confirmContext === 'buy-gold-app') {
-            this.getUserInfo()
+//            this.getUserInfo()
           }
         }
       }

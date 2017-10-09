@@ -18,6 +18,14 @@ module.exports = function (req, res, next) {
             sql: 'SELECT ' +
             't.task_id, ' +
             't.task_type, ' +
+            't.match_id, ' +
+            't.match_type, ' +
+            't.play_type, ' +
+            't.concede_points_show, ' +
+            'm.title, ' +
+            'm.home_score, ' +
+            'm.away_score, ' +
+            'm.open_time, ' +
             't.user_id, ' +
             't.task_content, ' +
             't.sale_price, ' +
@@ -44,6 +52,7 @@ module.exports = function (req, res, next) {
             'LEFT JOIN m_users AS u ON t.user_id = u.user_id ' +
             'LEFT JOIN t_tasks AS p ON t.parent_id = p.task_id ' +
             'LEFT JOIN m_users AS pu on pu.user_id = p.user_id ' +
+            'LEFT JOIN t_matches AS m on t.match_id = m.match_id ' +
             'WHERE t.task_id = ? AND t.is_delete = 0',
             values: [id]
         }).then(function (result){
@@ -51,10 +60,21 @@ module.exports = function (req, res, next) {
 
             var v = result[0][0];
             var parentId = v.parent_id;
-
+            var lockTime = v.lock_time;
+            if (lockTime != null){
+                lockTime = moment(new Date(lockTime)).format('YYYY-MM-DD HH:mm:ss');
+            }
             res.pkg.data = {
                 task_id: v.task_id,
                 task_type: v.task_type,
+                match_id: v.match_id,
+                match_type: v.match_type,
+                play_type: v.play_type,
+                concede_points_show: v.concede_points_show,
+                score: v.home_score+'-'+v.away_score,
+                // home_score: v.home_score,
+                // visit_score: v.away_score,
+                title: v.title,
                 user_id: v.user_id,
                 task_content: v.task_content,
                 sale_price: parseInt(v.sale_price),
@@ -64,10 +84,11 @@ module.exports = function (req, res, next) {
                 personal: parseInt(v.personal),//...  0:普通发布  1:私人发布
                 like_peas: parseInt(v.like_peas),//...  0:不接受金豆  1：接受金豆
                 lottery_type: parseInt(v.lottery_type),//...  0:自动开奖  1:手动开奖
-                lock_time: moment(v.lock_time).format('YYYY-MM-DD HH:mm:ss'),//  下注截止时间
+                lock_time: lockTime,//  下注截止时间
                 create_date: moment(v.create_date).format('YYYY-MM-DD HH:mm:ss'),
                 settle_time: moment(v.settle_time).format('YYYY-MM-DD HH:mm:ss'),
                 update_date: moment(v.update_date).format('YYYY-MM-DD HH:mm:ss'),
+                open_time: moment(v.open_time).format('YYYY-MM-DD HH:mm:ss'),
                 user: {
                     name: v.user_name,
                     type: v.user_type,
@@ -105,13 +126,14 @@ module.exports = function (req, res, next) {
             // 查询足球
             return Q.ninvoke(mysql, 'query', {
                 // 查询足球队伍
-                sql: 'SELECT tfb_id, task_id, team_name, court_type FROM t_task_football WHERE task_id = ?',
+                sql: 'SELECT tfb_id, task_id, team_name, court_type,team_logo FROM t_task_football WHERE task_id = ?',
                 values: [id]
             }).then(function (result) {
                 res.pkg.data.teams = result[0].map(function (p1, p2, p3) {
                     return {
                         tfb_id: p1.tfb_id,
                         team_name: p1.team_name,
+                        team_logo: p1.team_logo,
                         court_type: p1.court_type
                     };
                 });
@@ -139,7 +161,12 @@ module.exports = function (req, res, next) {
             'WHERE ans.task_id = ? ORDER BY ans.answer_id ',
             values: [taskId]
         }).then(function (result) {
-            res.pkg.data.answer = result[0].map(function (p1, p2, p3) {
+            var answerArr = [];
+            result[0].forEach(function (p1, p2, p3) {
+                //让球和大小球不显示平局答案
+                if((res.pkg.data.play_type==2 || res.pkg.data.play_type==3) && p1.answer=="平"){
+                    return ;
+                }
                 var item = {
                     answer_id: p1.answer_id,
                     answer: p1.answer,
@@ -149,9 +176,10 @@ module.exports = function (req, res, next) {
                 if(parseInt(res.pkg.data.task_status) === 30 || res.pkg.data.user_id === req.headers.user_id){
                     item.is_right = !!p1.is_right;
                 }
-                return item;
+                answerArr.push(item);
             });
-            return taskId
+            res.pkg.data.answer = answerArr;
+            return taskId;
         });
     }).then(function (taskId) {
         // ord.create_date, ord.update_date,

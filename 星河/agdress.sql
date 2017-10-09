@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50637
 File Encoding         : 65001
 
-Date: 2017-09-11 17:54:17
+Date: 2017-10-09 09:08:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -52,6 +52,9 @@ DROP TABLE IF EXISTS `m_agents`;
 CREATE TABLE `m_agents` (
   `agent_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '代理商ID',
   `agent_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '代理商名称',
+  `email` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
+  `remarks` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `defection_proportion` decimal(20,2) DEFAULT NULL COMMENT '反水比例/1000(千分之几)',
   `bg_login` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'BG代理登录ID',
   `bg_pwd` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'BG代理登录密码',
   `version_no` bigint(20) NOT NULL DEFAULT '1' COMMENT '数据版本号 用于锁处理(存时间戳)',
@@ -62,13 +65,15 @@ CREATE TABLE `m_agents` (
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   `bg_agent_id` bigint(20) NOT NULL,
   PRIMARY KEY (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='代理商';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='代理商';
 
 -- ----------------------------
 -- Records of m_agents
 -- ----------------------------
-INSERT INTO `m_agents` VALUES ('1', '星河娱乐', 'agdress', '123456', '1', '1', '2017-08-11 18:49:16', '0', '2017-08-17 19:01:25', '0', '20361889');
-INSERT INTO `m_agents` VALUES ('2', '我自己', 'agdress1', '123456', '1', '1', '2017-08-25 14:14:27', null, '2017-08-25 14:14:27', '0', '2036190');
+INSERT INTO `m_agents` VALUES ('1', '星河娱乐', '971083603@wqq.com', '131', '1.11', 'agdress', '123456', '1', '1', '2017-09-30 13:58:17', '1', '2017-09-30 13:58:17', '0', '20361889');
+INSERT INTO `m_agents` VALUES ('2', '我自己a', '971083603@qq.com', '测试代理商', '1.11', 'agdress1', '123456', '1', '1', '2017-09-28 20:38:20', '1', '2017-09-28 20:38:20', '0', '2036190');
+INSERT INTO `m_agents` VALUES ('5', '代理商测试1', '971083603@qq.com', '\n                             ', '11.11', 'agdresstest1', '123456', '1', '1', '2017-09-28 20:38:35', null, '2017-09-28 20:38:35', '0', '23687335');
+INSERT INTO `m_agents` VALUES ('6', '代理商测试', '971083603@qq.com', '\n                             ', '1.11', 'agdresstest22', '123456', '1', '1', '2017-09-30 13:58:10', null, '2017-09-30 13:58:10', '0', '23708587');
 
 -- ----------------------------
 -- Table structure for `m_bank_types`
@@ -158,40 +163,59 @@ CREATE TABLE `m_modules` (
   `module_type` int(11) NOT NULL DEFAULT '1' COMMENT '枚举（1：菜单 2：按钮）',
   `description` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
   `icon` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标CSS',
-  `seq` int(11) NOT NULL DEFAULT '1' COMMENT '排序',
+  `seq` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `opened` int(11) NOT NULL DEFAULT '0' COMMENT '是否打开新窗口（1：打开 0：不打开）',
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '资源状态（1：有效 0：无效）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资源模块';
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资源模块';
 
 -- ----------------------------
 -- Records of m_modules
 -- ----------------------------
-INSERT INTO `m_modules` VALUES ('1', '用户管理', '0', null, '0', '1', 'look', 'fa fa-user', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('2', '用户查询', '1', null, '20', '2', 'search', null, '2', '0', '1');
-INSERT INTO `m_modules` VALUES ('3', '用户详情', '1', null, '20', '2', 'detail', null, '3', '1', '1');
-INSERT INTO `m_modules` VALUES ('4', '用户修改', '1', null, '20', '2', 'update', null, '4', '1', '1');
-INSERT INTO `m_modules` VALUES ('5', '账户出入金明细', '0', 'ss_ac_detail/manager', '21', '1', 'look', 'fa fa-calendar-check-o', '5', '1', '1');
-INSERT INTO `m_modules` VALUES ('6', '账户出入金明细查询', '1', null, '5', '2', 'search', null, '6', '0', '1');
-INSERT INTO `m_modules` VALUES ('7', '账户出入金明细审核', '1', null, '5', '2', 'examine', null, '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('8', '账户出金打款表', '0', 'ss_ac_detail/upmanager', '21', '1', 'look', 'fa fa-calendar-check-o', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('9', '账户出金打款表查询', '1', null, '8', '2', 'search', null, '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('10', '账户出金打款表打款', '1', null, '8', '2', 'mademoney', null, '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('12', '业务员查询', '1', null, '23', '2', 'search', null, '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('13', '账号列表', '0', 'ss_user/xtmanager', '24', '1', 'look', 'fa fa-map', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('14', '账号新增', '1', null, '13', '2', 'add', null, '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('15', '账号查询', '1', null, '13', '2', 'search', null, '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('16', '账号修改', '1', null, '13', '2', 'update', null, '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('17', '角色列表', '0', 'ss_role/manager', '25', '1', 'look', 'fa fa-map', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('18', '角色新增', '1', null, '17', '2', 'add', null, '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('19', '角色权限设置', '1', null, '17', '2', 'update', null, '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('20', '用户列表', '0', 'ss_user/manager', '1', '1', 'look', 'fa fa-user', '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('21', '账户管理', '0', null, '0', '1', 'look', 'fa fa-calendar-check-o', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('22', '业务员管理', '0', null, '0', '1', 'look', 'fa fa-user', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('23', '业务员列表', '0', 'ss_user/ywmanager', '22', '1', 'look', 'fa fa-user', '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('24', '账号管理', '0', null, '0', '1', 'look', 'fa fa-map', '1', '0', '1');
-INSERT INTO `m_modules` VALUES ('25', '角色管理', '0', null, '0', '1', 'look', 'fa fa-map', '1', '1', '1');
-INSERT INTO `m_modules` VALUES ('26', '角色查询', '1', null, '17', '2', 'search', null, '1', '1', '1');
+INSERT INTO `m_modules` VALUES ('1', '用户管理', '0', null, '0', '1', 'look', 'fa fa-user', '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('2', '用户查询', '1', null, '20', '2', 'search', null, '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('3', '用户详情', '1', null, '20', '2', 'detail', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('4', '用户修改', '1', null, '20', '2', 'update', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('5', '账户出入金明细', '0', 'ss_ac_detail/manager', '21', '1', 'look', 'fa fa-calendar-check-o', '1', '1', '1');
+INSERT INTO `m_modules` VALUES ('6', '账户出入金明细查询', '1', null, '5', '2', 'search', null, '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('7', '账户出入金明细审核', '1', null, '5', '2', 'examine', null, '0', '1', '0');
+INSERT INTO `m_modules` VALUES ('8', '账户出金打款表', '0', 'ss_ac_detail/upmanager', '21', '1', 'look', 'fa fa-calendar-check-o', '3', '0', '1');
+INSERT INTO `m_modules` VALUES ('9', '账户出金打款表查询', '1', null, '8', '2', 'search', null, '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('10', '账户出金打款表打款', '1', null, '8', '2', 'mademoney', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('12', '客服查询', '1', null, '23', '2', 'search', null, '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('13', '账号列表', '0', 'ss_user/xtmanager', '24', '1', 'look', 'fa fa-map', '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('14', '账号新增', '1', null, '13', '2', 'add', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('15', '账号查询', '1', null, '13', '2', 'search', null, '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('16', '账号修改', '1', null, '13', '2', 'update', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('17', '角色列表', '0', 'ss_role/manager', '25', '1', 'look', 'fa fa-map', '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('18', '角色新增', '1', null, '17', '2', 'add', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('19', '角色权限设置', '1', null, '17', '2', 'update', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('20', '用户列表', '0', 'ss_user/manager', '1', '1', 'look', 'fa fa-user', '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('21', '出入金管理', '0', null, '0', '1', 'look', 'fa fa-calendar-check-o', '3', '0', '1');
+INSERT INTO `m_modules` VALUES ('22', '客服管理', '0', null, '0', '1', 'look', 'fa fa-user', '6', '0', '1');
+INSERT INTO `m_modules` VALUES ('23', '客服列表', '0', 'ss_user/ywmanager', '22', '1', 'look', 'fa fa-user', '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('24', '账号管理', '0', null, '0', '1', 'look', 'fa fa-map', '7', '0', '1');
+INSERT INTO `m_modules` VALUES ('25', '角色管理', '0', null, '0', '1', 'look', 'fa fa-map', '8', '1', '1');
+INSERT INTO `m_modules` VALUES ('26', '角色查询', '1', null, '17', '2', 'search', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('27', '代理商管理', '0', null, '0', '1', 'look', 'fa fa-user', '4', '0', '1');
+INSERT INTO `m_modules` VALUES ('28', '代理商列表', '0', 'ss_agent/dataGrid', '27', '1', 'look', 'fa fa-user', '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('29', '游戏管理', '0', null, '0', '1', 'look', 'fa fa-user', '2', '0', '1');
+INSERT INTO `m_modules` VALUES ('30', '游戏记录查询', '0', 'ss_games/dataGrid', '29', '1', 'look', 'fa fa-user', '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('31', '客服新增', '1', null, '23', '1', 'add', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('32', '客服修改', '1', null, '23', '1', 'update', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('33', '代理商新增', '1', null, '28', '1', 'add', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('34', '代理商修改', '1', null, '28', '1', 'update', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('35', '代理商查询', '1', null, '28', '1', 'search', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('36', '游戏查询', '1', null, '30', '1', 'search', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('37', '审核管理', '0', null, '0', '1', 'look', 'fa fa-calendar-check-o', '5', '0', '0');
+INSERT INTO `m_modules` VALUES ('38', '出金审核列表', '9', 'audit/withdrawal', '21', '1', 'look', 'fa fa-map', '2', '1', '1');
+INSERT INTO `m_modules` VALUES ('39', '出金审核查询', '1', null, '38', '1', 'search', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('40', '出金审核', '1', null, '38', '1', 'examine', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('41', '消息管理', '0', '', '0', '1', 'look', 'fa fa-calendar-check-o', '9', '0', '1');
+INSERT INTO `m_modules` VALUES ('42', '消息列表', '0', 'message/dataGrid', '41', '1', 'look', 'fa fa-calendar-check-o', '0', '0', '1');
+INSERT INTO `m_modules` VALUES ('43', '消息查询', '1', null, '42', '1', 'search', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('44', '消息更新', '1', null, '42', '1', 'update', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('45', '用户充值', '1', null, '20', '1', 'recharge', null, '0', '1', '1');
 
 -- ----------------------------
 -- Table structure for `m_role_modules`
@@ -202,7 +226,7 @@ CREATE TABLE `m_role_modules` (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   `module_id` bigint(20) NOT NULL COMMENT '模块ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色权限';
+) ENGINE=InnoDB AUTO_INCREMENT=299 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色权限';
 
 -- ----------------------------
 -- Records of m_role_modules
@@ -249,36 +273,87 @@ INSERT INTO `m_role_modules` VALUES ('45', '7', '13');
 INSERT INTO `m_role_modules` VALUES ('46', '7', '15');
 INSERT INTO `m_role_modules` VALUES ('47', '7', '25');
 INSERT INTO `m_role_modules` VALUES ('48', '7', '17');
-INSERT INTO `m_role_modules` VALUES ('49', '4', '21');
-INSERT INTO `m_role_modules` VALUES ('50', '4', '5');
-INSERT INTO `m_role_modules` VALUES ('51', '4', '6');
-INSERT INTO `m_role_modules` VALUES ('52', '4', '7');
-INSERT INTO `m_role_modules` VALUES ('53', '4', '8');
-INSERT INTO `m_role_modules` VALUES ('54', '4', '9');
-INSERT INTO `m_role_modules` VALUES ('55', '4', '10');
-INSERT INTO `m_role_modules` VALUES ('56', '5', '1');
-INSERT INTO `m_role_modules` VALUES ('57', '5', '20');
-INSERT INTO `m_role_modules` VALUES ('58', '5', '11');
-INSERT INTO `m_role_modules` VALUES ('59', '5', '23');
-INSERT INTO `m_role_modules` VALUES ('60', '5', '21');
-INSERT INTO `m_role_modules` VALUES ('61', '5', '5');
-INSERT INTO `m_role_modules` VALUES ('62', '5', '8');
-INSERT INTO `m_role_modules` VALUES ('63', '5', '24');
-INSERT INTO `m_role_modules` VALUES ('64', '5', '13');
-INSERT INTO `m_role_modules` VALUES ('65', '5', '25');
-INSERT INTO `m_role_modules` VALUES ('66', '5', '17');
-INSERT INTO `m_role_modules` VALUES ('67', '3', '1');
-INSERT INTO `m_role_modules` VALUES ('68', '3', '20');
-INSERT INTO `m_role_modules` VALUES ('69', '3', '2');
-INSERT INTO `m_role_modules` VALUES ('70', '3', '11');
-INSERT INTO `m_role_modules` VALUES ('71', '3', '23');
-INSERT INTO `m_role_modules` VALUES ('72', '3', '21');
-INSERT INTO `m_role_modules` VALUES ('73', '3', '5');
-INSERT INTO `m_role_modules` VALUES ('74', '3', '8');
-INSERT INTO `m_role_modules` VALUES ('75', '3', '24');
-INSERT INTO `m_role_modules` VALUES ('76', '3', '13');
-INSERT INTO `m_role_modules` VALUES ('77', '3', '25');
-INSERT INTO `m_role_modules` VALUES ('78', '3', '17');
+INSERT INTO `m_role_modules` VALUES ('79', '1', '27');
+INSERT INTO `m_role_modules` VALUES ('80', '1', '28');
+INSERT INTO `m_role_modules` VALUES ('81', '1', '29');
+INSERT INTO `m_role_modules` VALUES ('82', '1', '30');
+INSERT INTO `m_role_modules` VALUES ('83', '1', '31');
+INSERT INTO `m_role_modules` VALUES ('84', '1', '32');
+INSERT INTO `m_role_modules` VALUES ('85', '1', '33');
+INSERT INTO `m_role_modules` VALUES ('86', '1', '34');
+INSERT INTO `m_role_modules` VALUES ('128', '1', '35');
+INSERT INTO `m_role_modules` VALUES ('129', '1', '36');
+INSERT INTO `m_role_modules` VALUES ('130', '5', '1');
+INSERT INTO `m_role_modules` VALUES ('131', '5', '20');
+INSERT INTO `m_role_modules` VALUES ('132', '5', '2');
+INSERT INTO `m_role_modules` VALUES ('133', '5', '11');
+INSERT INTO `m_role_modules` VALUES ('134', '5', '23');
+INSERT INTO `m_role_modules` VALUES ('135', '5', '12');
+INSERT INTO `m_role_modules` VALUES ('136', '5', '27');
+INSERT INTO `m_role_modules` VALUES ('137', '5', '28');
+INSERT INTO `m_role_modules` VALUES ('138', '5', '35');
+INSERT INTO `m_role_modules` VALUES ('139', '5', '29');
+INSERT INTO `m_role_modules` VALUES ('140', '5', '30');
+INSERT INTO `m_role_modules` VALUES ('141', '5', '36');
+INSERT INTO `m_role_modules` VALUES ('142', '5', '21');
+INSERT INTO `m_role_modules` VALUES ('143', '5', '5');
+INSERT INTO `m_role_modules` VALUES ('144', '5', '6');
+INSERT INTO `m_role_modules` VALUES ('145', '5', '8');
+INSERT INTO `m_role_modules` VALUES ('146', '5', '9');
+INSERT INTO `m_role_modules` VALUES ('147', '5', '24');
+INSERT INTO `m_role_modules` VALUES ('148', '5', '13');
+INSERT INTO `m_role_modules` VALUES ('149', '5', '15');
+INSERT INTO `m_role_modules` VALUES ('150', '5', '25');
+INSERT INTO `m_role_modules` VALUES ('151', '5', '17');
+INSERT INTO `m_role_modules` VALUES ('152', '5', '18');
+INSERT INTO `m_role_modules` VALUES ('153', '1', '37');
+INSERT INTO `m_role_modules` VALUES ('154', '1', '38');
+INSERT INTO `m_role_modules` VALUES ('159', '1', '39');
+INSERT INTO `m_role_modules` VALUES ('160', '1', '40');
+INSERT INTO `m_role_modules` VALUES ('189', '1', '41');
+INSERT INTO `m_role_modules` VALUES ('190', '1', '42');
+INSERT INTO `m_role_modules` VALUES ('191', '1', '43');
+INSERT INTO `m_role_modules` VALUES ('212', '4', '21');
+INSERT INTO `m_role_modules` VALUES ('213', '4', '5');
+INSERT INTO `m_role_modules` VALUES ('214', '4', '6');
+INSERT INTO `m_role_modules` VALUES ('215', '4', '8');
+INSERT INTO `m_role_modules` VALUES ('216', '4', '9');
+INSERT INTO `m_role_modules` VALUES ('217', '4', '10');
+INSERT INTO `m_role_modules` VALUES ('218', '4', '37');
+INSERT INTO `m_role_modules` VALUES ('219', '4', '38');
+INSERT INTO `m_role_modules` VALUES ('220', '4', '39');
+INSERT INTO `m_role_modules` VALUES ('221', '4', '40');
+INSERT INTO `m_role_modules` VALUES ('222', '4', '41');
+INSERT INTO `m_role_modules` VALUES ('223', '4', '42');
+INSERT INTO `m_role_modules` VALUES ('224', '4', '43');
+INSERT INTO `m_role_modules` VALUES ('225', '1', '44');
+INSERT INTO `m_role_modules` VALUES ('227', '4', '44');
+INSERT INTO `m_role_modules` VALUES ('249', '1', '45');
+INSERT INTO `m_role_modules` VALUES ('274', '3', '1');
+INSERT INTO `m_role_modules` VALUES ('275', '3', '20');
+INSERT INTO `m_role_modules` VALUES ('276', '3', '2');
+INSERT INTO `m_role_modules` VALUES ('277', '3', '3');
+INSERT INTO `m_role_modules` VALUES ('278', '3', '4');
+INSERT INTO `m_role_modules` VALUES ('279', '3', '45');
+INSERT INTO `m_role_modules` VALUES ('280', '3', '21');
+INSERT INTO `m_role_modules` VALUES ('281', '3', '5');
+INSERT INTO `m_role_modules` VALUES ('282', '3', '6');
+INSERT INTO `m_role_modules` VALUES ('283', '3', '8');
+INSERT INTO `m_role_modules` VALUES ('284', '3', '9');
+INSERT INTO `m_role_modules` VALUES ('285', '3', '38');
+INSERT INTO `m_role_modules` VALUES ('286', '3', '39');
+INSERT INTO `m_role_modules` VALUES ('287', '3', '40');
+INSERT INTO `m_role_modules` VALUES ('288', '3', '22');
+INSERT INTO `m_role_modules` VALUES ('289', '3', '23');
+INSERT INTO `m_role_modules` VALUES ('290', '3', '12');
+INSERT INTO `m_role_modules` VALUES ('291', '3', '24');
+INSERT INTO `m_role_modules` VALUES ('292', '3', '13');
+INSERT INTO `m_role_modules` VALUES ('293', '3', '25');
+INSERT INTO `m_role_modules` VALUES ('294', '3', '17');
+INSERT INTO `m_role_modules` VALUES ('295', '3', '41');
+INSERT INTO `m_role_modules` VALUES ('296', '3', '42');
+INSERT INTO `m_role_modules` VALUES ('297', '3', '43');
+INSERT INTO `m_role_modules` VALUES ('298', '3', '44');
 
 -- ----------------------------
 -- Table structure for `m_roles`
@@ -294,17 +369,17 @@ CREATE TABLE `m_roles` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色';
 
 -- ----------------------------
 -- Records of m_roles
 -- ----------------------------
 INSERT INTO `m_roles` VALUES ('1', '超级管理员', null, '1', '2017-08-11 18:28:02', '1', '2017-08-11 18:28:09', '0');
-INSERT INTO `m_roles` VALUES ('2', '系统运营账户', null, '1', '2017-08-11 18:29:01', '1', '2017-08-11 18:29:01', '0');
-INSERT INTO `m_roles` VALUES ('3', '业务员', null, '1', '2017-08-28 14:12:46', '1', '2017-08-28 14:12:47', '0');
+INSERT INTO `m_roles` VALUES ('2', '系统运营账户', null, '1', '2017-09-30 17:13:40', '1', '2017-09-30 17:13:40', '1');
+INSERT INTO `m_roles` VALUES ('3', '客服员', null, '1', '2017-09-20 16:48:22', '1', '2017-09-20 16:48:22', '0');
 INSERT INTO `m_roles` VALUES ('4', '财务', null, '1', '2017-08-28 14:12:49', '1', '2017-08-28 14:12:49', '0');
-INSERT INTO `m_roles` VALUES ('5', '客服', null, '1', '2017-08-28 11:40:24', null, null, '0');
-INSERT INTO `m_roles` VALUES ('7', '查阅者', '0', '1', '2017-09-01 13:35:12', null, null, '0');
+INSERT INTO `m_roles` VALUES ('5', '代理商', null, '1', '2017-09-20 16:48:40', '1', '2017-09-20 16:48:40', '0');
+INSERT INTO `m_roles` VALUES ('7', '查阅者', '0', '1', '2017-09-30 17:13:41', '1', '2017-09-30 17:13:41', '1');
 
 -- ----------------------------
 -- Table structure for `t_audit_logs`
@@ -323,7 +398,7 @@ CREATE TABLE `t_audit_logs` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`audit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_audit_logs
@@ -333,6 +408,49 @@ INSERT INTO `t_audit_logs` VALUES ('9', '10', '1', '1', '出金审核通过', '1
 INSERT INTO `t_audit_logs` VALUES ('10', '10', '1', '2', '出金审核不通过', '1', '1', '2017-09-04 21:56:00', '1', '2017-09-04 21:56:00', '0');
 INSERT INTO `t_audit_logs` VALUES ('11', '28', '1', '1', '出金审核通过', '1', '17000011', '2017-09-04 21:56:26', '17000011', '2017-09-04 21:56:26', '0');
 INSERT INTO `t_audit_logs` VALUES ('12', '28', '1', '2', '出金审核通过', '1', '1', '2017-09-04 21:56:57', '1', '2017-09-04 21:56:57', '0');
+INSERT INTO `t_audit_logs` VALUES ('13', '28', '1', '1', '出金审核通过', '1', '4', '2017-09-25 11:30:18', '4', '2017-09-25 11:30:18', '0');
+INSERT INTO `t_audit_logs` VALUES ('14', '28', '1', '1', 'sssss', '1', '4', '2017-09-25 15:45:16', '4', '2017-09-25 15:45:16', '0');
+INSERT INTO `t_audit_logs` VALUES ('15', '28', '1', '1', '出金审核通过', '1', '4', '2017-09-25 15:47:17', '4', '2017-09-25 15:47:17', '0');
+INSERT INTO `t_audit_logs` VALUES ('16', '28', '1', '2', '出金审核通过', '1', '17000022', '2017-09-25 15:48:10', '17000022', '2017-09-25 15:48:10', '0');
+INSERT INTO `t_audit_logs` VALUES ('17', '28', '1', '1', '出金审核通过', '1', '4', '2017-09-25 16:04:51', '4', '2017-09-25 16:04:51', '0');
+INSERT INTO `t_audit_logs` VALUES ('18', '28', '1', '2', '出金审核通过', '1', '17000022', '2017-09-25 16:05:14', '17000022', '2017-09-25 16:05:14', '0');
+INSERT INTO `t_audit_logs` VALUES ('19', '28', '1', '2', '出金审核通过', '1', '17000022', '2017-09-25 16:07:52', '17000022', '2017-09-25 16:07:52', '0');
+INSERT INTO `t_audit_logs` VALUES ('20', '15', '1', '1', '出金审核通过', '1', '4', '2017-09-25 17:58:28', '4', '2017-09-25 17:58:28', '0');
+INSERT INTO `t_audit_logs` VALUES ('21', '15', '1', '2', '出金审核通过', '1', '17000022', '2017-09-25 17:58:51', '17000022', '2017-09-25 17:58:51', '0');
+INSERT INTO `t_audit_logs` VALUES ('22', '15', '1', '1', '出金审核通过', '1', '4', '2017-09-28 12:07:19', '4', '2017-09-28 12:07:19', '0');
+INSERT INTO `t_audit_logs` VALUES ('23', '15', '1', '1', '出金审核通过', '1', '4', '2017-09-28 12:57:15', '4', '2017-09-28 12:57:15', '0');
+INSERT INTO `t_audit_logs` VALUES ('24', '14', '1', '1', '出金审核通过', '1', '4', '2017-09-28 13:18:32', '4', '2017-09-28 13:18:32', '0');
+INSERT INTO `t_audit_logs` VALUES ('25', '10', '1', '1', '出金审核通过', '1', '4', '2017-09-28 13:20:35', '4', '2017-09-28 13:20:35', '0');
+INSERT INTO `t_audit_logs` VALUES ('26', '10', '1', '1', '测试审核通过', '1', '4', '2017-09-28 13:21:38', '4', '2017-09-28 13:21:38', '0');
+INSERT INTO `t_audit_logs` VALUES ('27', '15', '1', '1', '测试审核不通过', '1', '4', '2017-09-28 13:22:07', '4', '2017-09-28 13:22:07', '0');
+INSERT INTO `t_audit_logs` VALUES ('28', '14', '1', '1', '测试审核通过', '1', '4', '2017-09-28 13:22:46', '4', '2017-09-28 13:22:46', '0');
+INSERT INTO `t_audit_logs` VALUES ('29', '14', '1', '2', '财务审核通过', '1', '17000022', '2017-09-28 13:41:20', '17000022', '2017-09-28 13:41:20', '0');
+INSERT INTO `t_audit_logs` VALUES ('30', '10', '1', '2', '财务审核不通过', '1', '17000022', '2017-09-28 13:41:52', '17000022', '2017-09-28 13:41:52', '0');
+INSERT INTO `t_audit_logs` VALUES ('31', '14', '1', '2', '财务审核不通过', '1', '17000022', '2017-09-28 13:45:45', '17000022', '2017-09-28 13:45:45', '0');
+INSERT INTO `t_audit_logs` VALUES ('32', '10', '1', '2', '财务审核不通过', '1', '17000022', '2017-09-28 13:47:02', '17000022', '2017-09-28 13:47:02', '0');
+INSERT INTO `t_audit_logs` VALUES ('33', '28', '1', '1', '客服审核通过', '1', '4', '2017-09-28 13:49:58', '4', '2017-09-28 13:49:58', '0');
+INSERT INTO `t_audit_logs` VALUES ('34', '28', '1', '2', '财务审核通过', '1', '17000022', '2017-09-28 13:50:38', '17000022', '2017-09-28 13:50:38', '0');
+INSERT INTO `t_audit_logs` VALUES ('35', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-28 13:54:05', '4', '2017-09-28 13:54:05', '0');
+INSERT INTO `t_audit_logs` VALUES ('36', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-28 13:56:03', '4', '2017-09-28 13:56:03', '0');
+INSERT INTO `t_audit_logs` VALUES ('37', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-28 13:59:57', '4', '2017-09-28 13:59:57', '0');
+INSERT INTO `t_audit_logs` VALUES ('38', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-28 14:01:08', '4', '2017-09-28 14:01:08', '0');
+INSERT INTO `t_audit_logs` VALUES ('39', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-28 14:10:14', '4', '2017-09-28 14:10:14', '0');
+INSERT INTO `t_audit_logs` VALUES ('40', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-28 14:35:36', '4', '2017-09-28 14:35:36', '0');
+INSERT INTO `t_audit_logs` VALUES ('41', '11', '1', '1', '测试客服审核通过', '1', '4', '2017-09-28 17:32:36', '4', '2017-09-28 17:32:36', '0');
+INSERT INTO `t_audit_logs` VALUES ('42', '11', '1', '1', '出金审核通过', '1', '4', '2017-09-29 12:13:35', '4', '2017-09-29 12:13:35', '0');
+INSERT INTO `t_audit_logs` VALUES ('43', '11', '1', '2', '出金审核通过', '1', '17000022', '2017-09-29 13:35:00', '17000022', '2017-09-29 13:35:00', '0');
+INSERT INTO `t_audit_logs` VALUES ('44', '10', '1', '1', '出金审核通过', '1', '4', '2017-09-29 14:41:02', '4', '2017-09-29 14:41:02', '0');
+INSERT INTO `t_audit_logs` VALUES ('45', '14', '1', '1', '出金审核通过', '1', '4', '2017-09-29 14:50:45', '4', '2017-09-29 14:50:45', '0');
+INSERT INTO `t_audit_logs` VALUES ('46', '28', '1', '1', '出金审核通过', '1', '4', '2017-09-30 17:18:50', '4', '2017-09-30 17:18:50', '0');
+INSERT INTO `t_audit_logs` VALUES ('47', '13', '1', '1', '测试不通过', '1', '4', '2017-09-30 17:19:30', '4', '2017-09-30 17:19:30', '0');
+INSERT INTO `t_audit_logs` VALUES ('48', '12', '1', '1', '测试数据 ', '1', '4', '2017-09-30 17:20:46', '4', '2017-09-30 17:20:46', '0');
+INSERT INTO `t_audit_logs` VALUES ('49', '14', '1', '1', '测试数据', '1', '4', '2017-09-30 17:22:19', '4', '2017-09-30 17:22:19', '0');
+INSERT INTO `t_audit_logs` VALUES ('50', '10', '1', '1', '测试数据', '1', '4', '2017-09-30 17:25:49', '4', '2017-09-30 17:25:49', '0');
+INSERT INTO `t_audit_logs` VALUES ('51', '11', '1', '1', '测试数据', '1', '4', '2017-09-30 17:26:48', '4', '2017-09-30 17:26:48', '0');
+INSERT INTO `t_audit_logs` VALUES ('52', '15', '1', '1', '出金审核通过', '1', '4', '2017-09-30 17:27:26', '4', '2017-09-30 17:27:26', '0');
+INSERT INTO `t_audit_logs` VALUES ('53', '15', '1', '2', '出金审核通过', '1', '17000022', '2017-09-30 17:28:20', '17000022', '2017-09-30 17:28:20', '0');
+INSERT INTO `t_audit_logs` VALUES ('54', '10', '1', '2', '出金审核通过', '1', '17000022', '2017-09-30 17:28:31', '17000022', '2017-09-30 17:28:31', '0');
+INSERT INTO `t_audit_logs` VALUES ('55', '28', '1', '2', '财务审核不通过', '1', '17000022', '2017-09-30 17:28:46', '17000022', '2017-09-30 17:28:46', '0');
 
 -- ----------------------------
 -- Table structure for `t_audit_template`
@@ -372,13 +490,13 @@ CREATE TABLE `t_audit_template_step` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`flow_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_audit_template_step
 -- ----------------------------
-INSERT INTO `t_audit_template_step` VALUES ('1', '1', '1', '4', '1', '1', '2017-09-04 21:14:58', '1', '2017-09-04 21:14:58', '0');
-INSERT INTO `t_audit_template_step` VALUES ('2', '1', '2', '1', '1', '1', '2017-09-04 19:49:26', '1', '2017-09-04 19:49:26', '0');
+INSERT INTO `t_audit_template_step` VALUES ('1', '1', '1', '3', '1', '1', '2017-09-22 11:01:17', '1', '2017-09-22 11:01:17', '0');
+INSERT INTO `t_audit_template_step` VALUES ('2', '1', '2', '4', '1', '1', '2017-09-22 11:01:19', '1', '2017-09-22 11:01:19', '0');
 
 -- ----------------------------
 -- Table structure for `t_game_data`
@@ -416,6 +534,69 @@ CREATE TABLE `t_game_data` (
 -- ----------------------------
 -- Records of t_game_data
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for `t_message`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_message`;
+CREATE TABLE `t_message` (
+  `message_id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_type` int(11) DEFAULT NULL COMMENT '通知类型',
+  `icon` varchar(255) DEFAULT NULL,
+  `trade_id` bigint(20) DEFAULT NULL COMMENT '订单ID-关联t_user_account_detail',
+  `version_no` bigint(20) NOT NULL DEFAULT '1' COMMENT '数据版本号 用于锁处理(存时间戳)',
+  `create_by` bigint(20) NOT NULL DEFAULT '1' COMMENT '创建人',
+  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` bigint(20) DEFAULT NULL COMMENT '最后更新人',
+  `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
+  PRIMARY KEY (`message_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_message
+-- ----------------------------
+INSERT INTO `t_message` VALUES ('1', '50', 'fa fa-user text-red', '28', '1', '1', '2017-09-28 10:24:53', '1', '2017-09-28 10:24:53', '0');
+INSERT INTO `t_message` VALUES ('2', '50', 'fa fa-user text-red', '15', '1', '1', '2017-09-28 10:25:14', null, '2017-09-28 10:25:14', '0');
+INSERT INTO `t_message` VALUES ('3', '50', 'fa fa-user text-red', '10', '1', '1', '2017-09-28 10:25:34', null, '2017-09-28 10:25:34', '0');
+INSERT INTO `t_message` VALUES ('4', '50', 'fa fa-user text-red', '11', '1', '1', '2017-09-28 10:25:35', null, '2017-09-28 10:25:35', '0');
+INSERT INTO `t_message` VALUES ('5', '10', 'fa fa-user text-red', '187', '1', '1', '2017-09-28 18:06:37', null, '2017-09-28 18:06:37', '0');
+INSERT INTO `t_message` VALUES ('6', '10', 'fa fa-user text-red', '188', '1', '1', '2017-09-29 12:04:33', null, '2017-09-29 12:04:33', '0');
+INSERT INTO `t_message` VALUES ('7', '10', 'fa fa-user text-red', '189', '1', '4', '2017-09-29 13:30:30', null, '2017-09-29 13:30:30', '0');
+INSERT INTO `t_message` VALUES ('8', '10', 'fa fa-users text-aqua', '190', '1', '4', '2017-09-30 17:19:10', null, '2017-09-30 17:19:10', '0');
+
+-- ----------------------------
+-- Table structure for `t_message_content`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_message_content`;
+CREATE TABLE `t_message_content` (
+  `message_content_id` int(11) NOT NULL AUTO_INCREMENT,
+  `trade_id` int(11) DEFAULT NULL COMMENT ' 订单ID',
+  `role_id` int(11) DEFAULT NULL,
+  `user_id` int(20) DEFAULT NULL COMMENT '用户ID-关联t_users',
+  `content` varchar(200) DEFAULT NULL COMMENT '提醒内容',
+  `status` int(11) DEFAULT '0' COMMENT '处理状态：0-（默认）未处理，1-已处理',
+  `version_no` bigint(20) NOT NULL DEFAULT '1' COMMENT '数据版本号 用于锁处理(存时间戳)',
+  `create_by` bigint(20) NOT NULL DEFAULT '1' COMMENT '创建人',
+  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` bigint(20) DEFAULT NULL COMMENT '最后更新人',
+  `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
+  PRIMARY KEY (`message_content_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_message_content
+-- ----------------------------
+INSERT INTO `t_message_content` VALUES ('1', '28', '3', '4', '你 有 一 笔 订 单 (W150450675145482207) 待审 核', '1', '2', '1', '2017-09-30 17:22:03', '4', '2017-09-30 17:22:03', '0');
+INSERT INTO `t_message_content` VALUES ('2', '15', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '2', '1', '2017-09-30 17:27:08', '4', '2017-09-30 17:27:08', '0');
+INSERT INTO `t_message_content` VALUES ('3', '10', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '4', '1', '2017-09-30 17:27:16', '4', '2017-09-30 17:27:16', '0');
+INSERT INTO `t_message_content` VALUES ('4', '11', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '9', '1', '2017-09-30 17:27:19', '4', '2017-09-30 17:27:19', '0');
+INSERT INTO `t_message_content` VALUES ('5', '28', '3', '4', '你有一笔订单（W150450675145482207）待审核。', '1', '1', '4', '2017-09-30 17:17:18', null, '2017-09-30 17:17:18', '0');
+INSERT INTO `t_message_content` VALUES ('27', '28', '4', null, '你有一笔新的提现审核，编号：W150450675145482207。', '1', '1', '4', '2017-09-30 17:29:01', '4', '2017-09-30 17:29:01', '0');
+INSERT INTO `t_message_content` VALUES ('28', '190', '1', '1', '阳光大佬2]充值了111.0元，订单编号：R150676314947856715。', '1', '1', '4', '2017-09-30 19:13:08', null, '2017-09-30 19:13:08', '0');
+INSERT INTO `t_message_content` VALUES ('29', '10', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '1', '1', '4', '2017-09-30 17:28:26', '4', '2017-09-30 17:28:26', '0');
+INSERT INTO `t_message_content` VALUES ('30', '15', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '1', '1', '4', '2017-09-30 17:28:14', '4', '2017-09-30 17:28:14', '0');
 
 -- ----------------------------
 -- Table structure for `t_payment_records`
@@ -1120,7 +1301,7 @@ CREATE TABLE `t_recharges` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`recharge_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=305 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='充值记录';
+) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='充值记录';
 
 -- ----------------------------
 -- Records of t_recharges
@@ -1418,6 +1599,13 @@ INSERT INTO `t_recharges` VALUES ('301', '17000007', 'R150487885027874949', '1',
 INSERT INTO `t_recharges` VALUES ('302', '17000002', 'R150487892199754989', '0', '1.00', null, '0', null, '1', '17000002', '2017-09-08 21:55:22', '17000002', '2017-09-08 21:55:22', '0');
 INSERT INTO `t_recharges` VALUES ('303', '17000002', 'R150487893743952905', '0', '1.00', null, '0', null, '1', '17000002', '2017-09-08 21:55:37', '17000002', '2017-09-08 21:55:37', '0');
 INSERT INTO `t_recharges` VALUES ('304', '17000007', 'R150487996913614908', '0', '1.00', null, '0', null, '1', '17000007', '2017-09-08 22:12:49', '17000007', '2017-09-08 22:12:49', '0');
+INSERT INTO `t_recharges` VALUES ('305', '17000001', 'R150659122373378997', '1', '100.00', '测试', '0', null, '1', '1', '2017-09-28 17:33:44', '1', '2017-09-28 17:33:44', '0');
+INSERT INTO `t_recharges` VALUES ('306', '17000001', 'R150659133797996075', '1', '100.00', '测试', '0', null, '1', '1', '2017-09-28 17:35:38', '1', '2017-09-28 17:35:38', '0');
+INSERT INTO `t_recharges` VALUES ('307', '17000001', 'R150659148475481486', '1', '90.00', '测试', '0', null, '1', '1', '2017-09-28 17:38:05', '1', '2017-09-28 17:38:05', '0');
+INSERT INTO `t_recharges` VALUES ('308', '17000001', 'R150659319559076277', '1', '11.00', '测试', '0', null, '1', '1', '2017-09-28 18:06:36', '1', '2017-09-28 18:06:36', '0');
+INSERT INTO `t_recharges` VALUES ('309', '17000001', 'R150665786893796729', '1', '101.00', '测试', '0', null, '1', '1', '2017-09-29 12:04:29', '1', '2017-09-29 12:04:29', '0');
+INSERT INTO `t_recharges` VALUES ('310', '17000001', 'R150666302761560229', '1', '120.00', '测试充值', '0', null, '1', '1', '2017-09-29 13:30:28', '1', '2017-09-29 13:30:28', '0');
+INSERT INTO `t_recharges` VALUES ('311', '17000001', 'R150676314947856715', '1', '111.00', '测试金额', '0', null, '1', '1', '2017-09-30 17:19:09', '1', '2017-09-30 17:19:09', '0');
 
 -- ----------------------------
 -- Table structure for `t_user_account`
@@ -1441,17 +1629,18 @@ CREATE TABLE `t_user_account` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户';
 
 -- ----------------------------
 -- Records of t_user_account
 -- ----------------------------
 INSERT INTO `t_user_account` VALUES ('1', '1', '1', '0', '6.00', '0.00', '0.00', '0.00', '0.00', '0.00', '1', '1', '2017-09-04 10:32:04', '1', '2017-09-04 10:32:04', '0');
-INSERT INTO `t_user_account` VALUES ('3', '17000001', '1', '0', '0.00', '24.00', '1.00', '0.00', '0.00', '0.00', '77', '17000001', '2017-09-04 14:27:23', '17000001', '2017-09-08 21:50:33', '0');
-INSERT INTO `t_user_account` VALUES ('6', '17000002', '1', '0', '102.00', '100.00', '0.00', '0.00', '0.00', '0.00', '261', '17000002', '2017-09-05 20:05:00', '17000002', '2017-09-08 21:55:37', '0');
+INSERT INTO `t_user_account` VALUES ('3', '17000001', '1', '0', '0.00', '633.00', '3.00', '0.00', '0.00', '0.00', '144', '17000001', '2017-09-25 16:07:33', '17000001', '2017-09-30 17:28:31', '0');
+INSERT INTO `t_user_account` VALUES ('6', '17000002', '1', '0', '41.00', '100.00', '0.00', '0.00', '0.00', '0.00', '266', '17000002', '2017-09-05 20:05:00', '17000002', '2017-09-08 21:55:37', '0');
 INSERT INTO `t_user_account` VALUES ('7', '17000009', '1', '0', '6.00', '2.00', '0.00', '0.00', '0.00', '0.00', '2', '17000009', '2017-09-04 10:32:08', '17000009', '2017-09-04 10:32:08', '0');
 INSERT INTO `t_user_account` VALUES ('8', '17000003', '1', '0', '736.00', '736.00', '0.00', '0.00', '0.00', '0.00', '77', '17000003', '2017-09-08 15:27:53', '17000003', '2017-09-08 18:04:51', '0');
 INSERT INTO `t_user_account` VALUES ('19', '17000007', '1', '0', '36.00', '33.00', '0.00', '0.00', '0.00', '0.00', '145', '17000007', '2017-09-08 20:08:38', '17000007', '2017-09-08 22:12:49', '0');
+INSERT INTO `t_user_account` VALUES ('20', '17000012', '1', '0', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '2', '17000012', '2017-09-27 11:20:21', '17000012', '2017-09-27 11:20:21', '0');
 
 -- ----------------------------
 -- Table structure for `t_user_account_detail`
@@ -1477,24 +1666,24 @@ CREATE TABLE `t_user_account_detail` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`trade_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户交易明细';
+) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户交易明细';
 
 -- ----------------------------
 -- Records of t_user_account_detail
 -- ----------------------------
-INSERT INTO `t_user_account_detail` VALUES ('10', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '1.00', '50', '1', '审核不通过', '2', '0', '17000001', '2017-09-04 21:56:03', '1', '2017-09-04 21:55:59', '0');
-INSERT INTO `t_user_account_detail` VALUES ('11', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '1', '审核不通过', '1', '0', '17000001', '2017-09-04 21:53:25', '17000011', '2017-09-04 21:53:22', '0');
-INSERT INTO `t_user_account_detail` VALUES ('12', '3', '17000001', 'R150407330550765201', '1', '1.00', null, '2.00', '10', '2', null, '1', '0', '17000001', '2017-09-04 19:40:40', '17000001', '2017-09-04 19:40:40', '0');
-INSERT INTO `t_user_account_detail` VALUES ('13', '3', '17000001', 'R150407330550765201', '1', '1.00', null, '2.00', '10', '2', null, '1', '0', '17000001', '2017-09-04 19:40:41', '17000001', '2017-09-04 19:40:41', '0');
-INSERT INTO `t_user_account_detail` VALUES ('14', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '0', '', '1', '0', '17000001', '2017-09-04 21:52:19', '17000011', '2017-09-04 21:52:19', '0');
-INSERT INTO `t_user_account_detail` VALUES ('15', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '3.00', '50', '0', '', '1', '0', '17000001', '2017-09-04 21:52:21', '1', '2017-09-04 21:52:21', '0');
+INSERT INTO `t_user_account_detail` VALUES ('10', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '1.00', '50', '2', '', '2', '0', '17000001', '2017-09-30 17:29:28', '1', '2017-09-30 17:29:28', '0');
+INSERT INTO `t_user_account_detail` VALUES ('11', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '1', '测试数据', '1', '0', '17000001', '2017-09-30 17:26:47', '4', '2017-09-30 17:26:48', '0');
+INSERT INTO `t_user_account_detail` VALUES ('12', '3', '17000001', 'R150407330550765201', '-1', '1.00', null, '2.00', '50', '1', '测试数据 ', '1', '0', '17000001', '2017-09-30 17:20:46', '4', '2017-09-30 17:20:46', '0');
+INSERT INTO `t_user_account_detail` VALUES ('13', '3', '17000001', 'R150407330550765201', '-1', '1.00', null, '2.00', '50', '1', '测试不通过', '1', '0', '17000001', '2017-09-30 17:19:30', '4', '2017-09-30 17:19:30', '0');
+INSERT INTO `t_user_account_detail` VALUES ('14', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '1', '测试数据', '1', '0', '17000001', '2017-09-30 17:22:19', '4', '2017-09-30 17:22:19', '0');
+INSERT INTO `t_user_account_detail` VALUES ('15', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '3.00', '50', '2', '', '2', '0', '17000001', '2017-09-30 17:29:31', '1', '2017-09-30 17:29:31', '0');
 INSERT INTO `t_user_account_detail` VALUES ('20', '3', '17000001', 'R150424242620597557', '1', '10.00', '4', '11.00', '10', '2', '测试金额测试充值10块', '1', '1', '17000001', '2017-09-04 19:40:42', '1', '2017-09-04 19:40:42', '0');
 INSERT INTO `t_user_account_detail` VALUES ('23', '6', '17000002', 'R150424941331079226', '1', '10.00', '4', '10.00', '10', '2', '测试', '1', '1', '17000002', '2017-09-04 19:40:43', '1', '2017-09-04 19:40:43', '0');
 INSERT INTO `t_user_account_detail` VALUES ('24', '3', '17000001', 'R150425020769560470', '1', '11.00', '4', '22.00', '10', '2', '测试', '1', '1', '17000001', '2017-09-04 19:40:43', '1', '2017-09-04 19:40:43', '0');
 INSERT INTO `t_user_account_detail` VALUES ('25', '7', '17000009', 'R150425664342852646', '1', '1.00', '4', '1.00', '10', '2', '测试', '1', '1', '17000009', '2017-09-04 19:40:43', '1', '2017-09-04 19:40:43', '0');
 INSERT INTO `t_user_account_detail` VALUES ('26', '7', '17000009', 'R150425809274127437', '1', '2.00', '4', '3.00', '10', '2', '2', '1', '1', '17000009', '2017-09-04 19:40:44', '1', '2017-09-04 19:40:44', '0');
 INSERT INTO `t_user_account_detail` VALUES ('27', '3', '17000001', 'R150427831130913473', '1', '1.00', '4', '2.00', '10', '2', '2313233', '1', '1', '17000001', '2017-09-04 19:40:44', '17000001', '2017-09-04 19:40:44', '0');
-INSERT INTO `t_user_account_detail` VALUES ('28', '3', '17000001', 'W150450675145482207', '-1', '0.00', '4', '0.00', '50', '3', '审核通过', '2', '1', '17000001', '2017-09-04 21:57:00', '1', '2017-09-04 21:56:57', '0');
+INSERT INTO `t_user_account_detail` VALUES ('28', '3', '17000001', 'W150450675145482207', '-1', '1.00', '4', '9.00', '50', '1', '财务审核不通过', '2', '1', '17000001', '2017-09-30 17:28:45', '17000022', '2017-09-30 17:28:46', '0');
 INSERT INTO `t_user_account_detail` VALUES ('29', '6', '17000002', 'R150461267731257575', '1', '50.00', '4', '6.00', '10', '5', '玩家充值', null, '1', '17000002', '2017-09-05 19:57:57', '17000002', '2017-09-05 19:57:57', '0');
 INSERT INTO `t_user_account_detail` VALUES ('30', '6', '17000002', 'R150461357307193115', '1', '50.00', '4', '12.00', '10', '5', '玩家充值', null, '1', '17000002', '2017-09-05 20:12:53', '17000002', '2017-09-05 20:12:53', '0');
 INSERT INTO `t_user_account_detail` VALUES ('31', '6', '17000002', 'R150461491657179950', '1', '50.00', '4', '12.00', '10', '5', '玩家充值', null, '1', '17000002', '2017-09-05 20:35:17', '17000002', '2017-09-05 20:35:17', '0');
@@ -1636,10 +1825,17 @@ INSERT INTO `t_user_account_detail` VALUES ('176', '19', '17000007', 'R150487765
 INSERT INTO `t_user_account_detail` VALUES ('177', '3', '17000001', 'R150487849553530922', '1', '1.00', '4', '0.00', '10', '5', '玩家充值', null, '1', '17000001', '2017-09-08 21:48:16', '17000001', '2017-09-08 21:48:16', '0');
 INSERT INTO `t_user_account_detail` VALUES ('178', '3', '17000001', 'R150487854784366504', '1', '10.00', '4', '0.00', '10', '5', '玩家充值', null, '1', '17000001', '2017-09-08 21:49:08', '17000001', '2017-09-08 21:49:08', '0');
 INSERT INTO `t_user_account_detail` VALUES ('179', '3', '17000001', 'R150487863288448472', '1', '1.00', '4', '0.00', '10', '5', '玩家充值', null, '1', '17000001', '2017-09-08 21:50:33', '17000001', '2017-09-08 21:50:33', '0');
-INSERT INTO `t_user_account_detail` VALUES ('180', '19', '17000007', 'R150487885027874949', '1', '1.00', '4', '35.00', '10', '5', '玩家充值', null, '1', '17000007', '2017-09-08 21:54:10', '17000007', '2017-09-08 21:54:10', '0');
+INSERT INTO `t_user_account_detail` VALUES ('180', '19', '17000007', 'R150487885027874949', '1', '1.00', '4', '35.00', '10', '5', '玩家充值', null, '1', '17000007', '2017-09-25 16:07:44', '17000007', '2017-09-25 16:07:44', '0');
 INSERT INTO `t_user_account_detail` VALUES ('181', '6', '17000002', 'R150487892199754989', '1', '1.00', '4', '102.00', '10', '5', '玩家充值', null, '1', '17000002', '2017-09-08 21:55:22', '17000002', '2017-09-08 21:55:22', '0');
 INSERT INTO `t_user_account_detail` VALUES ('182', '6', '17000002', 'R150487893743952905', '1', '1.00', '4', '102.00', '10', '5', '玩家充值', null, '1', '17000002', '2017-09-08 21:55:37', '17000002', '2017-09-08 21:55:37', '0');
 INSERT INTO `t_user_account_detail` VALUES ('183', '19', '17000007', 'R150487996913614908', '1', '1.00', '4', '36.00', '10', '5', '玩家充值', null, '1', '17000007', '2017-09-08 22:12:49', '17000007', '2017-09-08 22:12:49', '0');
+INSERT INTO `t_user_account_detail` VALUES ('184', '3', '17000001', 'R150659122373378997', '1', '100.00', '4', '110.00', '11', '2', '测试', null, '1', '17000001', '2017-09-28 17:33:44', '17000001', '2017-09-28 17:33:44', '0');
+INSERT INTO `t_user_account_detail` VALUES ('185', '3', '17000001', 'R150659133797996075', '1', '100.00', '4', '210.00', '11', '2', '测试', null, '1', '17000001', '2017-09-28 17:35:38', '17000001', '2017-09-28 17:35:38', '0');
+INSERT INTO `t_user_account_detail` VALUES ('186', '3', '17000001', 'R150659148475481486', '1', '90.00', '4', '300.00', '11', '2', '测试', null, '1', '17000001', '2017-09-28 17:38:05', '17000001', '2017-09-28 17:38:05', '0');
+INSERT INTO `t_user_account_detail` VALUES ('187', '3', '17000001', 'R150659319559076277', '1', '11.00', '4', '311.00', '11', '2', '测试', null, '1', '17000001', '2017-09-28 18:06:36', '17000001', '2017-09-28 18:06:36', '0');
+INSERT INTO `t_user_account_detail` VALUES ('188', '3', '17000001', 'R150665786893796729', '1', '101.00', '4', '107.00', '11', '2', '测试', null, '1', '17000001', '2017-09-29 12:04:29', '17000001', '2017-09-29 12:04:29', '0');
+INSERT INTO `t_user_account_detail` VALUES ('189', '3', '17000001', 'R150666302761560229', '1', '120.00', '4', '227.00', '11', '2', '测试充值', null, '1', '17000001', '2017-09-29 13:30:28', '17000001', '2017-09-29 13:30:28', '0');
+INSERT INTO `t_user_account_detail` VALUES ('190', '3', '17000001', 'R150676314947856715', '1', '111.00', '4', '400.00', '11', '2', '测试金额', null, '1', '17000001', '2017-09-30 17:19:09', '17000001', '2017-09-30 17:19:09', '0');
 
 -- ----------------------------
 -- Table structure for `t_user_cards`
@@ -1664,7 +1860,7 @@ CREATE TABLE `t_user_cards` (
 -- ----------------------------
 -- Records of t_user_cards
 -- ----------------------------
-INSERT INTO `t_user_cards` VALUES ('1', '17000001', '6217001840000832975', '城西支行分行', '20', '0', '0', '2017-09-04 15:45:33', '1', '2017-09-04 15:45:33', '0', 'Damon 风柔');
+INSERT INTO `t_user_cards` VALUES ('1', '17000001', '12adsfsd12', '城西支行分行', '21', '0', '0', '2017-09-28 21:40:15', '1', '2017-09-28 21:40:15', '0', 'Damon 风柔');
 INSERT INTO `t_user_cards` VALUES ('2', '17000004', '52121212321324324325', '杭州分行', '3', '0', '0', '0000-00-00 00:00:00', '0', null, '0', '阳光测试');
 INSERT INTO `t_user_cards` VALUES ('4', '17000007', '332533623365332', '交通银行杭州分行中山支行', '25', '0', '0', '0000-00-00 00:00:00', '0', null, '0', '吴胡子');
 INSERT INTO `t_user_cards` VALUES ('5', '17000005', '62284866688866', '城西支行', '18', '0', '0', '0000-00-00 00:00:00', '0', null, '0', 'Damon');
@@ -1700,17 +1896,18 @@ CREATE TABLE `t_users` (
   `bg_login_id` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qq` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17000013 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户信息';
+) ENGINE=InnoDB AUTO_INCREMENT=17000025 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户信息';
 
 -- ----------------------------
 -- Records of t_users
 -- ----------------------------
-INSERT INTO `t_users` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', null, '2', '0', '1', null, 'http://img.jsqq.net/uploads/allimg/150111/1_150111080328_19.jpg', '2017-08-31 21:55:52', '0', null, null, null, '1', '1', '2017-08-31 21:55:52', '1', '2017-08-31 21:55:52', '0', null, '2');
-INSERT INTO `t_users` VALUES ('2', 'yunying', '123456', '系统运营账户', null, '2', '0', '2', null, 'http://img.jsqq.net/uploads/allimg/150111/1_150111080328_19.jpg', '2017-08-25 19:56:01', '0', null, null, null, '1', '1', '2017-08-25 19:56:01', '1', '2017-08-25 19:56:01', '0', null, '2');
-INSERT INTO `t_users` VALUES ('3', 'KF001', '123456', '业务员001', null, '2', '0', '3', null, null, '2017-08-28 17:28:19', '0', null, null, null, '1', '1', '2017-08-28 17:28:19', '1', '2017-08-28 17:28:19', '0', null, '1977704195');
-INSERT INTO `t_users` VALUES ('4', 'KF002', '123456', '业务员002', null, '2', '0', '3', null, null, '2017-08-28 17:28:19', '0', null, null, null, '1', '1', '2017-08-28 17:28:19', '1', '2017-08-28 17:28:19', '0', null, '1977704195');
-INSERT INTO `t_users` VALUES ('17000001', '15901794296', '423350', '阳光大佬', '15901794296', '-1', '1', '0', '4', '2017090809061430402302.jpeg', '2017-09-08 21:49:43', '0', '1', '20361890', 'n', '6', '0', '2017-09-04 15:45:05', '17000001', '2017-09-08 21:49:43', '0', '17000001_760e07b3-6075-4ad4-b13b-183230becda5', '9');
-INSERT INTO `t_users` VALUES ('17000002', '18550473963', '242700', 'Damon 风', '18550473963', '-1', '1', '0', '4', '', '2017-09-08 22:20:35', '0', '1', '20533559', 'n', '14', '0', '2017-09-01 22:51:25', '17000002', '2017-09-08 22:20:35', '0', '17000002_9c0333b4-35cd-40a5-9e58-d55989788c1d', '11');
+INSERT INTO `t_users` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', '15260282340', '2', '0', '1', '1', 'http://img.jsqq.net/uploads/allimg/150111/1_150111080328_19.jpg', '2017-09-28 12:09:34', '0', null, null, null, '3', '1', '2017-09-28 12:09:34', '1', '2017-09-28 12:09:34', '0', null, '2');
+INSERT INTO `t_users` VALUES ('3', 'KF001', 'e10adc3949ba59abbe56e057f20f883e', '客服001', '15260282340', '2', '0', '3', '3', null, '2017-09-28 12:09:32', '0', '1', '3', null, '1', '1', '2017-09-28 12:09:32', '1', '2017-09-28 12:09:32', '0', null, '1977704195');
+INSERT INTO `t_users` VALUES ('4', 'KF002', 'e10adc3949ba59abbe56e057f20f883e', '客服003', '15260282340', '2', '0', '3', '4', null, '2017-09-30 14:11:22', '0', '2', '4', null, '1', '1', '2017-09-30 14:11:22', '1', '2017-09-30 14:11:22', '0', null, '1977704192');
+INSERT INTO `t_users` VALUES ('5', 'agdress', 'e10adc3949ba59abbe56e057f20f883e', '星河娱乐', '15901794296', '2', '0', '5', '5', null, '2017-09-25 11:16:09', '0', '1', null, null, '1', '1', '2017-09-25 11:16:09', null, '2017-09-25 11:16:09', '0', null, null);
+INSERT INTO `t_users` VALUES ('6', 'agdress1', '81dc9bdb52d04dc20036dbd8313ed055', '我自己a', '15260282340', '2', '0', '5', '6', null, '2017-09-25 11:16:12', '0', '2', null, null, '3', '1', '2017-09-25 11:16:12', null, '2017-09-25 11:16:12', '0', null, null);
+INSERT INTO `t_users` VALUES ('17000001', '15901794296', '423350', '阳光大佬2', '15901794296', '-1', '1', '0', '4', '2017090809061430402302.jpeg', '2017-09-30 17:01:18', '0', '1', '20361890', 'n', '6', '0', '2017-09-30 17:01:18', '1', '2017-09-30 17:01:18', '0', 'gogogo3', '9');
+INSERT INTO `t_users` VALUES ('17000002', '18550473963', '242700', 'Damon 风', '18550473963', '-1', '1', '0', '4', '', '2017-09-30 12:08:18', '0', '1', '20533559', 'n', '14', '0', '2017-09-01 22:51:25', '17000002', '2017-09-30 12:08:18', '0', '17000002_9c0333b4-35cd-40a5-9e58-d55989788c1d', '11');
 INSERT INTO `t_users` VALUES ('17000003', '18058159956', '646398', '18058159956', '18058159956', '-1', '1', '0', '4', null, '2017-09-06 23:04:44', '0', '1', '20575939', 'n', '1', '0', '2017-09-01 19:38:52', '17000003', '2017-09-06 23:04:44', '0', '17000003_a5eace0e-0280-439a-a159-d60ef6aaf602', '10');
 INSERT INTO `t_users` VALUES ('17000004', '18321755892', '210281', '18321755892', '18321755892', '-1', '1', '0', null, null, '2017-08-26 18:13:56', '0', '1', '20695319', 'n', '0', '0', '2017-08-26 17:48:20', '17000004', '2017-08-26 18:13:56', '0', 'XH002589217000004', null);
 INSERT INTO `t_users` VALUES ('17000005', '18050473963', '464782', '18050473963', '18050473963', '-1', '1', '0', '3', null, '2017-08-29 14:13:09', '0', '1', '20819946', 'n', '1', '0', '2017-08-29 14:13:09', '0', '2017-08-29 14:13:09', '0', 'XH002396317000005', null);
@@ -1718,5 +1915,9 @@ INSERT INTO `t_users` VALUES ('17000007', '18668223750', '584576', '胡子侠', 
 INSERT INTO `t_users` VALUES ('17000008', 'LOOK1', 'e10adc3949ba59abbe56e057f20f883e', '我自己-赖', null, '2', '0', '7', null, null, '2017-09-01 17:11:00', '0', null, null, null, '1', '1', '2017-09-01 17:11:00', null, '2017-09-01 17:11:00', '0', null, '971083603');
 INSERT INTO `t_users` VALUES ('17000009', '18550473933', '150189', '18550473933', '18550473933', '-1', '1', '0', '4', null, '2017-08-30 16:08:12', '0', '1', '20907618', 'n', '1', '0', '2017-08-30 16:08:12', '0', '2017-08-30 16:08:12', '0', 'XH002393317000009', null);
 INSERT INTO `t_users` VALUES ('17000010', '15355046527', '391783', '15355046527', '15355046527', '-1', '1', '0', '4', null, '2017-09-01 19:40:34', '0', '1', '21075954', 'n', '1', '1', '2017-09-01 19:36:42', '17000010', '2017-09-01 19:40:34', '0', 'XH002652717000010', null);
-INSERT INTO `t_users` VALUES ('17000011', '15260282340', 'e10adc3949ba59abbe56e057f20f883e', null, null, '2', '0', '4', null, null, '2017-09-04 19:46:46', '0', null, null, null, '1', '1', '2017-09-04 19:46:46', null, '2017-09-04 19:46:46', '0', null, '971083603');
 INSERT INTO `t_users` VALUES ('17000012', '17767077763', '793841', '17767077763', '17767077763', '-1', '1', '0', '3', null, '2017-09-06 16:29:31', '0', '1', '21850971', 'n', '1', '1', '2017-09-06 16:29:30', '0', '2017-09-06 16:29:31', '0', 'XH002776317000012', null);
+INSERT INTO `t_users` VALUES ('17000013', 'AV123456', 'e10adc3949ba59abbe56e057f20f883e', 'AV123456', null, '2', '0', '1', null, null, '2017-09-21 10:09:32', '0', null, null, null, '1', '1', '2017-09-21 10:09:32', null, '2017-09-21 10:09:32', '0', null, null);
+INSERT INTO `t_users` VALUES ('17000015', 'root', 'e10adc3949ba59abbe56e057f20f883e', 'root', '15260282341', '2', '0', '2', null, null, '2017-09-21 13:57:58', '0', null, null, null, '1', '1', '2017-09-21 13:57:58', null, '2017-09-21 13:57:58', '0', null, null);
+INSERT INTO `t_users` VALUES ('17000022', 'CW001', 'e10adc3949ba59abbe56e057f20f883e', '财务', '15260282340', '2', '0', '4', null, null, '2017-09-28 14:52:41', '0', '4', null, null, '1', '1', '2017-09-28 14:52:41', null, '2017-09-28 14:52:41', '0', null, null);
+INSERT INTO `t_users` VALUES ('17000023', 'agdresstest1', 'e10adc3949ba59abbe56e057f20f883e', '代理商测试1', '15260282342', '2', '0', '5', null, null, '2017-09-28 20:42:25', '0', '5', null, null, '1', '1', '2017-09-28 20:42:25', null, '2017-09-28 20:42:25', '0', null, null);
+INSERT INTO `t_users` VALUES ('17000024', 'agdresstest22', 'e10adc3949ba59abbe56e057f20f883e', '代理商测试', '15260282340', '2', '0', '5', null, null, null, '0', '6', null, null, '1', '1', '0000-00-00 00:00:00', null, null, '0', null, null);

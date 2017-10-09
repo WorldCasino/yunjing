@@ -5,4 +5,5 @@ package com.agdress.bgapi.rsp;
  * Description: *_*
  */
 public class VideoRoundQuery extends BaseCollectionResult<VideoRoundQueryItem> {
+
 }

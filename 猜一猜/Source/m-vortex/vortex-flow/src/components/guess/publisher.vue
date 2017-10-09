@@ -3,7 +3,7 @@
   <div style="background: white">
     <div class="box-header-info">
       <div class="item-avatar" v-on:click="navToQuizPlayer()">
-        <div :style="{backgroundImage:'url(./static/homepage/default_header.png)'}" v-if="!avatar" class="head-pic"></div>
+        <div v-if="!avatar" class="head-pic head-default-img"></div>
         <div :style="{backgroundImage:'url(' + avatar + ')'}" v-else class="head-pic"></div>
       </div>
 
@@ -19,7 +19,8 @@
         </div>
       </div>
 
-      <div class="item-count-down">
+      <!-- 首页倒计时 -->
+      <div v-if="task_type === 0 || task_type === 3" class="item-count-down">
         <div v-if="!isPublished">
           <div class="item-count-down-title">
             揭晓倒计时
@@ -34,6 +35,24 @@
         </div>
         <div v-else class="item-count-down-title">
           已开奖
+        </div>
+      </div>
+
+      <!-- 体育倒计时 -->
+      <div v-if="task_type === 1 || task_type === 2" class="item-count-down">
+        <div v-if="!isPublished" class="item-count-down-title">
+
+          <div v-if="!openTime">
+            <!--列表页-->
+            <span v-if="showOpenTimeType === 0">{{openTimeFormat0}}开球</span>
+            <!--详情页-->
+            <span v-else-if="showOpenTimeType === 1">{{openTimeFormat1}}开球</span>
+          </div>
+          <div v-else>进行中</div>
+
+        </div>
+        <div v-else class="item-count-down-title">
+          已结束
         </div>
       </div>
     </div>
@@ -57,7 +76,10 @@
 //        now: 0,
         hour: '- -',
         min: '- -',
-        sec: '- -'
+        sec: '- -',
+
+        // 是否开赛
+        openTime: false
       }
     },
     props: {
@@ -75,7 +97,13 @@
       // 是否已发布 默认否
       isPublished: { type: Boolean, default: false },
       // 发布倒计时
-      publishTime: { type: String, required: true }
+      publishTime: { type: String, required: true },
+      // 任务类型
+      task_type: { type: Number, required: true },
+      // 详情
+      quizDetail: Object,
+      // 开赛时间显示格式化类型：0  MM/dd day hh:mm(首页,体育页)、 1 hh:mm(详情页)
+      showOpenTimeType: { type: Number, default: 0 }
     },
     computed: {
       ...mapState({
@@ -84,6 +112,16 @@
       getPublishTime: function () {
         // 日期转时间戳 考虑浏览器兼容性 yyyy-MM-dd hh:mm:ss 改成 yyyy/MM/dd hh:mm:ss
         return new Date(this.publishTime.replace(/-/g, '/')).getTime()
+      },
+      openTimeFormat0 () {
+        let oDate = new Date(this.quizDetail.open_time.replace(/-/g, '/'))
+        let hours = TimeUtil.formatDoubleDigit(parseInt(oDate.getHours()))
+        let minutes = TimeUtil.formatDoubleDigit(parseInt(oDate.getMinutes()))
+        return hours + ':' + minutes
+      },
+      // 详情页
+      openTimeFormat1 () {
+        return TimeUtil.formatSportItemTime(this.quizDetail.open_time, 'hh:mm')
       }
     },
     watch: {
@@ -94,6 +132,12 @@
           this.hour = '- -'
           this.min = '- -'
           this.sec = '- -'
+        }
+
+        if (!this.quizDetail.open_time) return
+        let time = new Date(this.quizDetail.open_time.replace(/-/g, '/')).getTime()
+        if (val > time) {
+          this.openTime = true
         }
       }
     },
@@ -119,24 +163,26 @@
 </script>
 
 <style scoped>
+  .head-default-img{
+    background-image:url(../../../static/homepage/default_header.png)
+  }
   .box-header-info {
     background: #ffffff;
     display: -webkit-flex;  /* safari */
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
+    min-height: 50px;
     /*border-bottom: 1px solid #e5e5e5;*/
   }
   .item-avatar {
     margin-left: 12px;
-    padding-top: 8px;
     padding-right: 10px;
   }
   .item-username {
     text-align: left;
     font-size: 14px;
-    padding-top: 9px;
   }
   .item-gender {
     margin-left: -1px;
@@ -153,12 +199,17 @@
     margin-left: auto;
   }
   .item-count-down-title {
-    padding-top: 9px;
     padding-right: 12px;
     font-size: 14px;
     text-align: right;
     color: #666666;
   }
+
+  .item-down-sport {
+    font-size: 14px;
+
+  }
+
   .item-count-down-number {
     padding-right: 12px;
     text-align: right;
@@ -175,7 +226,6 @@
     background: #f37c66;
     padding-left: 2px;
     padding-right: 2px;
-    margin-bottom: 10px;
     height: 16px;
     line-height: 16px;
   }
@@ -193,7 +243,7 @@
     margin-right: 12px;
   }
   .head-pic{
-    width:32px; height: 32px; border-radius: 100%; 
+    width:32px; height: 32px; border-radius: 100%;
     overflow: hidden; background-repeat: no-repeat;
     background-size: cover; background-position: center center;
   }

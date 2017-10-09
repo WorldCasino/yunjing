@@ -181,12 +181,14 @@ export function getServAddr () {
  * 竞猜列表
  * @param limit 数据条数
  * @param offset 偏移量
+ * @param taskType 类型：1 足球， 2 篮球， 0 图文， 3， 未知
  * @param token 认证信息，可以为null
  */
-export function quizzes (limit, offset, token) {
+export function quizzes (limit, offset, taskType, token) {
   return request('GET', 'v1/tasks', {
     'limit': limit,
-    'offset': offset
+    'offset': offset,
+    'task_type': taskType
   }, token === null ? {} : {'token': token})
 }
 
@@ -261,7 +263,7 @@ export function todayRanking (limit, offset) {
  * @return {*}
  */
 export function players (taskId, token) {
-  return request('GET', 'v1/task/gamblers', {
+  return request('GET', 'v1/task/gamblers2', {
     'id': taskId
   }, token === null ? {} : {'token': token})
 }
@@ -465,13 +467,19 @@ export function loginVerify (phone, captcha) {
 }
 
 // 体育竞猜发布
-export function sportsPublish (data) {
-  return request('post', 'post/publishMatch', data, {
-    'Content-Type': 'application/x-www-form-urlencoded'
+export function sportsPublish (data, token) {
+  return request('post', 'user/post/publishMatch', data, {
+    'Content-Type': 'application/json;charset=utf-8',
+    token
   })
 }
 
 // 获取体育竞猜发布列表
 export function getSportsPubList (data) {
   return request('get', 'ball/balllist', data, {})
+}
+
+// 获取体育竞猜发布详情
+export function getSportsDetail (data) {
+  return request('get', 'ball/balldetail', data, {})
 }

@@ -33,6 +33,57 @@ public class SystemConfig {
 
     private int FRONTEND_PLATFORM;
 
+    private int WITHDRAW_MONEY_MAX;//提现的最大额度
+    private int RECHARGE_MONEY_MAX;//充值的最大额度
+
+    private int EXAMINE_MESSAGE_OPEN;
+
+    private int WIDTHDRAWMAX_MESSAGE_OPEN;
+
+    private int USERRECHARGE_MESSAGE_OPEN;
+
+    private int SYSTEMRECHARGE_MESSAGE_OPEN;
+
+    public int getRECHARGE_MONEY_MAX() {
+        return RECHARGE_MONEY_MAX;
+    }
+
+    public void setRECHARGE_MONEY_MAX(int RECHARGE_MONEY_MAX) {
+        this.RECHARGE_MONEY_MAX = RECHARGE_MONEY_MAX;
+    }
+
+    public int getEXAMINE_MESSAGE_OPEN() {
+        return EXAMINE_MESSAGE_OPEN;
+    }
+
+    public void setEXAMINE_MESSAGE_OPEN(int EXAMINE_MESSAGE_OPEN) {
+        this.EXAMINE_MESSAGE_OPEN = EXAMINE_MESSAGE_OPEN;
+    }
+
+    public int getWIDTHDRAWMAX_MESSAGE_OPEN() {
+        return WIDTHDRAWMAX_MESSAGE_OPEN;
+    }
+
+    public void setWIDTHDRAWMAX_MESSAGE_OPEN(int WIDTHDRAWMAX_MESSAGE_OPEN) {
+        this.WIDTHDRAWMAX_MESSAGE_OPEN = WIDTHDRAWMAX_MESSAGE_OPEN;
+    }
+
+    public int getUSERRECHARGE_MESSAGE_OPEN() {
+        return USERRECHARGE_MESSAGE_OPEN;
+    }
+
+    public void setUSERRECHARGE_MESSAGE_OPEN(int USERRECHARGE_MESSAGE_OPEN) {
+        this.USERRECHARGE_MESSAGE_OPEN = USERRECHARGE_MESSAGE_OPEN;
+    }
+
+    public int getSYSTEMRECHARGE_MESSAGE_OPEN() {
+        return SYSTEMRECHARGE_MESSAGE_OPEN;
+    }
+
+    public void setSYSTEMRECHARGE_MESSAGE_OPEN(int SYSTEMRECHARGE_MESSAGE_OPEN) {
+        this.SYSTEMRECHARGE_MESSAGE_OPEN = SYSTEMRECHARGE_MESSAGE_OPEN;
+    }
+
     /**
      * 获取系统参数配置的实例
      * @return
@@ -44,6 +95,15 @@ public class SystemConfig {
     }
 
     // <editor-fold desc="get set">
+
+
+    public int getWITHDRAW_MONEY_MAX() {
+        return WITHDRAW_MONEY_MAX;
+    }
+
+    public void setWITHDRAW_MONEY_MAX(int WITHDRAW_MONEY_MAX) {
+        this.WITHDRAW_MONEY_MAX = WITHDRAW_MONEY_MAX;
+    }
 
     public String getURL_BASE_IMG() {
         return URL_BASE_IMG;

@@ -10,7 +10,7 @@
         <div class="m-close" @click="cancel">&times;</div>
         <div v-if="!isBet" class="text" :class="{noSelectText: isShowRadio}" :style="{textAlign:textAlign}">{{text}}</div>
         <div v-if="isBet" class="text" :class="{noSelectText: isShowRadio}" :style="{textAlign:textAlign}">投<span class="tip-money">{{betData.salePrice}}</span> {{goldType}}，猜中可得<span class="tip-money">{{parseInt(winGold)}}</span> {{goldType}}</div>
-        
+
         <div v-if="isShowRadio" class="select-wrapper" @click="noMoreWarn">
           <div class="select">
             <img v-if="!isDefaultSelect" class="select-img" src="../../static/homepage/homepass_taikuang02.png">
@@ -19,8 +19,8 @@
         </div>
       </div>
       <div class="btn-wrapper" v-if="isJudge">
-        <div class="btn-cancel" @click="cancel" v-@css:touchstart="{style: styleStart}" v-@css:touchend="{style: styleEnd}">取消</div>
-        <div class="btn-submit" @click="submit" v-@css:touchstart="{style: styleStart}" v-@css:touchend="{style: styleEnd}">确定</div>
+        <div class="btn-cancel" @click="cancel" v-@css:touchstart="{style: styleStart}" v-@css:touchend="{style: styleEnd}">{{judgePassive}}</div>
+        <div class="btn-submit" @click="submit" v-@css:touchstart="{style: styleStart}" v-@css:touchend="{style: styleEnd}">{{judgePositive}}</div>
       </div>
       <div class="btn-wrapper" v-else>
         <div class="btn-submit" @click="submit" v-@css:touchstart="{style: styleStart}" v-@css:touchend="{style: styleEnd}" :style="{backgroundColor:yesBtnBgColor}">确定</div>
@@ -52,6 +52,8 @@
         isShowRadio: state => state.confirm.isShowRadio,
         isDefaultSelect: state => state.confirm.isDefaultSelect,
         isJudge: state => state.confirm.isJudge,
+        judgePassive: state => state.confirm.judgePassive,
+        judgePositive: state => state.confirm.judgePositive,
         title: state => state.confirm.title,
         text: state => state.confirm.text,
         isBet: state => state.confirm.isBet,
@@ -211,7 +213,7 @@
   }
 
   .btn-submit{
-    line-height: 35px; 
+    line-height: 35px;
     text-align: center;
     color: #454545; display: block; margin: 0 auto;
     font-size: 16px;
@@ -232,7 +234,7 @@
     width: 25px;
     height: 25px;
   }
-  
+
   .m-close{
     position: absolute; right: 5px; top: 5px; height: 29px; width: 29px;
     font-size: 29px; line-height: 1;color: #666666;

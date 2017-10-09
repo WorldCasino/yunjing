@@ -83,7 +83,7 @@
       //   }
       //   self.isInfiniteLoading = true
       //   self.getPublishList([1])
-      // }) 
+      // })
     },
     watch: {
       publishShake: {
@@ -92,6 +92,7 @@
           this.isInfiniteLoading = false
           if (this.publishStatus === null) {
             if (this.publishLastCount < this.publishLimit) {
+//              this.$f7.dom('.infinite-scroll-preloader').remove()
               this.isAnyMore = false
             } else {
               this.isAnyMore = true

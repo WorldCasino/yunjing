@@ -23,7 +23,7 @@ public class Starship_UserEntity extends BaseEntity {
     private String headUrl;
 
     @TableField(value = "be_user_id")
-    private Long beUserId;
+    private Long beUserId;//客服
 
     @TableField(value = "nickname")
     private String nickName;
@@ -44,15 +44,20 @@ public class Starship_UserEntity extends BaseEntity {
     @TableField(value = "user_type")
     private UserTypeEnum userType;
 
-    @TableField(value = "agent_id")
-    private Long agentId;
-
     @TableField(value = "user_status")
     private UserStatusEnum userStatus;
 
     @TableField(value = "role_id")
     private Long roleId;
 
+    @TableField(value = "agent_id")
+    private Long agentId;
+
+    @TableField(value = "bg_user_id")
+    private Long bgUserId;
+
+    @TableField(value = "bg_login_id")
+    private String bgLoginId;
 
     @TableField(exist = false)
     private String validCode;
@@ -137,14 +142,6 @@ public class Starship_UserEntity extends BaseEntity {
         this.userType = userType;
     }
 
-    public Long getAgentId() {
-        return agentId;
-    }
-
-    public void setAgentId(Long agentId) {
-        this.agentId = agentId;
-    }
-
     public UserStatusEnum getUserStatus() {
         return userStatus;
     }
@@ -159,6 +156,30 @@ public class Starship_UserEntity extends BaseEntity {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public Long getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
+    }
+
+    public Long getBgUserId() {
+        return bgUserId;
+    }
+
+    public void setBgUserId(Long bgUserId) {
+        this.bgUserId = bgUserId;
+    }
+
+    public String getBgLoginId() {
+        return bgLoginId;
+    }
+
+    public void setBgLoginId(String bgLoginId) {
+        this.bgLoginId = bgLoginId;
     }
 
     public String getValidCode() {

@@ -180,4 +180,25 @@ public class MatchesEntity   {
     public void setLockTime(Timestamp lockTime) {
         this.lockTime = lockTime;
     }
+
+    @Override
+    public String toString() {
+        return "MatchesEntity{" +
+                "matchId=" + matchId +
+                ", matchesStatusEnum=" + matchesStatusEnum +
+                ", matchesTypeEnum=" + matchesTypeEnum +
+                ", homeTeamId=" + homeTeamId +
+                ", homeScore=" + homeScore +
+                ", awayTeamId=" + awayTeamId +
+                ", awayScore=" + awayScore +
+                ", title='" + title + '\'' +
+                ", dayWeek='" + dayWeek + '\'' +
+                ", dayDate='" + dayDate + '\'' +
+                ", dayTime='" + dayTime + '\'' +
+                ", openTime=" + openTime +
+                ", lockTime=" + lockTime +
+                ", settleTime=" + settleTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

@@ -49,11 +49,19 @@ public class MessageServiceImpl implements IMessageService {
             //String dealerName = StringUtils.isEmpty(dealer.getNickname())?dealer.getPhonenumber():dealer.getNickname();
             //给庄家发微信模板消息
             if(!StringUtils.isEmpty(dealer.getWxOpenId())) {
+                int totalCoinShares = 0;
+                int totalBeanShares = 0;
+                if (resultVo.getLotteryType() == 2){
+                    totalCoinShares = new Double(0 - resultVo.getCoinExpendTotal()).intValue();
+                    totalBeanShares = new Double(0 - resultVo.getBeanExpendTotal()).intValue();
+                }else{
+                    totalCoinShares = new Double(resultVo.getCoinIncomeTotal() - resultVo.getCoinExpendTotal()).intValue();
+                    totalBeanShares = new Double(resultVo.getBeanIncomeTotal() - resultVo.getBeanExpendTotal()).intValue();
+                }
                 StringBuilder param = new StringBuilder();
                 param.append("累计收入：" + new Double(resultVo.getCoinIncomeTotal()).intValue() + "金币  " + new Double(resultVo.getBeanIncomeTotal()).intValue() + "金豆\r\n" )
-                        .append("累计打赏：" + new Double(resultVo.getCoinExpendTotal()).intValue() + "金币" + new Double(resultVo.getBeanExpendTotal()).intValue() + "金豆\r\n")
-                        .append("累计盈亏：" + new Double(resultVo.getCoinIncomeTotal() - resultVo.getCoinExpendTotal()).intValue()
-                                + "金币" + new Double(resultVo.getBeanIncomeTotal() - resultVo.getBeanExpendTotal()).intValue() + "金豆\r\n")
+                        .append("累计打赏：" + new Double(resultVo.getCoinExpendTotal()).intValue() + "金币  " + new Double(resultVo.getBeanExpendTotal()).intValue() + "金豆\r\n")
+                        .append("累计盈亏：" + totalCoinShares + "金币  " + totalBeanShares + "金豆\r\n")
                         .append("参与人数：" + resultVo.getPlayerCount() + "人\r\n")
                         .append("项目详情：" + resultVo.getTaskContent()+"\r\n")
                         .append(resultVo.getAnswer());
@@ -79,10 +87,12 @@ public class MessageServiceImpl implements IMessageService {
                         double totalBeans = 0;
                         for (LotteryResultVo.BettingVo bet:playerVo.getBettingVoList()) {
                             param.append(String.format("参与答案%s：%s注【%s倍】%s金币 %s金豆\r\n",
-                                    bet.getAbc(),bet.getCoinsQty(),bet.getOdds(),new Double(bet.getCoins()).intValue(),new Double(bet.getBeans()).intValue()));
+                                    bet.getAbc(),bet.getCoinsQty()+bet.getBeansQty(),bet.getOdds(),
+                                    new Double(bet.getCoinsQty() * resultVo.getSalePrice()).intValue(),
+                                    new Double(bet.getBeansQty() * resultVo.getSalePrice()).intValue()));
                             if(bet.isRight()) {
-                                totalCoins += bet.getCoins();
-                                totalBeans += bet.getBeans();
+                                totalCoins += (bet.getCoins() - bet.getCoinsQty() * resultVo.getSalePrice());
+                                totalBeans += (bet.getBeans() - bet.getBeansQty() * resultVo.getSalePrice());
                             }
                             else {
                                 totalCoins -= bet.getCoins();

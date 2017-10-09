@@ -15,7 +15,14 @@ public class Starship_UserlistVo implements Serializable{
  	private String nickName;
  	private String passWord;
  	private String phone;
- 	private String agentName;
+
+	private Long  agentId;
+	private String agentNumber;
+	private String agentName;
+
+	private String beUserNumber;
+	private String beUserName;
+	private Long beUserId;
 
 	private Double balance;
 
@@ -24,7 +31,6 @@ public class Starship_UserlistVo implements Serializable{
 	private Timestamp createDate;
  	private Timestamp updateDate;
 
-	private String ywName;
 
 	private String qq;
 
@@ -34,6 +40,46 @@ public class Starship_UserlistVo implements Serializable{
 	private Timestamp registerStartTime ;
 
 	private Timestamp registerEndtime;
+
+	public String getAgentNumber() {
+		return agentNumber;
+	}
+
+	public void setAgentNumber(String agentNumber) {
+		this.agentNumber = agentNumber;
+	}
+
+	public String getBeUserNumber() {
+		return beUserNumber;
+	}
+
+	public void setBeUserNumber(String beUserNumber) {
+		this.beUserNumber = beUserNumber;
+	}
+
+	public String getBeUserName() {
+		return beUserName;
+	}
+
+	public void setBeUserName(String beUserName) {
+		this.beUserName = beUserName;
+	}
+
+	public Long getAgentId() {
+		return agentId;
+	}
+
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
+	}
+
+	public Long getBeUserId() {
+		return beUserId;
+	}
+
+	public void setBeUserId(Long beUserId) {
+		this.beUserId = beUserId;
+	}
 
 	public String getBgLoginId() {
 		return bgLoginId;
@@ -123,13 +169,6 @@ public class Starship_UserlistVo implements Serializable{
 		this.updateDate = updateDate;
 	}
 
-	public String getYwName() {
-		return ywName;
-	}
-
-	public void setYwName(String ywName) {
-		this.ywName = ywName;
-	}
 
 	public String getQq() {
 		return qq;

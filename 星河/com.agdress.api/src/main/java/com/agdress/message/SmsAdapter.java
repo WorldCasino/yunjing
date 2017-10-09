@@ -5,6 +5,7 @@ import com.agdress.commons.utils.*;
 import com.agdress.enums.ErrorCodeEnum;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.Consts;
+import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
@@ -22,6 +23,8 @@ import java.util.Map;
  */
 @Component
 public class SmsAdapter {
+    private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger("operation");
+
     @Autowired
     private JedisPool jedisPool;
     /**
@@ -134,7 +137,7 @@ public class SmsAdapter {
      */
     public String sendSmsCaptcha(String mobile) throws ApiException{
         //手机号格式
-        if(!PhoneFormatCheckUtil.isChinaPhoneLegal(mobile)) throw new ApiException(ErrorCodeEnum.InvalidPhoneFormatException);
+        if(!PhoneFormatCheckUtil.isCommonPhoneLegal(mobile)) throw new ApiException(ErrorCodeEnum.InvalidPhoneFormatException);
 
         //一分钟只能发一次验证码
         if(!this.canSendCaptcha(mobile)) throw new ApiException(ErrorCodeEnum.CaptchaRepetitiveError);
@@ -142,8 +145,8 @@ public class SmsAdapter {
         //获取验证码
         String captcha = this.getCaptcha(mobile);
 
-        //测试手机号不用发送验证码短信 默认8090
-        if(isTestMobile(mobile)) return "";
+        ////测试手机号不用发送验证码短信 默认8090
+        //if(isTestMobile(mobile)) return "";
 
         //短信内容
         String content = String.format(Locale.CHINA,"【星河娱乐】你的验证码为：%s，请在5分钟内完成验证；为了保障账号安全，请勿转发验证码给他人。",captcha);
@@ -164,8 +167,14 @@ public class SmsAdapter {
         System.out.println(response);
 
         JSONObject respJson = JSONObject.parseObject(response);
-        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) return "";
-        else return respJson.getString("msg");
+        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) {
+            LOGGER.info(String.format("【%s】短信验证码发送成功，内容：%s，返回结果：%s",mobile,content,respJson.toJSONString()));
+            return "";
+        }
+        else {
+            LOGGER.error(String.format("【%s】短信验证码发送失败，内容：%s，返回结果：%s",mobile,content,respJson.toJSONString()));
+            return respJson.getString("msg");
+        }
     }
 
     /**
@@ -177,7 +186,7 @@ public class SmsAdapter {
      */
     public String sendSmsNotify(String mobile,String content) throws ApiException{
         //手机号格式
-        if(!PhoneFormatCheckUtil.isChinaPhoneLegal(mobile)) throw new ApiException(ErrorCodeEnum.InvalidPhoneFormatException);
+        if(!PhoneFormatCheckUtil.isCommonPhoneLegal(mobile)) throw new ApiException(ErrorCodeEnum.InvalidPhoneFormatException);
 
         if (StringUtils.isNotBlank(content)) {
             try {
@@ -196,8 +205,14 @@ public class SmsAdapter {
         System.out.println(response);
 
         JSONObject respJson = JSONObject.parseObject(response);
-        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) return "";
-        else return respJson.getString("msg");
+        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) {
+            LOGGER.info(String.format("【%s】通知短信发送成功，内容：%s，返回结果：%s",mobile,content,respJson.toJSONString()));
+            return "";
+        }
+        else {
+            LOGGER.error(String.format("【%s】通知短信发送失败，内容：%s，返回结果：%s",mobile,content,respJson.toJSONString()));
+            return respJson.getString("msg");
+        }
     }
 
     /**
@@ -208,7 +223,7 @@ public class SmsAdapter {
      * @throws ApiException
      */
     public String sendVoiceCaptcah(String mobile,String captcha) throws ApiException{
-        if(!PhoneFormatCheckUtil.isChinaPhoneLegal(mobile)) throw new ApiException(ErrorCodeEnum.InvalidPhoneFormatException);
+        if(!PhoneFormatCheckUtil.isCommonPhoneLegal(mobile)) throw new ApiException(ErrorCodeEnum.InvalidPhoneFormatException);
 
         Map<String,String> params = new HashMap<>();
         params.put("apikey",this.DINGDONG_SMS_APIKEY);
@@ -220,8 +235,14 @@ public class SmsAdapter {
         System.out.println(response);
 
         JSONObject respJson = JSONObject.parseObject(response);
-        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) return "";
-        else return respJson.getString("msg");
+        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) {
+            LOGGER.info(String.format("【%s】语音验证码发送成功，内容：%s，返回结果：%s",mobile,captcha,respJson.toJSONString()));
+            return "";
+        }
+        else {
+            LOGGER.error(String.format("【%s】语音验证码发送失败，内容：%s，返回结果：%s",mobile,captcha,respJson.toJSONString()));
+            return respJson.getString("msg");
+        }
     }
 
     /**
@@ -238,7 +259,7 @@ public class SmsAdapter {
         String captcha = this.getCaptcha(mobile);
 
         //短信内容
-        String content = String.format("You are registering zhuluapp，code：%s。",captcha);
+        String content = String.format("You are registering xinghe app，code：%s。",captcha);
         if (StringUtils.isNotBlank(content)) {
             try {
                 content = URLEncoder.encode(content, Consts.UTF_8.name());
@@ -256,8 +277,14 @@ public class SmsAdapter {
         System.out.println(response);
 
         JSONObject respJson = JSONObject.parseObject(response);
-        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) return "";
-        else return respJson.getString("msg");
+        if(respJson.containsKey("code") && respJson.getIntValue("code") == 1) {
+            LOGGER.info(String.format("【%s】国际短信验证码发送成功，内容：%s，返回结果：%s",mobile,captcha,respJson.toJSONString()));
+            return "";
+        }
+        else {
+            LOGGER.error(String.format("【%s】国际短信验证码发送失败，内容：%s，返回结果：%s",mobile,captcha,respJson.toJSONString()));
+            return respJson.getString("msg");
+        }
     }
 
     // <editor-fold desc="get set">

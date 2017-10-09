@@ -3,7 +3,7 @@
     <div class="box-content">
       <div>
         <div class="head-pic" v-if="avatar" :style="{backgroundImage:'url('+ avatar +')'}"></div>
-        <div class="head-pic" v-else :style="{backgroundImage:'url(./static/homepage/default_header.png)'}"></div>
+        <div class="head-pic head-default-img" v-else></div>
       </div>
       <div class="item-user-info">
         <div class="item-name">
@@ -11,35 +11,20 @@
           <img v-if="isMale === 0" class="item-gender" width="12" height="12" src="../assets/male.png"/>
           <img v-else class="item-gender" width="12" height="12" src="../assets/female.png"/>
         </div>
-        <div class="item-buy" v-if="userType == 0">
-                      购买了<span>A：{{ A }}注</span> 
-            <span>B：{{ B }}注</span>
-            <span v-if="C !== undefined">C：{{ C }}注</span> 
+        <div class="item-buy" v-if="lotteryType == 0 || status == 30">
+                    购买<span v-for="answer in bettingVoList" v-if="answer.coinsQty + answer.beansQty">{{answer.abc}}: {{ answer.coinsQty + answer.beansQty}}注 &nbsp;</span>
         </div>
-        
-        <div class="item-buy" v-if="userType !== 0 && lotteryType == 0 && status != 30">
-                      购买了<span>A：{{ A }}注</span> 
-            <span>B：{{ B }}注</span>
-            <span v-if="C !== undefined">C：{{ C }}注</span> 
+         
+        <div class="item-buy" v-else>
+          <span class="red">购买了{{quantity}}注</span>
         </div>
-        
-        <div class="item-buy" v-if="userType !== 0 && lotteryType == 1 && status == 20">
-            <span class="red">购买了{{quantity}}注</span>
-        </div>
-        
-        <div class="item-buy" v-if="status == 30">
-                      购买了<span>A：{{ A }}注</span> 
-            <span>B：{{ B }}注</span>
-            <span v-if="C !== undefined">C：{{ C }}注</span> 
-        </div>
-        
       </div>
       
-      <div class="item-published" v-if="status == 20">
+      <div class="item-published" v-if="status != 30">
         {{formatRefreshTime}}
       </div>
       
-      <div class="item-published" v-if="status == 30">
+      <div class="item-published" v-else>
         {{formatRefreshTime}}<br />
         <span class="red" v-if="coins>=0">+{{parseInt(coins)}}</span>
         <span class="green"v-else>{{parseInt(coins)}}</span>
@@ -68,14 +53,18 @@
       isMale: { type: Number, required: false },
       // 更新时间
       refreshTime: { type: String, required: false },
-      A: { required: false },
-      B: { required: false },
-      C: { required: false },
       coins: { required: false },
       lotteryType: { required: false },
       status: { required: false },
       userType: { required: false },
-      quantity: { required: false }
+      quantity: { required: false },
+      bettingVoList: {
+        type: Array,
+        required: false,
+        dafault () {
+          return []
+        }
+      }
     },
     computed: {
       formatRefreshTime: function () {
@@ -87,6 +76,9 @@
 </script>
 
 <style scoped>
+  .head-default-img{
+    background-image:url(../../static/homepage/default_header.png);
+  }
   .box-content {
     display: -webkit-flex;  /* safari */
     display: flex;

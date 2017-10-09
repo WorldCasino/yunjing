@@ -28,6 +28,7 @@ module.exports = function (req,res,next) {
         res.pkg.data={
             'coin_balance':0,
             'today_liveness':0,
+            'active_type':active_type,
             'tasks':[]
         }
 
@@ -53,9 +54,13 @@ module.exports = function (req,res,next) {
     }).then(function (result) {
         res.pkg.data.tasks=result[0];
         return Q.ninvoke(mysql, 'query', {
-            sql: 'select IFNULL(SUM(IFNULL(receive_liveness,0)),0) today_liveness '+
+            // sql: 'select IFNULL(SUM(IFNULL(receive_liveness,0)),0) today_liveness '+
+            // 'from t_active_daily  '+
+            // 'where user_id=? and received=1',
+            //对任务重复的数据处理，暂时换个sql语句查询活跃值
+            sql: 'select total today_liveness '+
             'from t_active_daily  '+
-            'where user_id=? and received=1',
+            'where user_id=? and active_id=181',
             values: user_id
         }).then(function (result) {
             result[0].map(function (currentValue) {

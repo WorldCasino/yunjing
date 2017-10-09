@@ -23,7 +23,7 @@
 				<value>classpath:aliyun-mns.properties</value>
 				<value>classpath:log4j.properties</value>
 				<value>classpath:weixin4j.properties</value>
-				<value>classpath:environment/env-dev.properties</value>
+				<value>classpath:environment/env-test.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -43,10 +43,19 @@
 		<property name="IOS_SUPPLY_SECRET_KEY" value="${config.xinge.ios_supply_secret_key}"/>
 		<property name="ANDROID_SUPPLY_ACCESS_ID" value="${config.xinge.android_supply_access_id}"/>
 		<property name="ANDROID_SUPPLY_SECRET_KEY" value="${config.xinge.android_supply_secret_key}"/>
+
+		<property name="BALL_MATCH_LOGO" value="${ball.match.logo}"/>
+
+		<property name="BALL_MATCH_DEF_CHATSET" value="${ball.match.def_chatset}"/>
+		<property name="BALL_MATCH_DEF_CONN_TIMEOUT" value="${ball.match.def_conn_timeout}"/>
+		<property name="BALL_MATCH_DEF_READ_TIMEOUT" value="${ball.match.def_read_timeout}"/>
+		<property name="BALL_MATCH_USERAGENT" value="${ball.match.userAgent}"/>
 		<property name="BALL_MATCH_BASKETBALL_NBA" value="${ball.match.baskeball.nba}"/>
 		<property name="BALL_MATCH_BASKETBALL_COMBAT" value="${ball.match.baskeball.combat}"/>
+		<property name="BALL_MATCH_BASKETBALL_KEY" value="${ball.match.baskeball.key}"/>
 		<property name="BALL_MATCH_FOOTBALL_LEAGUE" value="${ball.match.football.league}"/>
 		<property name="BALL_MATCH_FOOTBALL_COMBAT" value="${ball.match.football.combat}"/>
+		<property name="BALL_MATCH_FOOTBALL_KEY" value="${ball.match.football.key}"/>
 	</bean>
 	<!--APP使用接口地址配置-->
 	<bean id="appConfig" class="com.cicada.commons.utils.AppConfig">

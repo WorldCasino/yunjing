@@ -45,6 +45,13 @@
 		<property name="FTP_PWD" value="${config.ftp.user.passwd}"/>
 		<property name="FTP_ROOT_BASE_IMAGE" value="${config.ftp.root.path}"/>
 		<property name="FRONTEND_PLATFORM" value="${switch.frontend.platform}"/>
+		<property name="WITHDRAW_MONEY_MAX" value="${message.money.max.withdraw}"/>
+		<property name="RECHARGE_MONEY_MAX" value="${message.money.max.recharge}"/>
+		<property name="WIDTHDRAWMAX_MESSAGE_OPEN" value="${message.open.withdrawmax}"/>
+		<property name="EXAMINE_MESSAGE_OPEN" value="${message.open.examine}"/>
+		<property name="USERRECHARGE_MESSAGE_OPEN" value="${message.open.userrechargemax}"/>
+		<property name="SYSTEMRECHARGE_MESSAGE_OPEN" value="${message.open.systemrechargemax}"/>
+
 	</bean>
 
 	<!--短信实例-->
@@ -67,6 +74,10 @@
 
 	<!--初始化appliationUtil类，并完成ApplicationContext的注入-->
 	<bean id="springContextUtil" class="com.agdress.commons.utils.SpringContextUtil"/>
+
+	<!--&lt;!&ndash; 开启这个配置，spring才能识别@Scheduled注解 &ndash;&gt;-->
+	<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>
+	<task:scheduler id="qbScheduler" pool-size="10"/>
 
 	<!-- 定义数据源 数据库连接池(BoneCP)-->
 	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"

@@ -13,6 +13,8 @@ public class DateUtil {
 
     private final static SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy-MM-dd");
 
+    private final static SimpleDateFormat sdfDay2 = new SimpleDateFormat("MM-dd");
+
     private final static SimpleDateFormat sdfDays = new SimpleDateFormat("yyyyMMdd");
 
     private final static SimpleDateFormat sdfDayshms = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -37,6 +39,15 @@ public class DateUtil {
         return sdfDay.format(new Date());
     }
 
+
+    /**
+     * 获取YYYY-MM-DD格式
+     *
+     * @return
+     */
+    public static String getDay2() {
+        return sdfDay2.format(new Date());
+    }
 
     /**
      * 获取YYYYMMDD格式
@@ -386,7 +397,7 @@ public class DateUtil {
 
     public static void main(String[] args) {
         try {
-            System.out.println(getAfterMinuteDate(DateUtil.getTime(),-15));
+            System.out.println(getDay2());
         } catch (Exception  e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

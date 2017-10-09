@@ -245,7 +245,8 @@
       ...mapActions([
         'uploadCopyGuessData',
         'isAblePop',
-        'getTaskData',
+        'getTaskDailyData',
+        'getTaskGrowData',
         'getQuizzes'
       ]),
       showtip (type) {
@@ -467,40 +468,43 @@
     watch: {
       shake: {
         handler: function (val) {
-          let self = this
-          self.$f7.hidePreloader()
-          if (self.status === null) {
-            this.$f7.addNotification({
-              title: '提醒',
-              message: '发布成功',
-              closeOnClick: true,
-              hold: 3000
-            })
-            this.$router.back()
-            this.$f7.closeModal('#post')
-            this.$store.state.quizDetail.taskId = this.publishData.task_id
-            this.$store.state.uploadData.uploadImages = []
-            this.$f7.mainView.router.load({url: '/quiz-detail/'})
-            this.$f7.popup('#pub-succeed')
-            this.getTaskData(this.$store.state.task.taskType)
-            this.getQuizzes([0])
-          } else {
-            if (self.status.id === 1001) {
-//              金币不足
-              this.$dm.confirm({
-                title: `提示`,
-                mes: '金币不足，购买金币后再发布',
-                confirmCb: () => {
-                  self.$f7.mainView.router.load({url: '/buy-gold/'})
-                }
-              })
-            } else {
-              self.$f7.addNotification({
-                title: '提示',
-                message: self.status.message,
+          if (!this.$store.state.sports.isSportsCopy) {
+            let self = this
+            self.$f7.hidePreloader()
+            if (self.status === null) {
+              this.$f7.addNotification({
+                title: '提醒',
+                message: '发布成功',
                 closeOnClick: true,
                 hold: 3000
               })
+              this.$router.back()
+              this.$f7.closeModal('#post')
+              this.$store.state.quizDetail.taskId = this.publishData.task_id
+              this.$store.state.uploadData.uploadImages = []
+              this.$f7.mainView.router.load({url: '/quiz-detail/'})
+              this.$f7.popup('#pub-succeed')
+              this.getTaskDailyData()
+              this.getTaskGrowData()
+              this.getQuizzes([0])
+            } else {
+              if (self.status.id === 1001) {
+  //              金币不足
+                this.$dm.confirm({
+                  title: `提示`,
+                  mes: '金币不足，购买金币后再发布',
+                  confirmCb: () => {
+                    self.$f7.mainView.router.load({url: '/buy-gold/'})
+                  }
+                })
+              } else {
+                self.$f7.addNotification({
+                  title: '提示',
+                  message: self.status.message,
+                  closeOnClick: true,
+                  hold: 3000
+                })
+              }
             }
           }
         }
@@ -509,6 +513,8 @@
     mounted () {
       // 让首次加载默认值为两位小数 (1.50)
       console.log('copy来的数据啊啊啊', this.copyTaskData)
+      // 区分体育转发竞猜
+      this.$store.state.sports.isSportsCopy = false
       const refundLen = this.copyTaskData.answer.length
       this.amount = Number(this.copyTaskData.sale_price)
       this.count = Number(this.copyTaskData.quantity)

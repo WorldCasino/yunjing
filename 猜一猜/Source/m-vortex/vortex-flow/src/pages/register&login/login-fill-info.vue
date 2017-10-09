@@ -65,33 +65,18 @@
     methods: {
       ...mapActions([
         'register',
-        'getTaskData',
         'getUserInfo',
         'loginDaily',
         'shareQuiz',
+        'getTaskDailyData',
+        'getTaskGrowData',
         'registerDeviceToken'
       ]),
       setMale (val) {
         this.isMale = val
       },
       nextStep () {
-        this.register([this.mobile, this.captchaLocal, this.nickname, this.isMale, () => {
-          setTimeout(() => {
-            var query = url.parse(window.location.href, true).query
-            if (query.operate_type === '18') {
-              this.shareQuiz({
-                taskId: query.task_id,
-                operateType: query.operate_type,
-                taskType: query.task_type,
-                token: query.token
-              })
-            }
-            this.$f7.popup('#login-baoxiang')
-            this.getTaskData(this.taskType)
-            this.getUserInfo()
-            this.loginDaily('')
-          }, 100)
-        }])
+        this.register([this.mobile, this.captchaLocal, this.nickname, this.isMale])
       }
     },
     mounted () {
@@ -108,7 +93,17 @@
           if (this.registerStatus === null) {
             let self = this
             this.$store.state.token = this.registerData.token
-
+            this.getUserInfo()
+            var query = url.parse(window.location.href, true).query
+            if (query.operate_type === '18') {
+              this.shareQuiz({
+                taskId: query.task_id,
+                operateType: query.operate_type,
+                taskType: query.task_type,
+                token: query.token
+              })
+            }
+            this.$f7.popup('#login-baoxiang')
             if (typeof (xgpush) !== 'undefined') {
               xgpush.registerPush('get-device-token')
                 .then(function (data) {

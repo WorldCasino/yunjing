@@ -20,7 +20,6 @@
 		<!-- 配置资源文件 -->
 		<property name="locations">
 			<list>
-				<value>classpath:sysconfig.properties</value>
 				<value>classpath:log4j.properties</value>
 				<value>classpath:environment/env-dev.properties</value>
 			</list>
@@ -57,6 +56,16 @@
 		<!-- 检查数据库连接池中空闲连接的间隔时间(分) 默认：240 -->
 		<property name="idleConnectionTestPeriodInMinutes" value="30"/>
 	</bean>
+
+	<!--系统参数-->
+	<bean id="systemConfig" class="com.agdress.commons.utils.SystemConfig">
+		<property name="URL_BASE_IMG" value="${config.system.url.base.img}"/>
+		<property name="URL_BASE_CMS" value="${config.system.url.base.cms}"/>
+		<property name="URL_BASE_API" value="${config.system.url.base.api}"/>
+	</bean>
+
+
+
 	
 	<!-- 上传文件 -->  
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
