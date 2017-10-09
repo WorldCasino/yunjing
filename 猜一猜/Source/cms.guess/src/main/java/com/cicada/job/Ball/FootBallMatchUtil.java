@@ -66,9 +66,9 @@ public class FootBallMatchUtil {
                     String keytitle=jsonObject.getString("key");
                     JSONObject views=jsonObject.getJSONObject("views");
                     JSONObject tabls=jsonObject.getJSONObject("tabs");
-                    System.out.println(tabls.toString());
+//                    System.out.println(tabls.toString());
                     for (Map.Entry<String, Object> entry : tabls.entrySet()) {
-                        System.out.println( entry.getKey()+ ":" + entry.getValue());
+//                        System.out.println( entry.getKey()+ ":" + entry.getValue());
                         String key = entry.getKey();
                         if(!key.contains("saicheng") || entry.getValue() == null){
                             continue;
@@ -136,7 +136,7 @@ public class FootBallMatchUtil {
                 JSONObject views=jsonObject.getJSONObject("views");
                 JSONObject tabls=jsonObject.getJSONObject("tabs");
                 for (Map.Entry<String, Object> entry : tabls.entrySet()) {
-                    System.out.println( entry.getKey()+ ":" + entry.getValue());
+//                    System.out.println( entry.getKey()+ ":" + entry.getValue());
                     String key = entry.getKey();
                     if(!key.contains("saicheng") || entry.getValue() == null){
                         continue;

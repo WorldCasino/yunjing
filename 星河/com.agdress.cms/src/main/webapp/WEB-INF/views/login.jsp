@@ -94,8 +94,8 @@
                         },
                         stringLength: {
                             min: 1,
-                            max: 6,
-                            message: '密码长度必须在6到30之间'
+//                            max: 6,
+                            message: '密码长度至少1位'
                         }
                     }
                 }
@@ -120,7 +120,7 @@
         });
 
         //重新启用按钮
-        $('#form_login').bootstrapValidator('disableSubmitButtons', true);
+        $('#form_login').bootstrapValidator('disableSubmitButtons', false);
 
         //验证图片点击后重新获取验证码
         $("#img_verify").on("click", function () {

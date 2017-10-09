@@ -136,7 +136,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         paymentMapper.insert(detail);
 
         //支付后前端获取不到新宝的同步通知，不知道支付状态，因此充值申请的时候先生成支付中的交易记录，等充值成功后再更新交易状态为已完成
-        this.insertBalance(user.getUserId(),payAmount,RechargeStatusEnum.Paying,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值","");
+        this.insertBalance(user.getUserId(),payAmount,RechargeStatusEnum.Paying,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值","",false);
 
         //新宝请求参数
         PaymentReq req = JSONObject.toJavaObject(params,PaymentReq.class);
@@ -256,7 +256,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
                     }
 
                     //开始充值
-                    insertBalance(rechargeEntity.getUserId(),rechargeEntity.getRechargeAmount(),rechargeEntity.getRechargeStatus(),rechargeEntity.getRechargeCode(),TradeTypeEnum.Recharge,rechargeEntity.getRechargeId(),"玩家充值","");
+                    insertBalance(rechargeEntity.getUserId(),rechargeEntity.getRechargeAmount(),rechargeEntity.getRechargeStatus(),rechargeEntity.getRechargeCode(),TradeTypeEnum.Recharge,rechargeEntity.getRechargeId(),"玩家充值","",true);
 
                 }else{
                     //交易失败
@@ -310,7 +310,10 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
         return "ok";
     }
 
-    //充值通用接口
+
+    /**
+     *  后台充值通用接口
+     */
     public void saveMoneyForUser(long userId,double addAmount,String remarks,String systemUserId) {
         RechargeEntity entity = new RechargeEntity();
         entity.setUserId(userId);
@@ -327,7 +330,7 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
 
         super.insert(entity);
 
-        insertBalance(  userId,  addAmount,  entity.getRechargeStatus(),  entity.getRechargeCode(), TradeTypeEnum.SystemRecharge,  entity.getRechargeId(),  remarks,systemUserId);
+        insertBalance(  userId,  addAmount,  entity.getRechargeStatus(),  entity.getRechargeCode(), TradeTypeEnum.SystemRecharge,  entity.getRechargeId(),  remarks,systemUserId,true);
 
         RECHARGE_LOGGER.info(String.format("后台代充值，用户【%s】成功充值【%s】元",userId,entity.getRechargeAmount()));
     }
@@ -342,10 +345,11 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
      * @param rechargeId
      * @param remarks
      * @param systemUserId 系统充值的操作员ID
+     * @param messageFlag  是否新增记录
      */
     public void insertBalance(long userId,double addAmount,
                               RechargeStatusEnum recharge_status,String recharge_code,TradeTypeEnum tradeType,
-                              long rechargeId,String remarks,String systemUserId){
+                              long rechargeId,String remarks,String systemUserId,boolean messageFlag){
         UserAccountEntity account;
         Map<String,Object> whereMap = new HashMap<>();
         whereMap.put("user_id",userId);
@@ -439,72 +443,78 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
                 throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
             }
         }
-        //发送短信到管理
-        boolean flag=true;
-        String beUserName="";
-        String content="玩家["+userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname() +"]发起了一笔充值，金额："+addAmount+"，订单编号："+tradeNo +"。";
-        long roleId=RoleTypeEnum.admin.getCode();
-        long createBy=userEntity.getUserId();
-        int type=QueueMessageTypeEnum.UserRechargeMax.getCode();
-        if(!systemUserId.equals("")){
-            UserEntity be_userEntity=userMapper.selectById( Long.parseLong(systemUserId) );
-            if(be_userEntity != null){
-                beUserName=be_userEntity.getNickname();
-            }
-            type=QueueMessageTypeEnum.SystemRechargeMax.getCode();
-            roleId=be_userEntity.getRoleId();
-            content="客服"+be_userEntity.getNickname()+"在后台给玩家["+userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname()+"]充值了"+addAmount+"元，订单编号："+tradeNo +"。";
-            createBy=be_userEntity.getUserId();
-        }else{
-            if(systemConfig.getRECHARGE_MONEY_MAX() < addAmount ) {
-                flag=false;
-            }
-        }
-        if(flag){
-            UserEntity admin_userEntity=userMapper.selectById( SystemIdEnum.admin.getCode());
-            if(admin_userEntity != null){
-                try{
-                    //新增充值记录
-                    MessageEntity messageEntity=new MessageEntity();
-                    messageEntity.setIcon("fa fa-users text-aqua");
-                    messageEntity.setMessageType(TradeTypeEnum.Recharge);
-                    messageEntity.setTradeId(tradeId);
-                    messageEntity.setCreateBy(createBy);
-                    messageEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                    messageEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                    messageEntity.setIsDelete(0);
-                    messageService.insert(messageEntity);
-                    ///新增充值记录
-                    MessageContentEntity messageContentEntity=new MessageContentEntity();
-                    messageContentEntity.setStatus(0);
-                    messageContentEntity.setTradeId(tradeId);
-                    messageContentEntity.setUserId(admin_userEntity.getUserId());
-                    messageContentEntity.setRoleId(admin_userEntity.getRoleId());
-                    messageContentEntity.setCreateBy(createBy);
-                    messageContentEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
-                    messageContentEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                    messageContentEntity.setIsDelete(0);
-                    messageContentEntity.setContent(content);
-                    messageContentService.insert(messageContentEntity);
-                    if(admin_userEntity.getPhone() != null){
-                        JSONObject json = new JSONObject();
-                        json.put("type", type);
-                        json.put("phone",admin_userEntity.getPhone());
-                        json.put("userName",userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname());
-                        json.put("amount",addAmount);
-                        json.put("tradeNo",tradeNo);
-                        json.put("beUserName",beUserName);
-                        //加入消息队列，等待业务逻辑处理
-                        String messagekey=DateUtil.getDayshms();
-                        json.put("messagekey",messagekey);
-                        producerService.sendMessagePhone(messagekey,this.payDestination,json.toJSONString());
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
+        //是否可以新增信息
+        if(messageFlag){
+            //发送短信到管理
+            boolean flag=true;
+            String beUserName="";
+            String content=userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname() +" 发起了一笔充值，金额："+addAmount+"，订单编号："+tradeNo +"。";
+            long roleId=RoleTypeEnum.admin.getCode();
+            long createBy=userEntity.getUserId();
+            int type=QueueMessageTypeEnum.UserRechargeMax.getCode();
+            if(!systemUserId.equals("")){
+                UserEntity be_userEntity=userMapper.selectById( Long.parseLong(systemUserId) );
+                if(be_userEntity != null){
+                    beUserName=be_userEntity.getNickname();
                 }
-
+                type=QueueMessageTypeEnum.SystemRechargeMax.getCode();
+                roleId=be_userEntity.getRoleId();
+                content="客服"+be_userEntity.getNickname()+"在后台给玩家[ "+userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname()+" ]充值了"+addAmount+"元，订单编号："+tradeNo +"。";
+                createBy=be_userEntity.getUserId();
+            }else{
+                if(systemConfig.getRECHARGE_MONEY_MAX() < addAmount ) {
+                    flag=false;
+                }
             }
+            if(flag && messageFlag){
+                UserEntity admin_userEntity=userMapper.selectById( SystemIdEnum.admin.getCode());
+                if(admin_userEntity != null){
+                    try{
+                        //新增充值记录
+                        MessageEntity messageEntity=new MessageEntity();
+                        messageEntity.setIcon("fa fa-users text-aqua");
+                        messageEntity.setMessageType(TradeTypeEnum.Recharge);
+                        messageEntity.setTradeId(tradeId);
+                        messageEntity.setCreateBy(createBy);
+                        messageEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                        messageEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                        messageEntity.setIsDelete(0);
+                        messageService.insert(messageEntity);
+                        ///新增充值记录
+                        MessageContentEntity messageContentEntity=new MessageContentEntity();
+                        messageContentEntity.setStatus(0);
+                        messageContentEntity.setTradeId(tradeId);
+                        messageContentEntity.setUserId(admin_userEntity.getUserId());
+                        messageContentEntity.setRoleId(admin_userEntity.getRoleId());
+                        messageContentEntity.setCreateBy(createBy);
+                        messageContentEntity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+                        messageContentEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                        messageContentEntity.setIsDelete(0);
+                        messageContentEntity.setContent(content);
+                        messageContentService.insert(messageContentEntity);
+                        if(admin_userEntity.getPhone() != null){
+                            JSONObject json = new JSONObject();
+                            json.put("type", type);
+                            json.put("phone",admin_userEntity.getPhone());
+                            json.put("userName",userEntity.getNickname() == null?userEntity.getPhone():userEntity.getNickname());
+                            json.put("amount",addAmount);
+                            json.put("tradeNo",tradeNo);
+                            json.put("beUserName",beUserName);
+                            //加入消息队列，等待业务逻辑处理
+                            String messagekey=DateUtil.getDayshms();
+                            json.put("messagekey",messagekey);
+                            producerService.sendMessagePhone(messagekey,this.payDestination,json.toJSONString());
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
         }
+
+
     }
 
     /**
@@ -585,7 +595,8 @@ public class RechargeService extends ServiceImpl<RechargeMapper,RechargeEntity> 
             paymentMapper.insert(detail);
 
             //支付后前端获取不到新宝的同步通知，不知道支付状态，因此充值申请的时候先生成支付中的交易记录，等充值成功后再更新交易状态为已完成
-            this.insertBalance(user.getUserId(),item.getPrice(),RechargeStatusEnum.RechargeSuccess,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值","");
+            this.insertBalance(user.getUserId(),item.getPrice(),RechargeStatusEnum.RechargeSuccess,entity.getRechargeCode(),TradeTypeEnum.Recharge,entity.getRechargeId(),"玩家充值","",false);
+
         }catch (ApiException e){
             e.printStackTrace();
             throw e;

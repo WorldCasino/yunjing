@@ -231,7 +231,7 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
                 messageContentEntity2.setUpdateBy(user.getUserId());
                 messageContentEntity2.setUpdateDate(new Timestamp(System.currentTimeMillis()));
                 messageContentEntity2.setIsDelete(0);
-                String content1="玩家["+user.getNickname() == null?user.getPhone():user.getNickname()+"]发起了一笔大额提现申请，金额："+amount+"，订单编号："+withdraw.getTradeNo()+"。";
+                String content1=user.getNickname() == null?user.getPhone():user.getNickname()+" 发起了一笔大额提现申请，金额："+amount+"，订单编号："+withdraw.getTradeNo()+"。";
                 messageContentEntity2.setContent(content1);
                 messageContentService.insert(messageContentEntity2);
                 Starship_UserEntity admin_userEntity=starship_iUserService.selectById( SystemIdEnum.admin.getCode());

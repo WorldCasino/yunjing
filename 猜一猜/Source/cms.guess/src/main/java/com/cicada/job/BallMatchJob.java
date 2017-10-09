@@ -127,7 +127,7 @@ public class BallMatchJob {
 			MatchesEntity matchesEntity=new MatchesEntity();
 			//获取今天正在进行的所有比赛
 			matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.Underway);
-			matchesEntity.setDayDate(DateUtil.getDay2());
+//			matchesEntity.setDayDate(DateUtil.getDay2());
 			EntityWrapper<MatchesEntity> wrapper = new EntityWrapper<MatchesEntity>(matchesEntity);
 			List<MatchesEntity> selectList =  iMatchesService.selectList(wrapper);
 			for (MatchesEntity matchesEntity1   : selectList ) {
@@ -155,6 +155,8 @@ public class BallMatchJob {
 			RedisHelper.returnResource(jedis);
 		}
 	}
+
+
 
 
  }

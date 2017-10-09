@@ -69,7 +69,7 @@ public class BasketballMatchUtil {
              result =net(url, params, "GET");//正式
              JSONObject object = JSONObject.parseObject(result);
               if(object.getInteger("error_code")    ==0){
-                System.out.println(object.get("result"));
+//                System.out.println(object.get("result"));
                 JSONObject jsonObject=object.getJSONObject("result");
                 JSONArray jsonArray= jsonObject.getJSONArray("list") ;
                 for (int i = 0; i < jsonArray.size() ; i++) {
@@ -136,7 +136,7 @@ public class BasketballMatchUtil {
             result =net(url, params, "GET");
             JSONObject object = JSONObject.parseObject(result);
             if( object.getInteger("error_code")   ==0){
-                System.out.println(object.get("result"));
+//                System.out.println(object.get("result"));
                 JSONObject jsonObject= object.getJSONObject("result") ;
                 JSONArray jsonArray= jsonObject.getJSONArray("list") ;
                 for (int i = 0; i < jsonArray.size() ; i++) {
@@ -257,42 +257,41 @@ public class BasketballMatchUtil {
 
 
 
-    public static void main(String[] args) {
-        getTeam();
+    public static void main(String[] args){
     }
 
 
 
-    //1.获取球队
-    public static void getTeam(){
-        String result =null;
-        String url ="http://v.juhe.cn/nba/all_team_info.php";//请求接口地址
-        Map params = new HashMap();//请求参数
-        params.put("key","27398ce915369f329522af83f8be64b6");//应用APPKEY(应用详细页查询)
-        try {
-            result =net(url, params, "GET");
-            JSONObject object = JSONObject.parseObject(result);
-            System.out.println(object.toString());
-            if(object.get("reason").toString().equals("success")){
-                JSONObject jsonObject= object.getJSONObject("result") ;
-                System.out.println(jsonObject.toString());
-                 for (int i = 1; i < 31 ; i++) {
-                     if(jsonObject.get(i+"") == null){
-                         continue;
-                     }
-                     JSONObject jsonObject2= jsonObject.getJSONObject(i+"");
-                     TeamEntity teamEntity=new TeamEntity();
-                     teamEntity.setTeamInfor(jsonObject2.getString("intro"));
-                     teamEntity.setTeamLogo(jsonObject2.getString("logo_link"));
-                     teamEntity.setTeamName(jsonObject2.getString("name"));
-                     ((TeamServiceImpl)SpringContextUtil.getBean("teamServiceImpl")).insert(teamEntity);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    //1.获取球队
+//    public static void getTeam(){
+//        String result =null;
+//        String url ="http://v.juhe.cn/nba/all_team_info.php";//请求接口地址
+//        Map params = new HashMap();//请求参数
+//        params.put("key","27398ce915369f329522af83f8be64b6");//应用APPKEY(应用详细页查询)
+//        try {
+//            result =net(url, params, "GET");
+//            JSONObject object = JSONObject.parseObject(result);
+////            System.out.println(object.toString());
+//            if(object.get("reason").toString().equals("success")){
+//                JSONObject jsonObject= object.getJSONObject("result") ;
+//                System.out.println(jsonObject.toString());
+//                 for (int i = 1; i < 31 ; i++) {
+//                     if(jsonObject.get(i+"") == null){
+//                         continue;
+//                     }
+//                     JSONObject jsonObject2= jsonObject.getJSONObject(i+"");
+//                     TeamEntity teamEntity=new TeamEntity();
+//                     teamEntity.setTeamInfor(jsonObject2.getString("intro"));
+//                     teamEntity.setTeamLogo(jsonObject2.getString("logo_link"));
+//                     teamEntity.setTeamName(jsonObject2.getString("name"));
+//                     ((TeamServiceImpl)SpringContextUtil.getBean("teamServiceImpl")).insert(teamEntity);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
     private  static  String ceshistr1="";

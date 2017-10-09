@@ -38,7 +38,7 @@
         <thead>
         <tr class="info">
             <th style="width: 5%;">订单编号</th>
-            <th style="width: 5%;">订单类型</th>
+            <th style="width: 10%;">订单类型</th>
             <th style="width: 5%;">金额</th>
             <th style="width: 30%;">提醒内容</th>
             <th style="width: 5%;">创建时间</th>
@@ -232,7 +232,7 @@
                  //查看出入金记录
                  var url = 'ss_ac_detail/manager?tradeNo='+tradeNo;
                  var id = "Account_CR"+tradeNo;
-                 var title = "出入金明细记录" + $(".nickName").val() +"】";
+                 var title = "出入金明细记录";
                  window.parent.openNewTab(id,title,url);
                  return;
              }

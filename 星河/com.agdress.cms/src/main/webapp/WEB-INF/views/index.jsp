@@ -226,7 +226,7 @@
                         <div class="form-group" >
                             <label class="col-sm-3 control-label" >密码</label>
                             <div class="col-sm-6">
-                                <input type="text" name="passWord"  class="form-control passWord">
+                                <input type="text" name="passWord"  class="form-control passWord" onkeyup="value=value.replace(/[^\w\/]/ig,'')">
                             </div>
                         </div>
                         <div class="form-group showfor" style="display: none;" >
@@ -253,11 +253,11 @@
                     <div class="text-center" style="margin-top: 50px">
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-lg" id="okUpdate">
-                                确认修改
+                                提交
                             </button>
                         </div>
                         <button type="button" class="btn btn-default btn-lg btnCancel"  >
-                            返回列表
+                            返回
                         </button>
                     </div>
                 </div>
@@ -345,7 +345,8 @@
 
         //取消
         $(".btnCancel").on("click", function () {
-            $("#updateModal").modal("hide");
+            $("#editModal").modal("hide");
+            $(".passWord").val("");
         });
 
          //发送验证码
@@ -358,7 +359,7 @@
         });
 
 
-
+        //确认提交密码
         $("#okUpdate").on("click", function () {
             if($(".passWord").val() == ""){
                 layer.msg("密码不能为空！", {icon: 2});return;
