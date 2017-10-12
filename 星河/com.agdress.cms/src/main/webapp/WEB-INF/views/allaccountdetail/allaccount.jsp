@@ -43,10 +43,10 @@
                         <option value="-1">出金</option>
                      </select>
                 </div>
-                <%--<label for="tradeNo" class="col-sm-2 control-label">订单编号</label>--%>
-                <%--<div class="col-sm-2" >--%>
-                    <%--<input type="text" name="tradeNo" id="tradeNo" value="" style="width: 120%;">--%>
-                <%--</div>--%>
+                <label for="tradeNo" class="col-sm-2 control-label">订单编号</label>
+                <div class="col-sm-2" >
+                    <input type="text" name="tradeNo" id="tradeNo" value="" style="width: 120%;">
+                </div>
               </div>
          </form>
         <div class="pull-right" style="margin-top: 5px;">
@@ -97,9 +97,9 @@
 
         var id = agdress.getQueryString("userId");
         $("input[name=userId]").val(id);
-        var tradeType = agdress.getQueryString("tradeType");
-        if(tradeType != null && tradeType != ''){
-            $("#tradeType").val(tradeType);
+        var tradeKind = agdress.getQueryString("tradeKind");
+        if(tradeKind != null && tradeKind != ''){
+            $("#tradeKind").val(tradeKind);
         }
         var bgLoginId = agdress.getQueryString("bgLoginId");
         $("input[name=bgLoginId]").val(bgLoginId);
@@ -109,10 +109,10 @@
 
         //消息记录用到的
         var messageContentId = agdress.getQueryString("messageContentId");
-//        var tradeNo = agdress.getQueryString("tradeNo");
-//        if(tradeNo != null && tradeNo != ''){
-//            $("#tradeNo").val(tradeNo);
-//        }
+        var tradeNo = agdress.getQueryString("tradeNo");
+        if(tradeNo != null && tradeNo != ''){
+            $("#tradeNo").val(tradeNo);
+        }
 
         var tables = $("#dataTable").dataTable(
             //URL

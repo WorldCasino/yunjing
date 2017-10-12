@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>充值兑换明细</title>
+    <title>盈亏明细</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/dist/css/font-awesome.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/dist/css/ionicons.css">

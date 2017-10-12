@@ -110,6 +110,12 @@ public interface ITaskService extends IService<Task> {
      * @return
      */
     boolean lockTask(List<Long> taskIds) throws ApiException;
+    /**
+     * 推荐竞猜项目到首页
+     * @param taskIds 所有需要推荐的竞猜项目
+     * @return
+     */
+    boolean recommendTask(List<Long> taskIds) throws ApiException;
 
     /**
      * 检查所有待开奖任务（倒计时 未及时处理的）

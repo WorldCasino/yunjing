@@ -15,6 +15,7 @@
             a.update_date as updateDate,
             a.qq,
             a.role_id as roleId,
+            a.user_status as userStatus,
              c.balance,
             (select count(*) from t_user_cards uc  where a.user_id=uc.user_id) as cardNumber,
 
@@ -136,7 +137,8 @@
         SELECT
           ifnull(b.bg_agent_id,'0') as bgAgentId,
           ifnull(c.login_name,'0') as agentNumber,
-          ifnull(a.agent_id,'0') as agentId
+          ifnull(a.agent_id,'0') as agentId,
+          ifnull(b.agent_name,'0') as agentName
         FROM
           t_users a
           JOIN m_agents  b  ON a.agent_id=b.agent_id

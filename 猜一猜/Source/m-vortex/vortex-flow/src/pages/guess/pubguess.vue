@@ -292,7 +292,7 @@
               break
             case 'ok':
               if (this.show0 && !this.$store.state.userInfo.data.default_pic) {
-                this.isAblePop(2)
+                this.isAblePop([2, 1])
                 this.$store.state.userInfo.data.default_pic = 1
                 // （添加判断是否是第一次激活此功能）
                 this.$dm.confirm({
@@ -397,7 +397,7 @@
             self.$refs.img0.src = ''
             self.$refs.img1.src = ''
             self.$refs.img2.src = ''
-            self.$refs.img3.src = ''
+            self.$refs.img3.src = '' 
           }
         }
       }

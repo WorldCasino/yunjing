@@ -68,5 +68,14 @@ public class MessageContentService extends ServiceImpl<MessageContentMapper,Mess
         return pageResult;
     }
 
+    /**
+     * 更新所有状态为已读
+     * @param userId
+     */
+    @Override
+    public void updateAllStatus(Long userId) {
+        this.messageContentMapper.updateAllStatus(userId);
+    }
+
 
 }

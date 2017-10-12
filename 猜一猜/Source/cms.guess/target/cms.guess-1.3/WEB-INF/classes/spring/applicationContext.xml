@@ -23,7 +23,7 @@
 				<value>classpath:aliyun-mns.properties</value>
 				<value>classpath:log4j.properties</value>
 				<value>classpath:weixin4j.properties</value>
-				<value>classpath:environment/env-test.properties</value>
+				<value>classpath:environment/env-dev.properties</value>
 			</list>
 		</property>
 	</bean>

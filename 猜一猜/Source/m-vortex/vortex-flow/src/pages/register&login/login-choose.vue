@@ -181,6 +181,7 @@
             }
 
             this.$f7.closeModal('#login-choose')
+            this.$store.state.showLuckyMoney = false
             if (this.wxLoginData.isNewUser) {
               var query = url.parse(window.location.href, true).query
               if (query.operate_type === '18') {

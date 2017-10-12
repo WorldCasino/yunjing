@@ -269,7 +269,7 @@
       change () {
         if (!this.isAbleBean && this.isablebean === 0) {
           this.$store.state.userInfo.data.isablebean = 1
-          this.isAblePop()
+          this.isAblePop([1, 1])
           this.$dm.confirm({
             title: `不可使用金豆参与竞猜`,
             mes: '当玩家金币不足时，用金豆参与竞猜，输赢将以金豆结算，选择该选项表示不可以使用金豆参与竞猜。',
@@ -282,7 +282,7 @@
       isPrivateFu () {
         if (!this.isPrivate && this.ispersonal === 0) {
           this.$store.state.userInfo.data.ispersonal = 1
-          this.isAblePop(3)
+          this.isAblePop([3, 1])
           this.$dm.confirm({
             title: `仅邀请人可见`,
             mes: '只有你邀请的人可以参与到这个竞猜，其它用户无法在大厅发现你的竞猜。',
@@ -833,7 +833,7 @@
   }
 
   .doubt-icon {
-    margin-top: -3px;
+    margin-top: -3.5px;
     width: 14px;
     height: 14px;
     border: 1px solid #666;

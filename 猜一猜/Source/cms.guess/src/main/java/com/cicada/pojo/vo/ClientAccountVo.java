@@ -57,6 +57,32 @@ public class ClientAccountVo implements Serializable {
      */
     private int memberPoints;
 
+    /**
+     * 盈
+     */
+    private double sumIncome;
+
+    /**
+     * 亏
+     */
+    private double sumExpend;
+
+    public double getSumIncome() {
+        return sumIncome;
+    }
+
+    public void setSumIncome(double sumIncome) {
+        this.sumIncome = sumIncome;
+    }
+
+    public double getSumExpend() {
+        return sumExpend;
+    }
+
+    public void setSumExpend(double sumExpend) {
+        this.sumExpend = sumExpend;
+    }
+
     public long getAccountId() {
         return accountId;
     }

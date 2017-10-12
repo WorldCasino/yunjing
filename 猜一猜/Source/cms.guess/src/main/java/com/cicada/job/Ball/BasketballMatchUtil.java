@@ -10,12 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.cicada.commons.Exception.ApiException;
 import com.cicada.commons.utils.DateFormatUtil;
 import com.cicada.commons.utils.DateUtil;
@@ -26,17 +25,22 @@ import com.cicada.enums.MatchesStatusEnum;
 import com.cicada.enums.MatchesTypeEnum;
 import com.cicada.pojo.MatchesEntity;
 import com.cicada.pojo.TeamEntity;
+import com.cicada.service.IMatchesService;
 import com.cicada.service.impl.MatchesServiceImpl;
 import com.cicada.service.impl.TeamServiceImpl;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 /**
  *NBA赛事调用示例代码 － 聚合数据
  *在线接口文档：http://www.juhe.cn/docs/92
+ *
+ * 99元2000次免费接口
  **/
 
 public class BasketballMatchUtil {
+
     public static final String DEF_CHATSET = SystemConfig.getInstance().getBALL_MATCH_DEF_CHATSET();
     public static final int DEF_CONN_TIMEOUT = Integer.parseInt(SystemConfig.getInstance().getBALL_MATCH_DEF_CONN_TIMEOUT());
     public static final int DEF_READ_TIMEOUT = Integer.parseInt(SystemConfig.getInstance().getBALL_MATCH_DEF_READ_TIMEOUT());
@@ -54,66 +58,69 @@ public class BasketballMatchUtil {
 
 
 
-    //status:0-未开赛，1-正在直播，2-已结束
-
     /**
      * NBA常规赛赛程赛果存储
+     * 比赛状态,'1'=>'已结束', '2'=>'进行中', '3'=>'未开始', '4'=>'已取消
+     *
      */
     public static void setBallList(){
-        String result =null;
-        String url =SystemConfig.getInstance().getBALL_MATCH_BASKETBALL_NBA();//请求接口地址
-        Map params = new HashMap();//请求参数
-        params.put("key",APPKEY);//应用APPKEY(应用详细页查询)
-        params.put("dtype","");//返回数据的格式,xml或json，默认json
-         try {
-             result =net(url, params, "GET");//正式
-             JSONObject object = JSONObject.parseObject(result);
-              if(object.getInteger("error_code")    ==0){
-//                System.out.println(object.get("result"));
-                JSONObject jsonObject=object.getJSONObject("result");
-                JSONArray jsonArray= jsonObject.getJSONArray("list") ;
-                for (int i = 0; i < jsonArray.size() ; i++) {
-                    String title="NBA 常规赛";
-                    JSONObject jsonObject2=jsonArray.getJSONObject(i);
-                    String time_title=  jsonObject2.getString("title");
-                    String day_date=time_title.substring(0,5).trim();
-                    String day_week=time_title.substring(6,time_title.length()).trim();
-                    //判断标题
-                    long nowplaytime=DateUtil.fomatDate(DateFormatUtil.getYear().trim()+"-"+day_date).getTime();
-                    long number=nowplaytime-(new Date()).getTime();
-                    //时间判断如果是今天的就忽略
-                    if(number <= 0){
-                        continue;
+        String now_date=DateUtil.getDay();//今天-今天之后的七天
+//        EntityWrapper ew = new EntityWrapper();
+//        ew.where("match_type = {0}", MatchesTypeEnum.Basketball.getCode());
+//        ew.orderBy("settle_time", false);
+//        List<MatchesEntity> matchesEntityList=((IMatchesService)SpringContextUtil.getBean("matchesServiceImpl")).selectList(ew);
+//        if(matchesEntityList.size() >0){
+//            MatchesEntity matchesEntity=matchesEntityList.get(0);
+//            long jhminute=DateUtil.getDaySub(now_date,matchesEntity.getSettleTime().toString());
+//            if(jhminute > 1){
+//                return;
+//            }
+//        }
+        for (int xi = 0 ; xi < 8; xi++) {
+            String over_date=DateUtil.getAfterDayDate(now_date,""+xi);
+            String result =null;
+            String url =SystemConfig.getInstance().getBALL_MATCH_BASKETBALL_NBA();//请求接口地址
+            Map params = new HashMap();//请求参数
+            params.put("key",APPKEY);//应用APPKEY(应用详细页查询)
+            params.put("date",over_date);//返回数据的格式,xml或json，默认json
+            try {
+                result =net(url, params, "GET");//正式
+                JSONObject object = JSONObject.parseObject(result);
+                if(object.getString("reason").equals("success")){
+                    JSONArray jsonArray= object.getJSONArray("result") ;
+                    for (int i = 0; i < jsonArray.size() ; i++) {
+                        String title="NBA 常规赛";
+                        JSONObject jsonObject2=jsonArray.getJSONObject(i);
+                        String open_time=jsonObject2.getString("time");
+                        String gl_match_id=jsonObject2.getString("match_id");
+                        int status=jsonObject2.getIntValue("status");
+                        JSONObject homejson=jsonObject2.getJSONObject("home");
+                        String home_team_name=homejson.getString("name");
+                        JSONObject awayjson=jsonObject2.getJSONObject("away");
+                        String away_team_name=awayjson.getString("name");
+                        //判断开赛状态
+                        if(status != 3){
+                            continue;
+                        }
+                        //判断标题
+                        long nowplaytime=DateUtil.fomatDate(open_time).getTime();
+                        if(nowplaytime >= jqstarttime && nowplaytime <= jqendttime){
+                            title="NBA 季前赛";
+                        }
+                        BallUtil.SaveMatch( home_team_name, away_team_name,  open_time, title, MatchesTypeEnum.Basketball.getCode()+"" ,gl_match_id);
                     }
-                    if(nowplaytime >= jqstarttime && nowplaytime <= jqendttime){
-                        title="NBA 季前赛";
-                    }
-                    //获取赛事
-                    JSONArray jsonArray2= jsonObject2.getJSONArray("tr");
-                    for (int j = 0; j < jsonArray2.size() ; j++) {
-
-                         JSONObject jsonObject3= jsonArray2.getJSONObject(j);
-//                         System.out.println(jsonObject3.toString());
-                         String time=jsonObject3.getString("time");
-                         String day_time=time.substring(6,time.length());
-                         String home_team_name=jsonObject3.getString("player2");
-                         String home_team_logo=jsonObject3.getString("player2logobig");
-                         String away_team_name=jsonObject3.getString("player1");
-                         String away_team_logo=jsonObject3.getString("player1logobig");
-                         String score=jsonObject3.getString("score");
-                          BallUtil.SaveMatch( home_team_name, home_team_logo,away_team_name,away_team_logo, day_week, day_date, day_time, title, MatchesTypeEnum.Basketball.getCode()+"" );
-                     }
-               }
-             }else{
-                  LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程失败",object.get("error_code")+":"+object.get("reason")));
-             }
-         } catch (Exception e) {
-            e.printStackTrace();
-             LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程是吧",e.toString()));
+                }else{
+                    LOTTERY_LOGGER.info(String.format("ball-参数对应无数据"+object.get("error_code")+"原因"+object.getString("reason")));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程是吧",e.toString()));
+            }
         }
         //开始redis存储
         BallUtil.changeRedisBallList(MatchesTypeEnum.Basketball.getCode()+"");
     }
+
 
 
 
@@ -123,55 +130,41 @@ public class BasketballMatchUtil {
      *      true:表示比赛结束
      *      false：表示比赛还未结束
      */
-    public static boolean flagIsOver( long matchId,String home_team_name,String away_team_name,String day_date,String day_time){
+    public static boolean flagIsOver( long matchId,String home_team_name,String away_team_name,String day_date,String day_time,long gl_match_id){
+        //无场次ID直接忽略
+        if(gl_match_id == 0){
+            return true;
+        }
         boolean flag=false;
         String result =null;
         String url = SystemConfig.getInstance().getBALL_MATCH_BASKETBALL_COMBAT();//请求接口地址
         Map params = new HashMap();//请求参数
         params.put("key",APPKEY);//应用APPKEY(应用详细页查询)
-        params.put("dtype","");//返回数据的格式,xml或json，默认json
-        params.put("hteam",home_team_name);//主队球队名称
-        params.put("vteam",away_team_name);//客队球队名称
+        params.put("match_id",gl_match_id);//返回数据的格式,xml或json，默认json
         try {
             result =net(url, params, "GET");
             JSONObject object = JSONObject.parseObject(result);
-            if( object.getInteger("error_code")   ==0){
-//                System.out.println(object.get("result"));
+            if(object.getString("reason").equals("success")) {
                 JSONObject jsonObject= object.getJSONObject("result") ;
-                JSONArray jsonArray= jsonObject.getJSONArray("list") ;
-                for (int i = 0; i < jsonArray.size() ; i++) {
-                    JSONObject jsonObject2 =  jsonArray.getJSONObject(i) ;
-                    String status=jsonObject2.getString("status");
-                    String again_day=jsonObject2.getString("m_time").substring(0,6);
-                    String now_day=DateFormatUtil.getYYYY_MM_DD();
-                    //非当天比赛的场次排除
-                    if(!now_day.contains(again_day)){
-                        continue;
-                    }
-                    String score=jsonObject2.getString("score");
-                    String home_score="0";
-                    String away_score="0";
-                    if(!score.equals("VS")){
-                        home_score=score.split("-")[0];
-                        away_score=score.split("-")[1];
-                    }
-                    MatchesEntity matchesEntity=new MatchesEntity();
-                    matchesEntity.setMatchId(matchId);
-                    if(status.equals("2")){
-                        flag=true;
-                        matchesEntity.setSettleTime(new Timestamp(System.currentTimeMillis()));
-                        matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.IsOver);
-                     }else if(status.equals("1")){
-                        matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.Underway);
-                    }else{
-                        matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.NotStarted);
-                    }
-                    matchesEntity.setHomeScore(Integer.parseInt(home_score));
-                    matchesEntity.setAwayScore(Integer.parseInt(away_score));
-                    ((MatchesServiceImpl)SpringContextUtil.getBean("matchesServiceImpl")).updateById(matchesEntity);
+                int status=jsonObject.getIntValue("status");
+                int home_score=jsonObject.getIntValue("home_score");
+                int away_score=jsonObject.getIntValue("away_score");
+                MatchesEntity matchesEntity=new MatchesEntity();
+                matchesEntity.setMatchId(matchId);
+                if(status == 1){
+                    flag=true;
+                    matchesEntity.setSettleTime(new Timestamp(System.currentTimeMillis()));
+                    matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.IsOver);
+                }else if(status == 2){
+                    matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.Underway);
+                }else{
+                    matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.NotStarted);
                 }
+                matchesEntity.setHomeScore(home_score);
+                matchesEntity.setAwayScore(away_score);
+                ((MatchesServiceImpl)SpringContextUtil.getBean("matchesServiceImpl")).updateById(matchesEntity);
             }else{
-                LOTTERY_LOGGER.info(String.format("ball-获取蓝球赛果失败",object.get("error_code")+":"+object.get("reason")));
+                LOTTERY_LOGGER.info(String.format("ball-暂无当前球赛记录"+object.get("error_code")+"原因"+object.getString("reason")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,7 +172,6 @@ public class BasketballMatchUtil {
         }
         return  flag;
     }
-
 
 
     /**
@@ -254,51 +246,6 @@ public class BasketballMatchUtil {
         return sb.toString();
     }
 
-
-
-
-    public static void main(String[] args){
-    }
-
-
-
-//    //1.获取球队
-//    public static void getTeam(){
-//        String result =null;
-//        String url ="http://v.juhe.cn/nba/all_team_info.php";//请求接口地址
-//        Map params = new HashMap();//请求参数
-//        params.put("key","27398ce915369f329522af83f8be64b6");//应用APPKEY(应用详细页查询)
-//        try {
-//            result =net(url, params, "GET");
-//            JSONObject object = JSONObject.parseObject(result);
-////            System.out.println(object.toString());
-//            if(object.get("reason").toString().equals("success")){
-//                JSONObject jsonObject= object.getJSONObject("result") ;
-//                System.out.println(jsonObject.toString());
-//                 for (int i = 1; i < 31 ; i++) {
-//                     if(jsonObject.get(i+"") == null){
-//                         continue;
-//                     }
-//                     JSONObject jsonObject2= jsonObject.getJSONObject(i+"");
-//                     TeamEntity teamEntity=new TeamEntity();
-//                     teamEntity.setTeamInfor(jsonObject2.getString("intro"));
-//                     teamEntity.setTeamLogo(jsonObject2.getString("logo_link"));
-//                     teamEntity.setTeamName(jsonObject2.getString("name"));
-//                     ((TeamServiceImpl)SpringContextUtil.getBean("teamServiceImpl")).insert(teamEntity);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-
-    private  static  String ceshistr1="";
-
-
-
-    private static String ceshistr2="";
 
 
 }

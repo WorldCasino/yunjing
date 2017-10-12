@@ -172,23 +172,28 @@ public class Starship_AccountDetailService extends ServiceImpl<Starship_AccountD
             //判断余额是否充足
             Starship_UserEntity userEntity=starship_iUserService.selectById(accountDetailEntity.getUserId());
             if(examine.equals("false")){
+                Starship_AccountDetaillistVo advo=accountDetailMapper.selectByTradeId(Long.parseLong(tradeId));
+                AgentEntity agent = agentMapper.selectById(advo.getAgentId());
+                GameRsp<Float> newBalance;
+                try {
+                    newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),advo.getBgLoginId(),String.valueOf(amount),accountDetailEntity.getTradeId(),"1");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
+                }
+                Map<String,Object> whereMap = new HashMap<>();
+                whereMap.put("user_id",advo.getUserId());
+                UserAccountEntity accountEntity;
+                List<UserAccountEntity> temp = accountMapper.selectByMap(whereMap);
+                accountEntity=temp.get(0);//获取会员财富数据
+                accountEntity.setBalance(newBalance.getResult());
+                accountEntity.setTotalWithdraw(accountEntity.getTotalWithdraw() - amount);
+                accountEntity.setUpdateBy(Long.parseLong(updateBy));
+                accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                accountMapper.updateById(accountEntity);
                 //审核不通过处理的逻辑---开始返还金额
                 userAccountDetailEntity.setTradeStatusEnum(TradeStatusEnum.AuditDisagree);//添加不通过状态
             }else{
-                //判断余额是否充足
-                AgentEntity agent = agentMapper.selectById(userEntity.getAgentId());
-                double bgBalance=0;
-                try {
-                    GameRsp<Float> resp = gameConnector.openBalanceGet(agent.getBgPwd(),userEntity.getBgLoginId());
-                    bgBalance = new Double(resp.getResult());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new ApiException(ErrorCodeEnum.NetWorkError);
-                }
-                 //余额不足
-                if(bgBalance < amount){
-                    throw new ApiException(ErrorCodeEnum.BalanceNoneException);
-                }
                 //判断是否还有下一个步骤
                 Integer step=auditTemplateStepEntity.getStep()+1;
                 auditTemplateStepEntity=new AuditTemplateStepEntity();
@@ -217,26 +222,32 @@ public class Starship_AccountDetailService extends ServiceImpl<Starship_AccountD
                     String content="你有一笔新的提现审核，编号："+accountDetailEntity.getTradeNo()+"。";
                     messageContentEntity.setContent(content);
                     messageContentService.insert(messageContentEntity);
+                    if(selectList.get(0).getRoleId() == RoleTypeEnum.Finance.getCode()){
+                        //获取所有财务
+                        Map<String,Object> whereMap = new HashMap<String,Object>();
+                        whereMap.put("role_id",RoleTypeEnum.Finance.getCode());
+                        whereMap.put("is_delete","0");
+                        whereMap.put("user_status","0");
+                        List<Starship_UserEntity> temp = starship_iUserService.selectByMap(whereMap);
+                        for (Starship_UserEntity send_user : temp) {
+                            if(send_user.getPhone() != null){
+                                JSONObject json = new JSONObject();
+                                json.put("type", QueueMessageTypeEnum.Examine.getCode());
+                                json.put("phone",send_user.getPhone());
+                                json.put("userName",userEntity.getNickName()== null?userEntity.getPhone():userEntity.getNickName());
+                                json.put("amount",amount);
+                                json.put("tradeNo",accountDetailEntity.getTradeNo());
+                                String messagekey=DateUtil.getDayshms();
+                                json.put("messagekey",messagekey);
+                                producerService.sendMessagePhone(messagekey,this.payDestination,json.toJSONString());
+                            }
+                        }
+                    }else if(selectList.get(0).getRoleId() == RoleTypeEnum.Salesman.getCode()){
+                        //不操作
+                    }
+
                  }else{
                     userAccountDetailEntity.setTradeStatusEnum( TradeStatusEnum.ShippedIsOk);
-                    //更新余额
-                    Map<String,Object> whereMap = new HashMap<>();
-                    whereMap.put("user_id",userEntity.getUserId());
-                    UserAccountEntity accountEntity;
-                    List<UserAccountEntity> temp = accountMapper.selectByMap(whereMap);
-                    accountEntity = temp.get(0);
-                    GameRsp<Float> newBalance;
-                    try {
-                        newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),userEntity.getBgLoginId(),String.valueOf(-1 * amount),Long.parseLong(tradeId),"1");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
-                    }
-                    accountEntity.setBalance(newBalance.getResult());
-                    accountEntity.setTotalWithdraw(accountEntity.getTotalWithdraw() + amount);
-                    accountEntity.setUpdateBy(userEntity.getUserId());
-                    accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-                    accountMapper.updateById(accountEntity);
                 }
             }
             //==当前步骤添加audit_logs纪录

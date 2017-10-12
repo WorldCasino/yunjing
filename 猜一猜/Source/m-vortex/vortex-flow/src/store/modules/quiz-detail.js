@@ -96,7 +96,7 @@ const actions = {
    * @param payload : [taskId,answerId,quantity]
    */
   quizBet ({state, commit, rootState}, payload) {
-    API.quizBet(payload[0], payload[1], payload[2], rootState.token)
+    API.quizBet(payload[0], payload[1], payload[2], payload[3], rootState.token)
       .then(function (data) {
         commit(types.QUIZ_BET_SUCCEED, [rootState.userInfo.data, data])
       })
@@ -271,7 +271,7 @@ const mutations = {
     state.shareData = res
     state.shareShake++
   },
-  
+
   [types.SHARE_FAILED] (state, res) {
     state.shareData = res
     state.shareShake++

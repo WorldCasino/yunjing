@@ -18,7 +18,10 @@ var MyMsg = (options = {}) => {
       isChecked: typeof options.checked === 'boolean' ? options.checked : 'noChecked', // 传入Boolean，默认状态是否勾选  :可选可不选
       btnType: options.btnType || 'default',  // 可选可不选，添加了'bet'的样式
       btnText: options.btnText || '确定',  // 按钮文案
-      textAlign: options.textAlign || 'center'
+      textAlign: options.textAlign || 'center',
+      goldConf: !isNaN(options.goldConf) ? options.goldConf : 'noGoldConf', // 可选可不选，下注金币类型：0 金币， 1金豆
+      enableBean: typeof options.enableBean === 'boolean' ? options.enableBean : true, // 传入Boolean: 默认状态可选择金豆或金币 :可选可不选
+      checks: Array.isArray(options.checks) ? options.checks : 'noChecks'
     },
     methods: {
       confirmCb: options.confirmCb || function () {}, // 可选可不选

@@ -1,6 +1,8 @@
 package com.cicada.commons.utils;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
 public class StringUtils extends org.springframework.util.StringUtils{
@@ -73,5 +75,26 @@ public class StringUtils extends org.springframework.util.StringUtils{
      */
     public static String getUUId() {
         return UUID.randomUUID().toString();
+    }
+
+
+    public static void main(String[] args){
+        String open_time="2017-10-11 11:07:59";
+        String date_week=StringUtils.getWeekOfDate(DateUtil.fomatDate1(open_time));
+        String day_date=DateUtil.formatDateChange3(open_time);
+        String day_time=DateUtil.formatDateChange2(open_time);
+        System.out.println(date_week+"**"+day_date+"**"+day_time);
+
+    }
+
+
+    public static String getWeekOfDate(Date dt) {
+        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0)
+            w = 0;
+        return weekDays[w];
     }
 }

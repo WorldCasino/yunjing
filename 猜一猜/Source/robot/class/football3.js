@@ -18,10 +18,10 @@ module.exports.get = function () {
         // https get 请求
         return https.get(uri);
     }).then(function (html) {
-        //先清空数据
-        Q.ninvoke(mysql, 'query', {
-            sql :  "delete from t_play_odds where play_id=3 and match_id<>0 "
-        })
+        // //先清空数据
+        // Q.ninvoke(mysql, 'query', {
+        //     sql :  "delete from t_play_odds where play_id=3 and match_id<>0 "
+        // })
 
         const $ = cheer.load(html);
         const tables=$('table').not('.has_group_date');
@@ -49,7 +49,7 @@ module.exports.get = function () {
                 if(arr.length==1){
                     ball_number=parseFloat(arr[0]);
                 }else if(arr.length==2){
-                    console.log(parseFloat(arr[0])+"+"+parseFloat(arr[1])+"="+(parseFloat(arr[0])+parseFloat(arr[1])))
+                    //console.log(parseFloat(arr[0])+"+"+parseFloat(arr[1])+"="+(parseFloat(arr[0])+parseFloat(arr[1])))
                     ball_number=(parseFloat(arr[0])+parseFloat(arr[1]))/2;
                 }
 
@@ -63,21 +63,42 @@ module.exports.get = function () {
                         values: [home_team_name_bwin, away_team_name_bwin]
                     });
                 }).then(function (result) {
-                    //查询是否有次比赛的标准盘赔率
+                    //查询是否有次比赛的大小球赔率
                     result[0].map(function (currentValue) {
                         const match_id=currentValue.match_id;
 
-                        return Q.ninvoke(mysql, 'query', {
-                            sql :  "insert into t_play_odds (match_id,play_id,ball_number,concede_points_show,big_ball_odds,small_ball_odds,is_default) " +
-                            "values (?,3,?,?,?,?,0)  ",
-                            values: [match_id,ball_number,concede_points_show,big_odds,small_odds]
-                        });
-                    })
+                        if(!match_id){
+                            return true;
+                        }
 
+                        //查询是否有当前赔率的数据
+                        Q.ninvoke(mysql, 'query', {
+                            sql :  "select * from t_play_odds where match_id=? and play_id=3 and ball_number=? ",
+                            values: [match_id,ball_number]
+                        }).then(function (data) {
+                            if(data[0].length==0){
+                                return Q.ninvoke(mysql, 'query', {
+                                    sql :  "insert into t_play_odds (match_id,play_id,ball_number,concede_points_show,big_ball_odds,small_ball_odds,is_default) " +
+                                    "values (?,3,?,?,?,?,0)  ",
+                                    values: [match_id,ball_number,concede_points_show,big_odds,small_odds]
+                                });
+                            }else{
+                                data[0].map(function (current) {
+                                    const odds_id=current.odds_id;
+                                    return Q.ninvoke(mysql, 'query', {
+                                        sql :  "update t_play_odds set big_ball_odds=?,small_ball_odds=?,ball_number=?,concede_points_show=? where odds_id=? ",
+                                        values: [big_odds,small_odds,ball_number,concede_points_show,odds_id]
+                                    });
+                                })
+                            }
+
+                        })
+                    })
                 })
 
             });
         })
+        console.log("---------------football3-over--------------------");
     }).catch(function (error) {
         console.log("-------------------------报错啦~--------------------------")
     })

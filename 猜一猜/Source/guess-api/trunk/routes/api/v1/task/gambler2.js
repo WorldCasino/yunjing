@@ -58,7 +58,7 @@ module.exports = function (req,res,next) {
                 values:[id]
             }),
             Q.ninvoke(mysql,'query',{
-                sql:'select user_type FROM m_users usr LEFT JOIN t_tasks t ON usr.user_id = t.user_id WHERE task_id = ? ',
+                sql:'select user_type,sale_price FROM m_users usr LEFT JOIN t_tasks t ON usr.user_id = t.user_id WHERE task_id = ? ',
                 values:[id]
             }),
             Q.ninvoke(mysql,'query',{
@@ -100,9 +100,9 @@ module.exports = function (req,res,next) {
                             }else {
                                 for (var j = 0; j < bettingList.length; j++ ){
                                     if (bettingList[j].right)
-                                        coinsRight = bettingList[j].coins + bettingList[j].beans;
+                                        coinsRight = bettingList[j].coins + bettingList[j].beans - parseInt(result[2][0][0].sale_price)*(bettingList[j].coinsQty+bettingList[j].beansQty);
                                     if (!bettingList[j].right)
-                                        coinsWrong = bettingList[j].coins + bettingList[j].beans;
+                                        coinsWrong = coinsWrong + bettingList[j].coins + bettingList[j].beans;
                                 }
                                 coins = coinsRight - coinsWrong;
                             }

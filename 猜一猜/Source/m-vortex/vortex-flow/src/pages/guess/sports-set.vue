@@ -85,6 +85,20 @@
               </div>
             </div>
             
+            <div class="seperater1" v-if="type == 1 && ballType == 1"></div>
+            <div class="amount-content" v-if="type == 1 && ballType == 1">
+              <h5>平</h5>
+              <div class="select-content">
+                <div class="minus-btn" @click="averageReduce">
+                  <img src="../../../static/guess/fabu_jian.png">
+                </div>
+                <input class="select-input" v-model="averagefund" type="number" @blur="averageFu">
+                <div class="add-btn" @click="averageAdd">
+                  <img src="../../../static/guess/fabu_jia.png">
+                </div>
+              </div>
+            </div>
+
             <div class="seperater2"></div>
 						<div class="amount-content">
               <h5 v-if="type != 2">客胜</h5>
@@ -127,7 +141,7 @@
           <div class="part5" style="height: 66px;"></div>
         </div>
       </div>
-		
+
       <div class="submit-content">
         <div class="submit-amount">
           <p class="submit-number">需冻结金币
@@ -216,7 +230,7 @@
         height: 0,
 
         averagefund: 1.80,
-        i: 0
+        i: -1
       }
     },
     computed: {
@@ -276,23 +290,23 @@
         if (this.i < this.handicapArr.length - 1) {
           this.i++
           if (this.type === 2) {
-            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds
-            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds
+            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds.toFixed(2)
           } else if (this.type === 3) {
-            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds
-            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds
+            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds.toFixed(2)
           }
         }
       },
-      handicapReduce () { 
+      handicapReduce () {
         if (this.i !== 0) {
           this.i--
           if (this.type === 2) {
-            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds
-            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds
+            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds.toFixed(2)
           } else if (this.type === 3) {
-            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds
-            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds
+            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds.toFixed(2)
           }
         }
       },
@@ -334,7 +348,7 @@
       change () {
         if (!this.isAbleBean && this.isablebean === 0) {
           this.$store.state.userInfo.data.isablebean = 1
-          this.isAblePop()
+          this.isAblePop([1, 1])
           this.$dm.confirm({
             title: `不可使用金豆参与竞猜`,
             mes: '当玩家金币不足时，用金豆参与竞猜，输赢将以金豆结算，选择该选项表示不可以使用金豆参与竞猜。',
@@ -347,7 +361,7 @@
       isPrivateFu () {
         if (!this.isPrivate && this.ispersonal === 0) {
           this.$store.state.userInfo.data.ispersonal = 1
-          this.isAblePop(3)
+          this.isAblePop([3, 1])
           this.$dm.confirm({
             title: `仅邀请人可见`,
             mes: '只有你邀请的人可以参与到这个竞猜，其它用户无法在大厅发现你的竞猜。',
@@ -379,7 +393,7 @@
             like_peas: this.isAbleBean ? 1 : 0,
             content: this.$store.state.sports.desc, // 描述
             price: this.amount, // 单注价格
-            quantity: this.count, // 总注数 
+            quantity: this.count, // 总注数
             home_logo: this.footballCurData.homeTeamLogo,
             visit_logo: this.footballCurData.awayTeamLogo
           }
@@ -409,7 +423,7 @@
             like_peas: this.isAbleBean ? 1 : 0,
             content: this.$store.state.sports.desc, // 描述
             price: this.amount, // 单注价格
-            quantity: this.count, // 总注数 
+            quantity: this.count, // 总注数
             home_logo: this.basketballCurData.homeTeamLogo,
             visit_logo: this.basketballCurData.awayTeamLogo
           }
@@ -555,7 +569,7 @@
             this.getQuizzesFoot([0])
           } else if (this.ballType === 2) {
             this.getQuizzesBask([0])
-          } 
+          }
         } else if (this.pubResult.id === 1001) {
           this.$dm.confirm({
             title: `提示`,
@@ -581,7 +595,7 @@
       }
     },
     destroyed () {
-      
+
     }
   }
 </script>
@@ -863,15 +877,15 @@
   .select-input-p{
     width:53px; height:29px;
     text-align:center;
-    border: 1px solid #e5e5e5; 
+    border: 1px solid #e5e5e5;
     line-height:29px; margin:0 4px;
     background: #f6f6f6;
   }
-  
+
   .rotate180{
     transform: rotateY(180deg);
   }
-  
+
   .desc-input {
     background-color: #f6f6f6;
     border-width: 0;
@@ -892,7 +906,7 @@
   .desc-warn{
     border: 1px solid #ff3c3c;
   }
-  
+
   .text-count{
     color:#FAA719;
     font-size: 12px;
@@ -912,7 +926,7 @@
     color:#999;
     font-size: 12px;
   }
-  
+
   .text-wrapper{
     position:absolute;
     right:16px;

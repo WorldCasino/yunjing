@@ -83,15 +83,13 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">赢输统计</label>
+            <label class="col-sm-2 control-label">赢输查询</label>
             <div class="col-sm-3">
                 <div class="input-group">
-                    <input type="text" class="form-control actionTotle" disabled   >
+                    <%--<input type="text" class="form-control actionTotle" disabled   >--%>
                     <shiro:hasPermission name="20update">
                                     <span class="input-group-btn">
                                         <button  class="btn btn-default" type="button" id="listaction">赢输明细</button>
-                                    </span>
-                                    <span class="input-group-btn">
                                         <button  class="btn btn-default" type="button" id="listLottery">转码总量</button>
                                     </span>
                     </shiro:hasPermission>
@@ -256,7 +254,7 @@
             $(".balance").val(usepd.balance);
             $(".totalRecharge").val(usepd.totalRecharge);
             $(".totalWithdraw").val(usepd.totalWithdraw);
-            $(".actionTotle").val(usepd.actionTotle);
+//            $(".actionTotle").val(usepd.actionTotle);
             $(".totalLottery").val(usepd.totalLottery);
             //循环业务员
             var beuserList=usepd.beuserList;
@@ -352,7 +350,7 @@
 
         //查看充值记录
         $("#listrecharge").on("click", function () {
-            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=1011'+"&bgLoginId="+$(".bgLoginId").val();
+            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeKind=1'+"&bgLoginId="+$(".bgLoginId").val();
             var id = "Account_1011"+window.userId;
             var title = "充值明细【" + $(".nickName").val() +"】";
             window.parent.openNewTab(id,title,url);
@@ -362,7 +360,7 @@
 
         //查看提现记录
         $("#listwithdraw").on("click", function () {
-            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeType=50'+"&bgLoginId="+$(".bgLoginId").val();
+            var url = 'ss_ac_detail/manager?userId='+window.userId+'&tradeKind=-1'+"&bgLoginId="+$(".bgLoginId").val();
             var id = "Account_50"+window.userId;
             var title = "提现明细【" + $(".nickName").val() +"】";
             window.parent.openNewTab(id,title,url);

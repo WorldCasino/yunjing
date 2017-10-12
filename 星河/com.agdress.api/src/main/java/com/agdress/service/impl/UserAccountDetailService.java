@@ -93,8 +93,10 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
         double bgBalance = 0;
 
         boolean ok = smsAdapter.validateCaptcha(user.getPhone(),captcha);
+
         CardEntity card = cardMapper.selectById(cardId);
         if(card==null || card.getUserId() != user.getUserId()) throw new ApiException(ErrorCodeEnum.ArgumentError.getCode(),"请选择正确的银行卡");
+
 
         AgentEntity agent = agentMapper.selectById(user.getAgentId());
 
@@ -161,15 +163,14 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
 //        更新余额
         GameRsp<Float> newBalance;
         try {
-//            newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),user.getBgLoginId(),String.valueOf(-1 * amount),withdraw.getTradeId(),"1");
-            newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),user.getBgLoginId(),"0",withdraw.getTradeId(),"1");
+            newBalance = gameConnector.openBalanceTransfer(agent.getBgPwd(),user.getBgLoginId(),String.valueOf(-1 * amount),withdraw.getTradeId(),"1");
         } catch (IOException e) {
             e.printStackTrace();
             throw new ApiException(ErrorCodeEnum.BgBalanceTransferException);
         }
 
         accountEntity.setBalance(newBalance.getResult());
-//      accountEntity.setTotalWithdraw(accountEntity.getTotalWithdraw() + amount);
+        accountEntity.setTotalWithdraw(accountEntity.getTotalWithdraw() + amount);
         accountEntity.setUpdateBy(user.getUserId());
         accountEntity.setUpdateDate(new Timestamp(System.currentTimeMillis()));
         accountMapper.updateById(accountEntity);
@@ -210,6 +211,26 @@ public class UserAccountDetailService extends ServiceImpl<UserAccountDetailMappe
                         JSONObject json = new JSONObject();
                         json.put("type", QueueMessageTypeEnum.Examine.getCode());
                         json.put("phone",message_userEntity.getPhone());
+                        json.put("userName",user.getNickname()== null?user.getPhone():user.getNickname());
+                        json.put("amount",amount);
+                        json.put("tradeNo",withdraw.getTradeNo());
+                        String messagekey=DateUtil.getDayshms();
+                        json.put("messagekey",messagekey);
+                        producerService.sendMessagePhone(messagekey,this.payDestination,json.toJSONString());
+                    }
+                }
+            }else if(roleId == RoleTypeEnum.Finance.getCode()){
+                //获取所有财务
+                whereMap = new HashMap<String,Object>();
+                whereMap.put("role_id",RoleTypeEnum.Finance.getCode());
+                whereMap.put("is_delete","0");
+                whereMap.put("user_status","0");
+                List<Starship_UserEntity> temp2 = starship_iUserService.selectByMap(whereMap);
+                for (Starship_UserEntity send_user : temp2) {
+                    if(send_user.getPhone() != null){
+                        JSONObject json = new JSONObject();
+                        json.put("type", QueueMessageTypeEnum.Examine.getCode());
+                        json.put("phone",send_user.getPhone());
                         json.put("userName",user.getNickname()== null?user.getPhone():user.getNickname());
                         json.put("amount",amount);
                         json.put("tradeNo",withdraw.getTradeNo());

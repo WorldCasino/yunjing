@@ -207,11 +207,12 @@ export function quizDetail (id, token) {
 /**
  * 下注
  */
-export function quizBet (taskId, answerId, quantity, token) {
+export function quizBet (taskId, answerId, quantity, goldPrefer, token) {
   return request('POST', 'v1/user/bet', {
     'task_id': taskId,
     'answer_id': answerId,
-    'quantity': quantity
+    'quantity': quantity,
+    'coin_first': goldPrefer
   }, {
     'token': token,
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -452,10 +453,12 @@ export function shareQuiz (token, taskId, operateType, taskType) {
   })
 }
 
+// 修改用户信息：type值为1，是否使用金豆弹窗 2， 默认图弹窗 3，私密发布弹窗 4,优先选用金币下注 5，首次下注设置 6，下注提醒弹窗
 // 修改是否用金豆参与竞猜弹窗
-export function isAblePop (token, type = 1) {
-  return request('get', 'user/judge', {type}, {
-    'token': token
+export function isAblePop (token, type, flag) {
+  return request('post', 'user/judge', {type, flag}, {
+    'token': token,
+    'Content-Type': 'application/json;charset=utf-8'
   })
 }
 

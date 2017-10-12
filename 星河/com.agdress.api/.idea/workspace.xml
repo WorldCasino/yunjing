@@ -6,7 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d349b52b-3f7a-4e12-8617-d19b3f8b572a" name="Default" comment="新增快速登陆，添加agent字段">
+    <list default="true" id="d349b52b-3f7a-4e12-8617-d19b3f8b572a" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../com.agdress.cms/src/main/webapp/apiresources/js/agdress.all.js" afterPath="$PROJECT_DIR$/../com.agdress.cms/src/main/webapp/apiresources/js/agdress.all.js" />
     </list>
@@ -33,21 +33,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>MessageContentMapper</find>
-      <find>Starship_UserEntity</find>
-      <find>Starship_AccountDetailMapper</find>
-      <find>selectByTradeId</find>
-      <find>playMoeny</find>
-      <find>systemC</find>
-      <find>saveMoneyForUser</find>
-      <find>QueueMessageTypeEnum</find>
-      <find>selectAgentListPage</find>
-      <find>addUserForXt</find>
-      <find>PageHelper</find>
-      <find>doLogin</find>
-      <find>content</find>
-      <find>4175260341</find>
-      <find>sendSmsNotify</find>
       <find>producerService.sendMessage</find>
       <find>trade_no</find>
       <find>selectAccountDetailListVoPage</find>
@@ -55,12 +40,29 @@
       <find>search</find>
       <find>getMessageList</find>
       <find>listMessage</find>
-      <find>getAgentId</find>
       <find>KEY_MESSAGE</find>
       <find>messageContentService</find>
       <find>messageContentService.insert</find>
       <find>insertBalance</find>
       <find>applyWithdraw</find>
+      <find>HttpClientUtil</find>
+      <find>gameRequest</find>
+      <find>redis</find>
+      <find>RedisT</find>
+      <find>selectByUserId</find>
+      <find>getAgentLoginId</find>
+      <find>getAgentId</find>
+      <find>selectUserVo</find>
+      <find>selectUserListVoPage</find>
+      <find>xtdataGrid</find>
+      <find>W</find>
+      <find>Starship_AgentrVo</find>
+      <find>Failed</find>
+      <find>BaseController</find>
+      <find>AuthorizationInterceptor</find>
+      <find>GameRsp</find>
+      <find>updateCardInfo</find>
+      <find>getCardInfo</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -77,32 +79,19 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/Starship_UserEntity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/enums/RoleTypeEnum.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/mapper/MessageContentMapper.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageContentService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/IMessageContentService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/enums/QueueMessageTypeEnum.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/environment/env-product.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/IRechargeService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_UserAccountService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/Starship_IUserAccountService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/Starship_UserController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/SystemConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/StringUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/Starship_AgentEntity.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_AgentService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_AccountDetaillistVo.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/MessageContenVo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/MessageController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/MessageContentEntity.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/MessageContentMapper.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/UserController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/IUserService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/LoginResultVo.java" />
         <option value="$PROJECT_DIR$/src/main/resources/log4j.properties" />
         <option value="$PROJECT_DIR$/src/main/resources/spring/applicationContext.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/bgapi/GameConnectorImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/Starship_IGamesService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/DbLoggerController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/environment/env-dev.properties" />
@@ -110,24 +99,37 @@
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/GetUTCTimeUtil.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/agdress/mogo/MogoImplTest.java" />
         <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_AccountDetailMapper.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_AgentrVo.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/mapper/Starship_UserMapper.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/Starship_IUserService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_UserService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/mongodb/model/DBOrderGames.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_GamesService.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_UserMapper.xml" />
         <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_AgentMapper.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/UserService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_AccountDetailService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/ConstantInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageProducerService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/IMessageProducerService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/listener/ConsumerMessageListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/agdress/job/OrderGamesJob.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/mongodb/impl/DBOrderGamesDaoImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/RechargeService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/bgapi/GameReq.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/agdress/bgapi/GameConnectorImplTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/job/OrderGamesJob.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/mongodb/model/DBOrderGames.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_GamesService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/mapper/MessageContentMapper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/IMessageContentService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageContentService.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/MessageContentMapper.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/MessageController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_UserMapper.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_UserlistVo.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/Starship_UserController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/mapper/AgentMapper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_AgentrVo.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/mapper/Starship_AgentMapper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/controller/UserController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/UserService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/bgapi/GameConnectorImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/UserAccountDetailService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_AccountDetailService.java" />
       </list>
     </option>
   </component>
@@ -160,6 +162,7 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -195,10 +198,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -206,10 +207,109 @@
               <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
               <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+              <item name="entity" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+              <item name="entity" type="462c0819:PsiDirectoryNode" />
+              <item name="vo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+              <item name="mapper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+              <item name="service" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="api.agdress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="com.agdress.api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="agdress" type="462c0819:PsiDirectoryNode" />
+              <item name="service" type="462c0819:PsiDirectoryNode" />
+              <item name="impl" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -220,10 +320,11 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../com.agdress.cms" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.agdress.service" />
       <recent name="com.agdress.enums" />
     </key>
   </component>
@@ -240,56 +341,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Tomcat Server.Unnamed">
-    <configuration name="MogoImplTest.findList" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.agdress.mogo.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="api.agdress" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.agdress.mogo" />
-      <option name="MAIN_CLASS_NAME" value="com.agdress.mogo.MogoImplTest" />
-      <option name="METHOD_NAME" value="findList" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="MogoImplTest.openOrderQuery" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.agdress.mogo.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="api.agdress" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.agdress.mogo" />
-      <option name="MAIN_CLASS_NAME" value="com.agdress.mogo.MogoImplTest" />
-      <option name="METHOD_NAME" value="openOrderQuery" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
     <configuration name="Unnamed" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 8.0.45" ALTERNATIVE_JRE_ENABLED="false">
       <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8090/api/" />
       <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
@@ -446,17 +497,6 @@
       <properties />
       <listeners />
     </configuration>
-    <list size="3">
-      <item index="0" class="java.lang.String" itemvalue="Tomcat Server.Unnamed" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.MogoImplTest.openOrderQuery" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.MogoImplTest.findList" />
-    </list>
-    <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.MogoImplTest.openOrderQuery" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.MogoImplTest.findList" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -477,7 +517,17 @@
       <workItem from="1506603620075" duration="31648000" />
       <workItem from="1506733866713" duration="24275000" />
       <workItem from="1507511486573" duration="191000" />
-      <workItem from="1507515718137" duration="2603000" />
+      <workItem from="1507515718137" duration="3476000" />
+      <workItem from="1507539916473" duration="7983000" />
+      <workItem from="1507555783613" duration="559000" />
+      <workItem from="1507557728079" duration="3017000" />
+      <workItem from="1507600269760" duration="21408000" />
+      <workItem from="1507639096962" duration="94000" />
+      <workItem from="1507641360066" duration="267000" />
+      <workItem from="1507704952184" duration="4704000" />
+      <workItem from="1507711220194" duration="51000" />
+      <workItem from="1507778756026" duration="1426000" />
+      <workItem from="1507795076025" duration="6886000" />
     </task>
     <task id="LOCAL-00001" summary="去掉的异常错误说明">
       <created>1506581721140</created>
@@ -633,15 +683,71 @@
       <option name="project" value="LOCAL" />
       <updated>1507520543820</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="转码改为正数">
+      <created>1507556172540</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1507556172540</updated>
+    </task>
+    <task id="LOCAL-00024" summary="转码量改为正">
+      <created>1507556291953</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1507556291953</updated>
+    </task>
+    <task id="LOCAL-00025" summary="调整页面显示信息，新增账号启用停用功能。新增财务审核短信发全部">
+      <created>1507615094910</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1507615094910</updated>
+    </task>
+    <task id="LOCAL-00026" summary="代理商">
+      <created>1507620341731</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1507620341731</updated>
+    </task>
+    <task id="LOCAL-00027" summary="代理商">
+      <created>1507621177099</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1507621177099</updated>
+    </task>
+    <task id="LOCAL-00028" summary="代理商">
+      <created>1507624714502</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1507624714503</updated>
+    </task>
+    <task id="LOCAL-00029" summary="代理商">
+      <created>1507624884852</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1507624884852</updated>
+    </task>
+    <task id="LOCAL-00030" summary="代理商">
+      <created>1507625193698</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1507625193698</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="MogoImplTest_openOrderQuery - 2017.09.30 at 10h 48m 04s.xml">
-      <configuration name="MogoImplTest.openOrderQuery" configurationId="JUnit" />
+    <history-entry file="GameConnectorImplTest_openOrderQuery2 - 2017.10.09 at 21h 37m 17s.xml">
+      <configuration name="GameConnectorImplTest.openOrderQuery2" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MogoImplTest_openOrderQuery - 2017.09.30 at 10h 48m 18s.xml">
-      <configuration name="MogoImplTest.openOrderQuery" configurationId="JUnit" />
+    <history-entry file="GameConnectorImplTest_openOrderQuery2 - 2017.10.12 at 11h 26m 26s.xml">
+      <configuration name="GameConnectorImplTest.openOrderQuery2" configurationId="JUnit" />
     </history-entry>
     <history-entry file="MogoImplTest_openOrderQuery - 2017.09.30 at 10h 49m 49s.xml">
       <configuration name="MogoImplTest.openOrderQuery" configurationId="JUnit" />
@@ -669,7 +775,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88943000" />
+    <option name="totallyTimeSpent" value="136211000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -684,7 +790,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08785249" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3546638" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286334" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -695,7 +801,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3383948" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20788912" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22921109" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -733,230 +839,311 @@
     <MESSAGE value="短信新增一个消息队列，不同的key" />
     <MESSAGE value="使用默认参数" />
     <MESSAGE value="更改bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="更改bug" />
+    <MESSAGE value="转码改为正数" />
+    <MESSAGE value="转码量改为正" />
+    <MESSAGE value="调整页面显示信息，新增账号启用停用功能。新增财务审核短信发全部" />
+    <MESSAGE value="代理商" />
+    <option name="LAST_COMMIT_MESSAGE" value="代理商" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="51" />
+      <option name="time" value="67" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mongodb/DBOrderGamesDao.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/MessageContentMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/util/Calendar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="566" column="28" lean-forward="false" selection-start-line="566" selection-start-column="28" selection-end-line="566" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/util/TimeZone.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5176">
-          <caret line="514" column="61" lean-forward="false" selection-start-line="514" selection-start-column="59" selection-end-line="514" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/GetUTCTimeUtil.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/redis/RedisHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="133" column="23" lean-forward="false" selection-start-line="133" selection-start-column="23" selection-end-line="133" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/IRechargeService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="34" column="11" lean-forward="false" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/enums/QueueMessageTypeEnum.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/alibaba/fastjson/1.1.42/fastjson-1.1.42.jar!/com/alibaba/fastjson/JSONObject.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="70" column="18" lean-forward="false" selection-start-line="70" selection-start-column="18" selection-end-line="70" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/DateUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="176" column="0" lean-forward="false" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-test.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/agdress/mogo/MogoImplTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="55" column="12" lean-forward="true" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mapper/Starship_AccountDetailMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="19" column="40" lean-forward="false" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/enums/TradeStatusEnum.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_AccountDetailMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="21" column="75" lean-forward="true" selection-start-line="21" selection-start-column="75" selection-end-line="21" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/IMessageContentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="17" column="37" lean-forward="false" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="37" />
+        <state relative-caret-position="372">
+          <caret line="123" column="20" lean-forward="true" selection-start-line="123" selection-start-column="20" selection-end-line="123" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/MessageController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="51" column="60" lean-forward="false" selection-start-line="51" selection-start-column="60" selection-end-line="51" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="30" column="14" lean-forward="true" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageContentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="46" column="82" lean-forward="false" selection-start-line="46" selection-start-column="68" selection-end-line="46" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/MessageContentMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="72" lean-forward="true" selection-start-line="11" selection-start-column="72" selection-end-line="11" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_UserService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="168" column="28" lean-forward="false" selection-start-line="168" selection-start-column="11" selection-end-line="168" selection-end-column="28" />
+        <state relative-caret-position="253">
+          <caret line="91" column="26" lean-forward="true" selection-start-line="91" selection-start-column="26" selection-end-line="91" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/Starship_IUserService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="29" column="22" lean-forward="false" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
+        <state relative-caret-position="323">
+          <caret line="25" column="43" lean-forward="false" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/UserMapper.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_UserService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="18" column="16" lean-forward="true" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+        <state relative-caret-position="239">
+          <caret line="136" column="73" lean-forward="false" selection-start-line="136" selection-start-column="73" selection-end-line="136" selection-end-column="73" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mapper/Starship_UserMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="20" column="17" lean-forward="false" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spring/applicationContext.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_AgentrVo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="56" column="18" lean-forward="false" selection-start-line="56" selection-start-column="18" selection-end-line="56" selection-end-column="18" />
+        <state relative-caret-position="153">
+          <caret line="16" column="50" lean-forward="false" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="50" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_UserMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="61" column="11" lean-forward="false" selection-start-line="61" selection-start-column="11" selection-end-line="63" selection-end-column="17" />
+        <state relative-caret-position="85">
+          <caret line="5" column="117" lean-forward="true" selection-start-line="5" selection-start-column="117" selection-end-line="5" selection-end-column="117" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/Starship_AgentController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/StringUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="75" column="38" lean-forward="true" selection-start-line="75" selection-start-column="38" selection-end-line="75" selection-end-column="38" />
+        <state relative-caret-position="188">
+          <caret line="100" column="0" lean-forward="false" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mybatis/mappers/Starship_AgentMapper.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/Starship_UserController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="32" lean-forward="true" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+        <state relative-caret-position="301">
+          <caret line="294" column="9" lean-forward="true" selection-start-line="294" selection-start-column="9" selection-end-line="294" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/enums/QueueMessageTypeEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/baomidou/mybatis-plus/2.1-gamma/mybatis-plus-2.1-gamma.jar!/com/baomidou/mybatisplus/service/IService.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/baomidou/mybatis-plus/2.1-gamma/mybatis-plus-2.1-gamma.jar!/com/baomidou/mybatisplus/service/impl/ServiceImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="227" column="36" lean-forward="true" selection-start-line="227" selection-start-column="36" selection-end-line="227" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/baomidou/mybatis-plus/2.1-gamma/mybatis-plus-2.1-gamma.jar!/com/baomidou/mybatisplus/mapper/BaseMapper.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="36" column="12" lean-forward="false" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mapper/AgentMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_AgentrVo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="11" column="30" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mapper/Starship_AgentMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="50" lean-forward="false" selection-start-line="17" selection-start-column="50" selection-end-line="17" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/UserEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/commons/interceptor/CorsFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/CaptchaController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="58" column="7" lean-forward="true" selection-start-line="58" selection-start-column="7" selection-end-line="58" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/RechargeService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="604" column="67" lean-forward="true" selection-start-line="604" selection-start-column="67" selection-end-line="604" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/IMessageProducerService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="30" column="12" lean-forward="false" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageProducerService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="80" column="36" lean-forward="false" selection-start-line="80" selection-start-column="36" selection-end-line="80" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/listener/ConsumerMessageListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1326">
+          <caret line="95" column="22" lean-forward="true" selection-start-line="95" selection-start-column="22" selection-end-line="95" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/enums/ErrorCodeEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="651">
+          <caret line="53" column="15" lean-forward="false" selection-start-line="53" selection-start-column="15" selection-end-line="53" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/IUserService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="29" column="27" lean-forward="true" selection-start-line="29" selection-start-column="27" selection-end-line="29" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/UserController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="60" column="46" lean-forward="false" selection-start-line="60" selection-start-column="46" selection-end-line="60" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/UserService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="197" column="43" lean-forward="true" selection-start-line="197" selection-start-column="43" selection-end-line="197" selection-end-column="43" />
+        <state relative-caret-position="180">
+          <caret line="23" column="18" lean-forward="false" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/DbLoggerController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="144" column="35" lean-forward="true" selection-start-line="144" selection-start-column="35" selection-end-line="144" selection-end-column="35" />
+        <state relative-caret-position="221">
+          <caret line="30" column="13" lean-forward="false" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/UserService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="201" column="9" lean-forward="false" selection-start-line="201" selection-start-column="9" selection-end-line="201" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/spring/com.agdress.api-servlet.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="61" column="41" lean-forward="true" selection-start-line="61" selection-start-column="41" selection-end-line="61" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/commons/secret/AuthorizationInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="39" column="30" lean-forward="false" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-dev.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="50" lean-forward="false" selection-start-line="26" selection-start-column="50" selection-end-line="26" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-product.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="10" lean-forward="true" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/CardEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mapper/CardMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mapper/BankMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/ICardService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/Starship_IUserCardService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="14" column="1" lean-forward="false" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/Starship_UserEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="867">
+          <caret line="59" column="29" lean-forward="true" selection-start-line="55" selection-start-column="3" selection-end-line="59" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/UserResultVo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_UserlistVo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" column="28" lean-forward="true" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/entity/vo/Starship_UserVo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="101" column="0" lean-forward="true" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/agdress/bgapi/GameUtilsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/agdress/bgapi/GameConnectorImplTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2057">
+          <caret line="144" column="34" lean-forward="false" selection-start-line="144" selection-start-column="34" selection-end-line="144" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -964,141 +1151,80 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="24" column="10" lean-forward="false" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_GamesService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-607">
-          <caret line="198" column="21" lean-forward="true" selection-start-line="198" selection-start-column="21" selection-end-line="198" selection-end-column="21" />
+        <state relative-caret-position="2040">
+          <caret line="158" column="53" lean-forward="false" selection-start-line="158" selection-start-column="53" selection-end-line="158" selection-end-column="53" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_AccountDetailService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/bgapi/IGameConnector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-502">
-          <caret line="227" column="46" lean-forward="true" selection-start-line="227" selection-start-column="46" selection-end-line="227" selection-end-column="46" />
+        <state relative-caret-position="612">
+          <caret line="41" column="24" lean-forward="false" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_UserAccountService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/bgapi/GameRsp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/IMessageProducerService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/MessageProducerService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="67" column="59" lean-forward="false" selection-start-line="67" selection-start-column="59" selection-end-line="67" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/commons/utils/ConstantInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="59" column="11" lean-forward="false" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/bgapi/HttpClientUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="291" column="39" lean-forward="true" selection-start-line="291" selection-start-column="39" selection-end-line="291" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-product.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="28" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/environment/env-dev.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        <state relative-caret-position="187">
+          <caret line="13" column="22" lean-forward="true" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/bgapi/GameConnectorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="992">
-          <caret line="208" column="0" lean-forward="true" selection-start-line="208" selection-start-column="0" selection-end-line="208" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/job/OrderGamesJob.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="45" column="7" lean-forward="false" selection-start-line="45" selection-start-column="7" selection-end-line="45" selection-end-column="7" />
+        <state relative-caret-position="666">
+          <caret line="217" column="22" lean-forward="false" selection-start-line="217" selection-start-column="22" selection-end-line="217" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mongodb/model/DBLogger.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/message/SmsAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        <state relative-caret-position="188">
+          <caret line="104" column="19" lean-forward="false" selection-start-line="104" selection-start-column="19" selection-end-line="104" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mongodb/model/DBOrderGames.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/Starship_AccountDetailService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/mongodb/impl/DBOrderGamesDaoImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="57" column="14" lean-forward="true" selection-start-line="57" selection-start-column="14" selection-end-line="57" selection-end-column="14" />
+        <state relative-caret-position="410">
+          <caret line="190" column="55" lean-forward="true" selection-start-line="190" selection-start-column="55" selection-end-line="190" selection-end-column="55" />
           <folding>
-            <element signature="e#2819#2834#0" expanded="true" />
+            <element signature="e#10235#10250#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/listener/ConsumerMessageListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/PaymentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/UserAccountDetailService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="223" column="86" lean-forward="true" selection-start-line="223" selection-start-column="86" selection-end-line="223" selection-end-column="86" />
+        <state relative-caret-position="155">
+          <caret line="152" column="62" lean-forward="true" selection-start-line="152" selection-start-column="28" selection-end-line="152" selection-end-column="62" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/service/impl/RechargeService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/ActivityController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="436" column="50" lean-forward="true" selection-start-line="436" selection-start-column="50" selection-end-line="436" selection-end-column="50" />
+        <state relative-caret-position="374">
+          <caret line="33" column="0" lean-forward="true" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/agdress/controller/UserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="136" column="18" lean-forward="true" selection-start-line="136" selection-start-column="18" selection-end-line="136" selection-end-column="18" />
           <folding />
         </state>
       </provider>

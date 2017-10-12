@@ -168,7 +168,7 @@
     },
     computed: {
       yearList () {
-        return this.date.getFullYear()
+        return new Date().getFullYear()
       },
       active () {
         var dt = this.dt
@@ -215,7 +215,7 @@
   
   Date.prototype.format = function () {
     return this.getFullYear() + '-' +
-    (this.getMonth() >= 10 ? this.getMonth() + 1 : '0' + (this.getMonth() + 1)) + '-' + 
+    (this.getMonth() + 1 >= 10 ? this.getMonth() + 1 : '0' + (this.getMonth() + 1)) + '-' + 
     (this.getDate() >= 10 ? this.getDate() : '0' + this.getDate()) + ' ' + 
     (this.getHours() >= 10 ? this.getHours() : '0' + this.getHours()) + ':' + 
     (this.getMinutes() >= 10 ? this.getMinutes() : '0' + this.getMinutes())

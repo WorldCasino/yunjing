@@ -150,7 +150,7 @@
                     {
                         "data": 'status',
                         "render": function (data, type, full, callback) {
-                            return data == "1"?"已读":str
+                            return str
                         }
                     }
                 ],
@@ -192,25 +192,18 @@
         $("#dataTable tbody").on("click", ".audit", function () {
             var data = tables.api().row($(this).parents("tr")).data();
             var messageContentId=data.messageContentId;
-            changeStatus(messageContentId);
             LinkUrl(data.messageType.code,data.tradeNo,messageContentId);
-//            $(".tradeNo").val(data.tradeNo);
-//            $(".amount").val(data.amount);
-//            $(".messageType").val(data.messageType.desc);
-//            var content1=data.content.trim();
-//            console.log(content1)
-//            $(".content1").val(content1);
-//            $(".createDate").val(agdress.timeStamp2String(data.createDate));
-//            $("#myModal").modal("show");
         });
 
-         function changeStatus(messageContentId){
+        //全部转为已读
+         changeStatus();
+         function changeStatus(){
              $.ajax({
                  type: "POST",
                  url: agdress.CONSTS.URL_BASE_API + "message/updateStatus",
                  data: {
-                     "messageContentId": messageContentId,
-                     "status": "1"
+                     "status": "1",
+                     "userId":<shiro:principal property="id"/>
                  },
                  async: false,
                  success: function (data) {
@@ -225,14 +218,14 @@
              if(messageType == 50){//提现审核
                  var url = 'audit/withdrawal?tradeNo='+tradeNo+"&messageContentId="+messageContentId;
                  var id = "Account_CJ"+tradeNo;
-                 var title = "出金审核列表";
+                 var title = "出金审核列表"+messageContentId;
                  window.parent.openNewTab(id,title,url);
                  return;
              }else {
                  //查看出入金记录
                  var url = 'ss_ac_detail/manager?tradeNo='+tradeNo;
                  var id = "Account_CR"+tradeNo;
-                 var title = "出入金明细记录";
+                 var title = "出入金明细记录"+messageContentId;
                  window.parent.openNewTab(id,title,url);
                  return;
              }

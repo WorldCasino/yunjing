@@ -44,4 +44,9 @@ public class CommonService implements ICommonService {
     public int getFrontendPlatform() throws ApiException {
         return systemConfig.getFRONTEND_PLATFORM();
     }
+
+    @Override
+    public int getRebatePlatform() throws ApiException {
+        return systemConfig.getREBATE_PLATFORM();
+    }
 }

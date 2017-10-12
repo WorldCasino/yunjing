@@ -59,10 +59,12 @@
 
     <!--查看是否有可领取的奖励-->
     <select id="getActiveReward" resultType="java.lang.Integer" parameterType="java.lang.Long">
-        select count(1)
+        select count(1) FROM
+        (select a.active_id,a.user_id
         from t_active_daily a
         left join t_actives b on a.active_id=b.active_id
-        where a.total>=b.limit and a.received=0 and a.user_id=#{userId}
+        GROUP by a.active_id,a.user_id,a.total,b.limit,a.received
+        <![CDATA[having a.total>=b.limit and a.received=0 and a.user_id=#{userId}]]>) as a
     </select>
     <!--查看用户是否参与过此任务-->
     <select id="isParticipationActive" resultType="java.lang.Integer" parameterType="java.util.HashMap">

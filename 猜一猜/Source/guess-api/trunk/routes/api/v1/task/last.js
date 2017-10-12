@@ -103,10 +103,10 @@ var latest = function (req, res, next) {
                 'LEFT JOIN m_users AS u ON t.user_id = u.user_id ' +
                 'LEFT JOIN m_users AS p on t.parent_id = p.user_id ' +
                 'WHERE t.is_delete = 0 and t.task_status = 20 ' +
-                'AND t.task_type in (0,3) ' +
+                'AND (t.task_type in (0,3) or t.is_recommend=1) ' +
                 'AND (SYSDATE()<t.lock_time OR t.lock_time IS NULL) ' +
                 'AND t.quantity>(SELECT count(1) FROM t_task_orders AS o WHERE o.task_id=t.task_id) ' +
-                'ORDER BY t.hot DESC,t.create_date DESC limit ? offset ? ',
+                'ORDER BY t.is_recommend DESC,t.hot DESC,t.create_date DESC limit ? offset ? ',
                 values: [limit, offset]
             });
         }

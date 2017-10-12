@@ -228,7 +228,7 @@
             $("input[name=bindWx]").val(cicada.isNullOrEmpty(data.wxOpenId)?"未绑定":"已绑定");
             $("input[name=balance]").val(data.accountVo.coinBalance);
             $("input[name=taskCount]").val(data.accountVo.taskCount);
-            $("input[name=incomeExpend]").val((parseFloat(data.accountVo.coinIncome)-parseFloat(data.accountVo.coinExpend)).toFixed(1));
+            $("input[name=incomeExpend]").val((parseFloat(data.accountVo.sumIncome)-parseFloat(data.accountVo.sumExpend)).toFixed(2));
             $("input[name=joinCount]").val(data.accountVo.taskJoin);
         };
 

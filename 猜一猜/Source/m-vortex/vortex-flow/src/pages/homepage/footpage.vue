@@ -23,8 +23,6 @@
   import { arrRepeatValToNull } from '../../utils/commom'
   import { mapState, mapGetters, mapActions } from 'vuex'
 
-  import * as StorageHelper from '../../store/storage-helper'
-
   export default {
     mixins: [TaskListWatch],
     components: {

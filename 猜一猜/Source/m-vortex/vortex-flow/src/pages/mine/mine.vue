@@ -85,7 +85,6 @@
 <script>
 
   import { mapState, mapGetters, mapActions } from 'vuex'
-  import * as StorageHelper from '../../store/storage-helper'
   import redDot from '../../components/red-dot'
   import * as servConf from '../../api/server-config'
 
@@ -101,7 +100,6 @@
         versionimg: './../../assets/ic_logo.png',
         maleimg: './../../assets/male.png',
         femaleimg: './../../assets/female.png',
-        checked: false,
         showStore: true
       }
     },
@@ -111,8 +109,12 @@
         userInfoShake: state => state.userInfo.shake,
         userInfoStatus: state => state.userInfo.status,
         userInfoData: state => state.userInfo.data,
-        betTip: state => state.betTip,
-        serverInit: state => state.serverInit
+        serverInit: state => state.serverInit,
+
+        // 修改用户信息
+        isAblePopShake: state => state.minePublish.isAblePopShake,
+        isAblePopStatus: state => state.minePublish.isAblePopStatus,
+        isAblePopData: state => state.minePublish.isAblePopData
       }),
       ...mapGetters([
         'getUserInfoStatus',
@@ -124,7 +126,8 @@
     methods: {
       ...mapActions([
         'getUserInfo',
-        'getUserCoin'
+        'getUserCoin',
+        'getUserInfoQuickly'
       ]),
       clickHeadImg () {
 
@@ -231,21 +234,8 @@
       }
     },
     mounted () {
-      let self = this
-      this.checked = this.showBetTip
     },
     watch: {
-      checked: {
-        handler: function (val) {
-          this.$store.state.betTip = val
-          StorageHelper.saveBetTip(val)
-        }
-      },
-      betTip: {
-        handler: function (val) {
-          this.checked = val
-        }
-      },
       serverInit: {
 //        immediate: true,
         handler: function (val) {
@@ -279,6 +269,26 @@
               title: '提示',
               message: this.userInfoStatus.message
             })
+          }
+        }
+      },
+      // 所有修改用户信息成功后的回调写在这里
+      isAblePopShake: {
+        handler: function (val) {
+          if (this.isAblePopStatus === null) {
+//            this.getUserInfoQuickly()
+            // 修改vuex的userInfo对应的值
+            const type = this.isAblePopData.type
+            const flag = this.isAblePopData.flag
+            if (this.userInfoData === null) return
+            switch (type) {
+              case 4 :
+                this.$store.state.userInfo.data.coin_first = flag
+                break
+              case 6 :
+                this.$store.state.userInfo.data.bet_tip = flag
+                break
+            }
           }
         }
       }

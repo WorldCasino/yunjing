@@ -26,6 +26,7 @@ public interface TaskMapper extends BaseMapper<Task> {
     void updateLotteryComplete(Task task);
 
     int updateTaskLocked(long taskId);
+    int updateTaskrecommend(long taskId);
 
     List<TaskVo> selectWattingLotteryTasks();
 

@@ -52,7 +52,7 @@
 
         </div>
         <div v-else class="item-count-down-title">
-          已结束
+          已开奖
         </div>
       </div>
     </div>
@@ -143,7 +143,7 @@
     },
     methods: {
       formatRefreshTime: function () {
-        return TimeUtil.formatDatePass(this.refreshTime)
+        return TimeUtil.formatDatePass(this.quizDetail.create_date)
       },
       calcCountDown (time) {
         time = time / 1000

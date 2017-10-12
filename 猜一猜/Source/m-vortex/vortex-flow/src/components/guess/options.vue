@@ -153,7 +153,8 @@
       bet: function (option, index) {
         // 下注声音提示（audio想要动态响应触发play方法，必须先在js事件（可在点击事件）下至少触发一次play）
         const oBetAudio = document.querySelector('.bet-audio')
-        oBetAudio.play().catch(() => {})
+//        oBetAudio.play().catch(() => {})
+        oBetAudio.play()
         oBetAudio.pause()
         // 停止上一次的声音
         oBetAudio.src = ''

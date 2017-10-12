@@ -44,15 +44,15 @@
   
                     <div class="m-inline-block">
                       <p>主胜</p>
-                      <div>{{itm.hisOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.hisOdds.toFixed(2)}}</div>
                     </div>
                     <div class="m-inline-block">
                       <p>平</p>
-                      <div>{{itm.tieOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.tieOdds.toFixed(2)}}</div>
                     </div>
                     <div class="m-inline-block">
                       <p>客胜</p>
-                      <div>{{itm.winOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.winOdds.toFixed(2)}}</div>
                     </div>
   
                   </div>
@@ -68,7 +68,7 @@
               <section class="m-item-part m-block" v-if="item.ballSize && item.ballSize.length">
   
                 <div class="m-item-sports" style="display:block;" v-for="itm in item.ballSize" v-if="itm.isDefault">
-                  <p class="m-detail-title">大小球 ({{itm.concedePointsShow}})</p>
+                  <p class="m-detail-title">大小球 ({{itm.matchId == 0 ? '-' : itm.concedePointsShow}})</p>
   
                   <div class="m-item-con">
                     <!--<div class="m-inline-block" style="padding: 0;">
@@ -76,11 +76,11 @@
                     </div>-->
                     <div class="m-inline-block">
                       <p>大</p>
-                      <div>{{itm.bigBallOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.bigBallOdds.toFixed(2)}}</div>
                     </div>
                     <div class="m-inline-block" style="border-right: none;">
                       <p>小</p>
-                      <div>{{itm.smallBallOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.smallBallOdds.toFixed(2)}}</div>
                     </div>
   
                   </div>
@@ -96,16 +96,16 @@
               <section class="m-item-part m-block" v-if="item.letTheBall && item.letTheBall.length">
   
                 <div class="m-item-sports" style="display:block;" v-for="itm in item.letTheBall" v-if="itm.isDefault">
-                  <p class="m-detail-title">让球 ({{itm.concedePointsShow}})</p>
+                  <p class="m-detail-title">让球 ({{itm.matchId == 0 ? '-' : itm.concedePointsShow}})</p>
   
                   <div class="m-item-con">
                     <div class="m-inline-block">
                       <p>主胜</p>
-                      <div>{{itm.hisOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.hisOdds.toFixed(2)}}</div>
                     </div>
                     <div class="m-inline-block" style="border-right: none;">
                       <p>客胜</p>
-                      <div>{{itm.winOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.winOdds.toFixed(2)}}</div>
                     </div>
                   </div>
   
@@ -185,7 +185,7 @@
     mounted () {
       this.getSportsPubList({
         match_type: 1,
-        page: this.page
+        page: this.$store.state.sports.footpageNum
       })
       var self = this
       this.Dom7('#pubTab2').on('infinite', function () {
@@ -193,7 +193,7 @@
           self.isLoadList = false
           self.getSportsPubList({
             match_type: 1,
-            page: ++self.page
+            page: ++self.$store.state.sports.footpageNum
           })
         }
       })

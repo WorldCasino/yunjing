@@ -61,7 +61,7 @@ const actions = {
 
   // 首页、足球、篮球的下注接口共用此入口  TODO 考虑未来把详情页下注接口合并为一个
   homepageQuizBet ({state, commit, rootState}, payload) {
-    API.quizBet(payload[0], payload[1], payload[2], rootState.token)
+    API.quizBet(payload[0], payload[1], payload[2], payload[3], rootState.token)
       .then(function (data) {
         commit(types.HOMEPAGE_QUIZ_BET_SUCCEED, [payload[0], data])
       })

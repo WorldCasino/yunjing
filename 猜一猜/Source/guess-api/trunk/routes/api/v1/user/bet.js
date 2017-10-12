@@ -36,7 +36,8 @@ module.exports = function (req, res, next) {
     var coin_type = 0;
     //玩家昵称 推送用
     var nickname = false;
-
+    //优先币种
+    var coin_first = 0 ;
 
     //操作类型
     var operateType ;
@@ -57,10 +58,12 @@ module.exports = function (req, res, next) {
         pd.checkArgument(!!req.body.task_id, '参数task_id必须设置');
         pd.checkArgument(!!req.body.quantity, '参数quantity必须设置');
         pd.checkArgument(!!req.body.answer_id, '参数answer_id必须设置');
+        pd.checkArgument(!!req.body.coin_first, '参数coin_first必须设置');
         //
         task_id = parseInt(req.body.task_id);
         quantity = parseInt(req.body.quantity);
         answer_id = parseInt(req.body.answer_id);
+        coin_first = parseInt(req.body.coin_first);
     }).then(function () {
         // 锁定表，避免多个用户都下注时候超过了总的下注数【只用锁定一个表就可以了，因为其它都在这个步骤之后才能执行】
         // pool 方式也不行，BUG?
@@ -72,6 +75,24 @@ module.exports = function (req, res, next) {
             // ]);
             // return Q.ninvoke(conn, 'query', 'LOCK TABLES t_task_orders WRITE,t_tasks WRITE,t_user_account WRITE,t_user_account_detail WRITE');
             //return Q.ninvoke(conn, 'query', 'LOCK TABLES t_tasks WRITE');
+
+            //使用行锁
+            //FOR UPDATE仅适用于InnoDB，且必须在交易区块(BEGIN/COMMIT)中才能生效
+            return Q.ninvoke(conn, 'query', {
+                sql: 'BEGIN'
+            }).then(function () {
+                //需要做update操作的表加行锁
+                return Q.all([
+                    Q.ninvoke(conn, 'query', {
+                        sql: 'SELECT * FROM t_tasks WHERE task_id = ? for update',
+                        values: [task_id]
+                    }),
+                    Q.ninvoke(conn, 'query', {
+                        sql: 'SELECT * FROM t_user_account WHERE user_id = ? for update',
+                        values: [user_id]
+                    })
+                ]);
+            })
         });
         //return Q.ninvoke(conn, 'query', 'LOCK TABLES t_tasks WRITE, t_task_orders WRITE');
     }).then(function () {
@@ -113,31 +134,68 @@ module.exports = function (req, res, next) {
             //默认金币id
             accountId = parseInt(result[0][0][0].account_id);
 
+            // 锁定的金币
+            var locked = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_locked || 0.0) : 0.0;
+
             // 我的结余金币
             if(judge === 0){//不能用金豆
                 var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_balance || 0.0) : 0.0;
+                pd.checkState((myLeft - locked) >= (quantity * price), '金币不足，购买金币后再下注',1001);
             }
             if(judge === 1){//可以用金豆
-                //金币做够下注
-                if((result[0][0][0].coin_balance - result[0][0][0].coin_locked) >= (quantity * result[1][0][0].price)){
-                    var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_balance || 0.0) : 0.0;
-                }else{//金币不足
+                //优先金币下注
+                if(coin_first==0){
+                    //金币足够下注
+                    if((result[0][0][0].coin_balance - result[0][0][0].coin_locked) >= (quantity * result[1][0][0].price)){
+                        var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_balance || 0.0) : 0.0;
+                        //币种是金币
+                        coin_type = 0;
+                        //金币id
+                        accountId = parseInt(result[0][0][0].account_id);
+                    }else{//金币不足
+                        pd.checkState(true, '金币不足，购买金币后再下注',1001);
+                        // //金豆足够下注
+                        // if((result[0][0][1].coin_balance - result[0][0][1].coin_locked) >= (quantity * result[1][0][0].price)){
+                        //     //币种是金豆
+                        //     coin_type = 1;
+                        //     //金豆id
+                        //     accountId = parseInt(result[0][0][1].account_id);
+                        //     var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][1].coin_balance || 0.0) : 0.0;
+                        // }else{//金豆不足
+                        //     pd.checkState(true, '金币不足，购买金币后再下注',1001);
+                        // }
+                    }
+                }
+                //优先金豆下注
+                else if(coin_first==1){
                     //金豆足够下注
                     if((result[0][0][1].coin_balance - result[0][0][1].coin_locked) >= (quantity * result[1][0][0].price)){
+                        var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_balance || 0.0) : 0.0;
                         //币种是金豆
                         coin_type = 1;
                         //金豆id
                         accountId = parseInt(result[0][0][1].account_id);
-                        var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][1].coin_balance || 0.0) : 0.0;
                     }else{//金豆不足
-                        pd.checkState(true, '金币不足，购买金币后再下注',1001);
+                        pd.checkState(true, '金豆不足',1001);
+                        //     //币种是金豆
+                        //     coin_type = 1;
+                        //     //金豆id
+                        //     accountId = parseInt(result[0][0][1].account_id);
+                        //     var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][1].coin_balance || 0.0) : 0.0;
+                        // //金币足够下注
+                        // if((result[0][0][0].coin_balance - result[0][0][0].coin_locked) >= (quantity * result[1][0][0].price)){
+                        //     //币种是金币
+                        //     coin_type = 0;
+                        //     //金币id
+                        //     accountId = parseInt(result[0][0][0].account_id);
+                        //     var myLeft = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_balance || 0.0) : 0.0;
+                        // }else{//金豆不足
+                        //     pd.checkState(true, '金币不足，购买金币后再下注',1001);
+                        // }
                     }
                 }
             }
 
-
-            // 锁定的金币
-            var locked = result[0][0].length === 2 ? parseFloat(result[0][0][0].coin_locked || 0.0) : 0.0;
             // 玩家昵称
             nickname = result[0][0].length === 2 ? result[0][0][0].nickname || '' : '';
 
@@ -163,11 +221,11 @@ module.exports = function (req, res, next) {
 
             pd.checkState(answers[0].cnt === 1, '系统开小差了');//答案编号不正确
             pd.checkState(status === 20, '竞猜已经开奖，不能下注了');
-            if(coin_type==0){
-                pd.checkState((myLeft - locked) >= (quantity * price), '金币不足，购买金币后再下注',1001);
-            }else if(coin_type==1){
-                pd.checkState((myLeft) >= (quantity * price), '金币不足，购买金币后再下注',1001);
-            }
+            // if(coin_type==0){
+            //     pd.checkState((myLeft - locked) >= (quantity * price), '金币不足，购买金币后再下注',1001);
+            // }else if(coin_type==1){
+            //     pd.checkState((myLeft) >= (quantity * price), '金币不足，购买金币后再下注',1001);
+            // }
             pd.checkState(quantity <= (total - sold), '注数已经下满了');
             pd.checkState(lockTime == null || lockTime > new Date(), '下注已经截止，不能下注了');
         });
@@ -243,6 +301,8 @@ module.exports = function (req, res, next) {
 
             return insertId;
         }).then(function (insertId) {
+            //解锁行锁
+            Q.ninvoke(conn, 'query', 'COMMIT');//TODO
             // 更新统计表
             //更新条件用account_id
             return Q.ninvoke(mysql, 'query', {
@@ -467,11 +527,12 @@ module.exports = function (req, res, next) {
                 values: [user_id ,task_id]
             })
         },1500)
-    })
-        .catch(function (error) {
+    }).catch(function (error) {
         // 解锁表
         // Q.ninvoke(conn, 'query', 'UNLOCK TABLES');//TODO
-        conn.release();
+        //解锁行锁
+        Q.ninvoke(conn, 'query', 'ROLLBACK');//TODO
+        // conn.release();
         res.pkg.success = false;
         res.pkg.message = error.message;
         res.pkg.code = error.code || -1;

@@ -1,134 +1,3 @@
-<style scoped>
-  p{
-    margin: 0; padding: 0;
-  }
-  .m-sports-can{
-    width: 100%; display: flex; margin-top: .26666rem;
-    height: 2.057rem;
-  }
-  .m-sports-mainTeam, .m-sports-keTeam{
-    flex: 1;
-  }
-  .m-sports-vs{
-    width: 36%;text-align: center;
-  }
-  .m-sports-vs>p:nth-of-type(1){
-    margin-top: .5466rem; font-size: .53333rem; color: #333;
-    line-height: 1; 
-  }
-  .m-sports-vs>p:nth-of-type(2){
-    margin-top: .09rem; font-size: .26666rem; color: #666;
-  }
-  .m-sports-item{
-    text-align: left; 
-  }
-  .m-sports-title{
-    margin-top: .32rem; font-size: .26666rem;
-    color: #666; padding: 0 .25rem; line-height: 1;
-  }
-  .m-sports-img{
-    width: 1.0666rem; margin-bottom: 5px;
-    position: relative; height: 100%;
-  }
-  .m-fl{
-    float: left; clear: both;
-  }
-  .m-fr{
-    float: right; clear: both;
-  }
-  .red{
-   color: #E6191A;
-  }
-  .blue{
-   color: #19A0FF;
-  }
-
-  .open-type {
-    padding-left: 12px;
-    font-size: 13px;
-    color: #666;
-    line-height: 30px;
-    background: #fff;
-    text-align: left;
-  }
-  .type-wrapper {
-    height: 55px; border-top: 1px solid #efeff4;
-    background: #fff; text-align: left;
-    padding: 0 12px 0 14px;
-  }
-  .open-text {
-    font-size: 15px;
-    color: #333; margin-top: 10px;
-    text-align: left;
-    line-height: 25px;
-  }
-  .open-des {
-    font-size: 12px;
-    color: #666; text-align: left;
-  }
-   .time-des {
-    color: #333;
-    font-size: 15px; float: left;
-    line-height: 50px;
-  }
-
-  .time-text {
-    color: #666; float: right;
-    font-size: 15px; line-height: 50px;
-  }
-
-  .btn-next-step {
-    height: 45px;
-    width: 100%;
-    color: black;
-    background-color: gold;
-    padding-bottom: 0px;
-    border-width: 0px;
-    border-radius: 0px;
-    font-size: large;
-    display: flex;
-    display: -webkit-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .m-team-logo{
-    width: 1.066666rem;
-  }
-  
-  .m-sports-keTeam>.m-sports-img>div{
-    position: absolute; left: 50%;
-    word-break: keep-all; transform: translateX(-50%);
-  }
-  
-  .m-sports-mainTeam>.m-sports-img>div{
-    position: absolute; left: 50%;
-    word-break: keep-all; transform: translateX(-50%);
-  }
-  
-  .m-visit-word{
-    position: absolute;
-    right: -24px; top: 0;
-  }
-  
-  .m-home-word{
-    position: absolute;
-    left: -24px; top: 0;
-  }
-  
-  .notice-title{
-    font-size:14px;
-    color:#666;
-    margin:12px 0 0 12px;
-    text-align: left;
-  }
-
-  .notice-content{
-    font-size:14px;
-    color:#999;
-    text-align: left;
-    padding:4px 0 10px 12px;
-  }
-</style>
 
 <template>
   <f7-page navbar-fixed>
@@ -171,8 +40,12 @@
               <div class="m-sports-vs">
                 <p>VS</p>
                 <p v-if="type == 1 || ballType == 2">标准盘</p>
-                <p v-if="type == 2 && itm.isDefault" v-for="itm in footballCurData.ballSize">大小球 ({{itm.concedePointsShow}})</p>
-                <p v-if="type == 3 && itm.isDefault" v-for="itm in footballCurData.letTheBall">让球 ({{itm.concedePointsShow}})</p>
+                <p v-if="type == 2">
+                  <span v-if="itm.isDefault" v-for="itm in footballCurData.ballSize">大小球 ({{itm.matchId == 0 ? '-' : itm.concedePointsShow}})</span>
+                </p>
+                <p v-if="type == 3">
+                  <span v-if="itm.isDefault" v-for="itm in footballCurData.letTheBall">让球 ({{itm.matchId == 0 ? '-' : itm.concedePointsShow}})</span>
+                </p>
               </div>
               <div class="m-sports-keTeam">
                 <div class="m-sports-img m-fl">
@@ -352,5 +225,135 @@
   .text-max{
     color:#999;
     font-size: 12px;
+  }
+  
+  p{
+    margin: 0; padding: 0;
+  }
+  .m-sports-can{
+    width: 100%; display: flex; margin-top: .26666rem;
+    height: 2.057rem;
+  }
+  .m-sports-mainTeam, .m-sports-keTeam{
+    flex: 1;
+  }
+  .m-sports-vs{
+    width: 36%;text-align: center;
+  }
+  .m-sports-vs>p:nth-of-type(1){
+    margin-top: .5466rem; font-size: .53333rem; color: #333;
+    line-height: 1; 
+  }
+  .m-sports-vs>p:nth-of-type(2){
+    margin-top: .09rem; font-size: .26666rem; color: #666;
+  }
+  .m-sports-item{
+    text-align: left; 
+  }
+  .m-sports-title{
+    margin-top: .32rem; font-size: .26666rem;
+    color: #666; padding: 0 .25rem; line-height: 1;
+  }
+  .m-sports-img{
+    width: 1.0666rem; margin-bottom: 5px;
+    position: relative; height: 100%;
+  }
+  .m-fl{
+    float: left; clear: both;
+  }
+  .m-fr{
+    float: right; clear: both;
+  }
+  .red{
+   color: #E6191A;
+  }
+  .blue{
+   color: #19A0FF;
+  }
+
+  .open-type {
+    padding-left: 12px;
+    font-size: 13px;
+    color: #666;
+    line-height: 30px;
+    background: #fff;
+    text-align: left;
+  }
+  .type-wrapper {
+    height: 55px; border-top: 1px solid #efeff4;
+    background: #fff; text-align: left;
+    padding: 0 12px 0 14px;
+  }
+  .open-text {
+    font-size: 15px;
+    color: #333; margin-top: 10px;
+    text-align: left;
+    line-height: 25px;
+  }
+  .open-des {
+    font-size: 12px;
+    color: #666; text-align: left;
+  }
+   .time-des {
+    color: #333;
+    font-size: 15px; float: left;
+    line-height: 50px;
+  }
+
+  .time-text {
+    color: #666; float: right;
+    font-size: 15px; line-height: 50px;
+  }
+
+  .btn-next-step {
+    height: 45px;
+    width: 100%;
+    color: black;
+    background-color: gold;
+    padding-bottom: 0px;
+    border-width: 0px;
+    border-radius: 0px;
+    font-size: large;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .m-team-logo{
+    width: 1.066666rem;
+  }
+  
+  .m-sports-keTeam>.m-sports-img>div{
+    position: absolute; left: 50%;white-space: nowrap; 
+    transform: translateX(-50%);
+  }
+  
+  .m-sports-mainTeam>.m-sports-img>div{
+    position: absolute; left: 50%;
+    transform: translateX(-50%); white-space: nowrap; 
+  }
+  
+  .m-visit-word{
+    position: absolute;
+    right: -24px; top: 0;
+  }
+  
+  .m-home-word{
+    position: absolute;
+    left: -24px; top: 0;
+  }
+  
+  .notice-title{
+    font-size:14px;
+    color:#666;
+    margin:12px 0 0 12px;
+    text-align: left;
+  }
+
+  .notice-content{
+    font-size:14px;
+    color:#999;
+    text-align: left;
+    padding:4px 0 10px 12px;
   }
 </style>

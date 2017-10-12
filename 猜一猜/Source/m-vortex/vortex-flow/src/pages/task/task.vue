@@ -27,14 +27,14 @@
                 <img src="../../../static/task/gold-box.png" v-if="item.active_id == 183"/>
               </div>
               
-              <div v-for='(item, index) in taskBox' v-if="taskDailyData.today_liveness >= 30 && taskDailyData.today_liveness < 90" :key="Math.random()">
+              <div v-for='(item, index) in taskBox' v-if="taskDailyData.today_liveness >= 30 && taskDailyData.today_liveness < 60" :key="Math.random()">
                 <img src="../../../static/task/ashen-light-box.gif" v-if="item.received == 0 && item.active_id == 181" @click="getDailyReward(item.active_id, item.coin_type, item.reward_coins, item.reward_liveness)"/>
                 <img src="../../../static/task/gray-box.png" v-if="item.received == 1 && item.active_id == 181"/>
                 <img src="../../../static/task/purple-box.png" v-if="item.active_id == 182"/>
                 <img src="../../../static/task/gold-box.png" v-if="item.active_id == 183"/>
               </div>
               
-              <div v-for='(item, index) in taskBox' v-if="taskDailyData.today_liveness >= 90 && taskDailyData.today_liveness < 150" :key="Math.random()">
+              <div v-for='(item, index) in taskBox' v-if="taskDailyData.today_liveness >= 60 && taskDailyData.today_liveness < 90" :key="Math.random()">
                 <img src="../../../static/task/ashen-light-box.gif" v-if="item.received == 0 && item.active_id == 181" @click="getDailyReward(item.active_id, item.coin_type, item.reward_coins, item.reward_liveness)"/>
                 <img src="../../../static/task/gray-box.png" v-if="item.received == 1 && item.active_id == 181"/>
                 <img src="../../../static/task/purple-light-box.gif" v-if="item.received == 0 && item.active_id == 182" @click="getDailyReward(item.active_id, item.coin_type, item.reward_coins, item.reward_liveness)"/>
@@ -43,7 +43,7 @@
                 <img src="../../../static/task/gray2-white-box.png" v-if="item.received == 1 && item.active_id == 183"/>
               </div>
               
-              <div v-for='(item, index) in taskBox' v-if="taskDailyData.today_liveness >= 150" :key="Math.random()">
+              <div v-for='(item, index) in taskBox' v-if="taskDailyData.today_liveness >= 90" :key="Math.random()">
                 <img src="../../../static/task/ashen-light-box.gif" v-if="item.received == 0 && item.active_id == 181" @click="getDailyReward(item.active_id, item.coin_type, item.reward_coins, item.reward_liveness)"/>
                 <img src="../../../static/task/gray-box.png" v-if="item.received == 1 && item.active_id == 181"/>
                 <img src="../../../static/task/purple-light-box.gif" v-if="item.received == 0 && item.active_id == 182" @click="getDailyReward(item.active_id, item.coin_type, item.reward_coins, item.reward_liveness)"/>
@@ -61,8 +61,6 @@
               <span>30</span>
               <span>60</span>
               <span>90</span>
-              <span>120</span>
-              <span>150</span>
             </div>
   
           </div>
@@ -194,7 +192,8 @@
         taskDailyErr: state => state.task.taskDailyErr
       }),
       percent () {
-        return (this.taskDailyData.today_liveness / 150 <= 1 ? this.taskDailyData.today_liveness / 150 : 1) * 100 + '%'
+        var liveness = this.taskDailyData.today_liveness
+        return (liveness / 90 <= 1 ? liveness / 90 : 1) * 100 + '%'
       }
     },
     methods: {
@@ -338,11 +337,11 @@
   }
 
   .task-flex-item>div:nth-of-type(1){
-    left: 19.5%;
+    left: 45.333%; transform: translateX(-50%);
   }
 
   .task-flex-item>div:nth-of-type(2){
-    left: 58.5%;
+    left: 77.666%; transform: translateX(-50%);
   }
 
   .task-flex-item>div:nth-of-type(3){
@@ -384,23 +383,15 @@
   }
 
   .task-progress-degree>span:nth-of-type(2){
-    left: 20%; 
+    left: 36.5%;  transform: translateX(-50%);
   }
 
   .task-progress-degree>span:nth-of-type(3){
-    left: 40%
+    left: 69.666%;transform: translateX(-50%);
   }
 
   .task-progress-degree>span:nth-of-type(4){
-    left: 59.5%
-  }
-
-  .task-progress-degree>span:nth-of-type(5){
-    left: 79%
-  }
-
-  .task-progress-degree>span:nth-of-type(6){
-    right:-4px; text-align: left;
+    left:98%; text-align: right;transform: translateX(-50%);
   }
 
   .task-reward{

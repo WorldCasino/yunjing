@@ -15,17 +15,18 @@
       <div class="input-content">
         <p v-if="captchaSucceed" style="font-size: 14px;margin-top: 20px">验证码已发送至{{mobile}}</p>
         <p v-else style="font-size: 14px;margin-top: 20px">验证码发送失败,请重新获取</p>
-        <div class="time-content">
-          <button class="time-btn" disabled="true" v-if="second > 0">{{second}}s后重发</button>
-          <button class="time-btn" v-else @click="getCaptcha">点击重新发送</button>
-        </div>
+        
         <div class="inputs">
-          <input class="code-input" v-for="n in 4" :key="n" maxlength="1" type="number" pattern="[0-9]*">
+          <input class="code-input" placeholder="请输入验证码" v-model="code" type="number" pattern="[0-9]*" maxlength="4" @input="verifyInput">
+          <div class="time-content">
+            <button class="time-btn" disabled="true" v-if="second > 0">{{second}}s后重发</button>
+            <button class="time-btn" v-else @click="getCaptcha">重发</button>
+          </div>
         </div>
       </div>
 
       <div class="submit-content">
-        <button class="submit-btn" @click="nextStep">下一步</button>
+        <button class="submit-btn" @click="nextStep" :disabled="disable">下一步</button>
       </div>
 
     </div>
@@ -40,12 +41,13 @@
     name: 'login-verify',
     data () {
       return {
-        code: [],
+        code: '',
         now: 0,
         second: 60,
         captchaSucceed: true,
         taskType: this.$store.state.task.taskType,
-        timer: null
+        timer: null,
+        disable: true
       }
     },
     computed: {
@@ -77,6 +79,14 @@
         'loginVerify',
         'registerDeviceToken'
       ]),
+      verifyInput () {
+        if (this.code.length >= 4) {
+          this.code = this.code.substring(0, 4)
+          this.disable = false
+        } else {
+          this.disable = true
+        }
+      },
       calcRemainTime () {
         let remainTime = this.captchaAcquireTime + 60000 - this.now
         if (remainTime < 0) {
@@ -91,12 +101,8 @@
         this.sendCaptcha(this.mobile)
       },
       nextStep () {
-        this.code = []
         var self = this
-        this.Dom7('.code-input').each(function () {
-          self.code.push(this.value)
-        })
-        let captcha = this.code.join('')
+        let captcha = this.code
 //      captcha = '8090'
         if (!captcha) {
           this.$f7.addNotification({
@@ -151,31 +157,6 @@
     },
     mounted () {
       let self = this
-//    验证码输入逻辑
-      this.Dom7('.inputs').on('touchend', '.code-input', function (e) {
-        self.Dom7(this).focus()
-      })
-      this.Dom7('.code-input').on('keydown', function (e) {
-        var keyCode = e.keyCode || e.which
-        if (keyCode >= 96 && keyCode <= 105) {
-          setTimeout(() => {
-            self.Dom7(this).next().focus()
-          }, 30)
-        } else if (keyCode >= 48 && keyCode <= 57) {
-          setTimeout(() => {
-            self.Dom7(this).next().focus()
-          }, 30)
-        } else if (keyCode === 8) {
-          if (!this.value) {
-            setTimeout(() => {
-              self.Dom7(this).prev().focus()
-            }, 30)
-          }
-        } else {
-          e.preventDefault()
-        }
-      })
-
 //      获取验证码
       self.now = new Date().getTime()
       self.calcRemainTime()
@@ -266,54 +247,66 @@
 <style scoped>
 
   .time-content {
-    height: 50px;
+    height: 100%;
     display: flex;
-    display: -webkit-flex;
+    display: -webkit-flex; text-align: center;
     justify-content: space-around;
-    align-items: center;
-    margin-top: 20px;
+    align-items: center; flex: 1;
   }
 
   .time-btn {
-    background-color: white;
-    border-radius: 3px;
-    border-width: 0px;
-    width: 100px;
-    height: 30px;
+    background-color: #000; background: gold;
+    box-sizing: border-box;
+    border: none; outline: none;
+    width: 100%;
+    height: 100%;
   }
-
+  
+  .inputs>p {
+    width: 20%;
+    font-size: 15px;
+    text-align: left;
+    margin-left: 12px;
+  }
+  
   .inputs {
-    width: 80%;
-    height:60px;
+    background-color: white;
+    width: 100%;
+    height: 44px;
+    margin-top: 10px;
     display: flex;
     display: -webkit-flex;
-    justify-content: space-around;
     align-items: center;
-    margin-left: 10%;
-    margin-top: 20px;
+    justify-content: flex-start;
+    -webkit-align-items: center;
+    -webkit-justify-content: flex-start;
   }
 
   .code-input {
-    width: 50px;
-    height: 50px;
-    font-size: large;
-    background-color: white;
+    width: 70%;
+    height: 30px;
+    font-size: 15px;
+    padding-left: 12px;
+    box-sizing: border-box;
     border: none;
-    text-align: center;
-    border-radius: 0;
-    padding: 0;
     -webkit-user-select:auto!important;
   }
 
   .submit-content {
-    padding-top: 30px;
+    margin-top: 30px;
+    padding: 0 12px;
+  }
+  
+  .input-content > p {
+    text-align: left; padding-left: 12px;
+    box-sizing: border-box;
   }
   .submit-btn {
     color: black;
     border-width: 0px;
     background-color: gold;
     height:45px;
-    width: 90%;
+    width: 100%;
     font-size: 16px;
   }
   .submit-btn:disabled{

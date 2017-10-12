@@ -74,8 +74,8 @@ module.exports = function (req, res, next) {
             pd.checkArgument(!!odds_tie, '参数odds_tie不能为空');
         }
 
-        //体育类竞猜开赛前半小时不能下注(锁定)
-        if((task_type==1 || task_type==2) && new Date(lock_time).getTime()<operate_time.getTime()){
+        //体育类竞猜开赛前15分钟前不能下注(锁定)，30分钟不能发布
+        if((task_type==1 || task_type==2) && new Date(new Date(lock_time).setMinutes(new Date(lock_time).getMinutes()-15)).getTime()<operate_time.getTime()){
             pd.checkArgument(false, '体育类竞猜开赛前半小时不能下注');
         }
 

@@ -67,6 +67,9 @@
                 <button type="button" class="btn btn-primary btn-sm" id="btn-lock">
                     <i class="fa fa-sign-in"></i> 锁定
                 </button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-recommend">
+                    <i class="fa fa-sign-in"></i> 推荐
+                </button>
                 <button type="button" class="btn btn-primary btn-sm" id="btn-lottery">
                     <i class="fa fa-sign-in"></i> 开奖
                 </button>
@@ -89,7 +92,7 @@
             <th style="width: 7%;">状态</th>
             <th style="width: 7%;">单价</th>
             <th style="width: 7%;">注数</th>
-            <th style="width: 8%;">总额</th>
+            <%--<th style="width: 8%;">总额</th>--%>
             <th style="width: 10%;">答案</th>
             <th style="width: 8%;">发布时间</th>
             <th style="width: 8%;">发布人</th>
@@ -228,7 +231,7 @@
                 },
                 {"data": 'salePrice'},
                 {"data": 'quantity'},
-                {"data": 'saleAmount'},
+//                {"data": 'saleAmount'},
                 {
                     "data": 'answerVoList',
                     "render": function (data,type,rowData,callback) {
@@ -362,7 +365,35 @@
                 layer.close(index);
             });
         });
+//推荐竞猜到首页
+        $("#btn-recommend").on("click", function () {
+            var ids = new Array();
+            $('input:checkbox[name=checkList]:checked').each(function (i) {
+                ids.push(this.id);
+            })
 
+            if(ids.length==0){
+                layer.msg("请选择要推荐的竞猜项目！");
+                return;
+            }
+
+            layer.confirm('<span style="color:blue">推荐后竞猜将显示在首页！<br/>确定要推荐选中的竞猜项目吗？</span>', {
+                title:"提示",
+                btn: ['推荐','取消'] //按钮
+            }, function(index){
+                var data = {taskIds:ids};
+                cicada.post('task/recommend',JSON.stringify(data),function (result) {
+                    layer.msg('推荐成功！');
+
+                },function (err) {
+                    layer.msg('推荐失败！'+ err.message, {icon: 2});
+                },"application/json");
+
+                layer.close(index);
+            }, function(index){
+                layer.close(index);
+            });
+        });
 //开奖
         $("#btn-lottery").on("click", function () {
             var ids = new Array();

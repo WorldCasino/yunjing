@@ -43,12 +43,12 @@
   
                     <div class="m-inline-block">
                       <p>主胜</p>
-                      <div>{{itm.hisOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.hisOdds.toFixed(2)}}</div>
                     </div>
                     
                     <div class="m-inline-block" style="border-right:none;">
                       <p>客胜</p>
-                      <div>{{itm.winOdds.toFixed(2)}}</div>
+                      <div>{{itm.matchId == 0 ? '-' : itm.winOdds.toFixed(2)}}</div>
                     </div>
   
                   </div>
@@ -123,7 +123,7 @@
     mounted () {
       this.getSportsPubList({
         match_type: 2,
-        page: 1
+        page: this.$store.state.sports.baskpageNum
       })
       var self = this
       this.Dom7('#pubTab3').on('infinite', function () {
@@ -131,7 +131,7 @@
           self.isLoadList = false
           self.getSportsPubList({
             match_type: 2,
-            page: ++self.page
+            page: ++self.$store.state.sports.baskpageNum
           })
         } 
       })
@@ -151,6 +151,7 @@
 </script>
 
 <style scoped>
+  
   .pub-guess {
     display: flex;
     display: -webkit-flex;

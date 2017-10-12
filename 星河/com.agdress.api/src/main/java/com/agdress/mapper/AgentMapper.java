@@ -10,4 +10,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 public interface AgentMapper extends BaseMapper<AgentEntity> {
 
+
 }

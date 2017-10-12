@@ -92,14 +92,12 @@ public class FootBallMatchUtil {
                             String day_time=jsonObject2.getString("c3");
                             String home_team_name=jsonObject2.getString("c4T1");
                             String away_team_name=jsonObject2.getString("c4T2");
-                            String score=jsonObject2.getString("c4R");
-                            String home_score="";
-                            String away_score="";
-                            BallUtil.SaveMatch( home_team_name,"", away_team_name,"", day_week, day_date, day_time, keytitle+" "+value, MatchesTypeEnum.Football.getCode()+"" );
+                            String open_time= DateFormatUtil.getYear().trim()+"-"+day_date.trim()+" "+day_time.trim()+":00";
+                            BallUtil.SaveMatch( home_team_name,  away_team_name, open_time, keytitle+" "+value, MatchesTypeEnum.Football.getCode()+"" ,"");
                         }
                     }
                 }else{
-                    LOTTERY_LOGGER.info(String.format("ball-获取足球赛程失败",object.get("error_code")+":"+object.get("reason")));
+                    LOTTERY_LOGGER.info(String.format("ball-获取足球赛程失败"+object.get("error_code")+":"+object.get("reason")));
                 }
             }
         } catch (Exception e) {
@@ -177,7 +175,7 @@ public class FootBallMatchUtil {
                     }
                 }
             }else{
-                LOTTERY_LOGGER.info(String.format("ball-获取足球赛程结果失败",object.get("error_code")+":"+object.get("reason")));
+                LOTTERY_LOGGER.info(String.format("ball-获取足球赛程结果失败"+object.get("error_code")+":"+object.get("reason")));
             }
         } catch (Exception e) {
             e.printStackTrace();

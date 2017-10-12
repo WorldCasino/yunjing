@@ -65,7 +65,7 @@
         console.log('jljlj', servConf)
         let self = this
 //        if (servConf.APP === 0) {
-        if (servConf.APP === 1) {
+        if (servConf.APP === 0) {
           var query = url.parse(window.location.href, true).query
           var urlStr = servConf.WAP_ADDR
           if (query.operate_type === '18') {

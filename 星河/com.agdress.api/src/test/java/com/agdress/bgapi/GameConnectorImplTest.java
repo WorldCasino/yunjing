@@ -10,6 +10,7 @@ import com.agdress.commons.utils.DateUtil;
 import com.agdress.commons.utils.JacksonSerializer;
 import com.agdress.mongodb.DBOrderGamesDao;
 import com.agdress.mongodb.model.DBOrderGames;
+import com.agdress.service.Starship_IGamesService;
 import com.agdress.service.Starship_IUserService;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -39,6 +40,9 @@ public class GameConnectorImplTest extends SpringTestBase {
 
     @Autowired
     private Starship_IUserService userService;
+
+    @Autowired
+    private Starship_IGamesService gamesService;
 
 
     @Autowired
@@ -130,6 +134,21 @@ public class GameConnectorImplTest extends SpringTestBase {
         }
     }
 
-
+    @Test
+    public void openOrderQuery2() throws Exception {
+        try {
+            //获取三十分钟前的时间和二十分钟前的时间
+            String nowtime= DateUtil.getAfterMinuteDate(DateUtil.getTime(),480);//时差相差8个小时
+            String afterthree=DateUtil.getAfterMinuteDate(nowtime,-30);
+            String aftertwo=DateUtil.getAfterMinuteDate(nowtime,-20);
+            System.out.println("afterthree="+afterthree+"&&aftertwo="+aftertwo);
+            gamesService.getThreeGamesList(null, null, 0, null,
+                    null, null, 0, 0, 0, null, 1, 15, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("request for openOrderQuery data exception");
+            throw new ApiException(-1, "请求游戏数据失败!");
+        }
+    }
 
 }

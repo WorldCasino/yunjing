@@ -21,6 +21,9 @@ public class MatchesEntity   {
     @TableId(type = IdType.AUTO, value = "match_id")
     private Long matchId;
 
+    @TableField(value = "gl_match_id")
+    private Long glMatchId;
+
     @TableField(value = "status")
     private MatchesStatusEnum matchesStatusEnum;
 
@@ -60,6 +63,14 @@ public class MatchesEntity   {
 
     @TableField(value = "updatetime")
     private Timestamp updateTime;
+
+    public Long getGlMatchId() {
+        return glMatchId;
+    }
+
+    public void setGlMatchId(Long glMatchId) {
+        this.glMatchId = glMatchId;
+    }
 
     public Integer getHomeScore() {
         return homeScore;

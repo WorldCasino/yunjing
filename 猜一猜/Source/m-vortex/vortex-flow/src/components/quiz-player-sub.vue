@@ -104,6 +104,7 @@
   .item-published {
     margin-left: auto;
     color: #666666;
+    text-align: right;
   }
   
   .red{

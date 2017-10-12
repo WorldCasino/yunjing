@@ -117,7 +117,7 @@
                     {"data": "nickName"},
                     {"data": 'phone'},
                     {
-                        "data": 'agentNumber',
+                        "data": 'agentName',
                         "render": function (data, type, full, callback) {
                             return data //+"("+full.agentName+")"
                         }
@@ -200,7 +200,7 @@
                     var agentList=data.data;
                     $(".agentNumber").append("<option value=''>全部</option>");
                     for(var i=0 ; i <agentList.length ;i++){
-                        $(".agentNumber").append("<option value='"+agentList[i].loginName+"'>"+agentList[i].loginName+"</option>");
+                        $(".agentNumber").append("<option value='"+agentList[i].loginName+"'>"+agentList[i].nickName+"</option>");
                     }
                 }
             });

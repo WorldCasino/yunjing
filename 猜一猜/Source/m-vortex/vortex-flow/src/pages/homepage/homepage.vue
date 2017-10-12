@@ -17,7 +17,6 @@
   import TaskListWatch from '../../utils/taskListWatch.js'
   import { mapState, mapGetters, mapActions } from 'vuex'
 
-  import * as StorageHelper from '../../store/storage-helper'
   import * as servConf from '../../api/server-config'
 
   export default {
@@ -114,9 +113,10 @@
                 goldType = '金豆'
                 break
             }
+//            let win_expect = this.betData.win_expect.toFixed(2)
             this.$f7.addNotification({
               title: '提示',
-              message: `投${this.betData.price}${goldType}，猜中可得${this.betData.win_expect}${goldType}`,
+              message: `投${this.betData.price}${goldType}，猜中可得${parseInt(this.betData.win_expect)}${goldType}`,
               closeOnClick: true,
               hold: 3000
             })

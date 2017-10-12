@@ -55,9 +55,6 @@ const state = {
   // 当前页面参数对应当前页面标识
   currentPageParam: null,
 
-  // 下注提醒
-  betTip: JSON.parse(localStorage.getItem(storageTypes.BET_TIP)),
-
   // 分享弹窗
   showShare: false,
   shareType: 0,

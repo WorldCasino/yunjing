@@ -90,9 +90,9 @@
         </div>
     </div>
     <div style="font-size: 20px;">
-        <span style="font-size: 22px;"></span>有效投注总额：<span class="chumoney" style="display: inline-block;margin-right: 30px;"> </span> 玩家赢输总额：<span class="rumoney"  style="display: inline-block;margin-right: 30px;"> </span>
-        转码总量：<span class="zmmoney" style="display: inline-block;margin-right: 30px;"> </span>
-        <span>(注：只能查询最近二十分之前的记录)</span>
+        <span style="font-size: 22px;"></span>投注总额：<span class="chumoney" style="display: inline-block;margin-right: 30px;"> </span> 输赢：<span class="rumoney"  style="display: inline-block;margin-right: 30px;"> </span>
+        转码量：<span class="zmmoney" style="display: inline-block;margin-right: 30px;"> </span>
+        <%--<span>(注：只能查询最近二十分之前的记录)</span>--%>
     </div>
     <!--表格-->
     <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed" align="center">
@@ -104,7 +104,8 @@
             <th style="width: 5%;">玩家账号</th>
             <th style="width: 5%;">代理商</th>
             <th style="width: 5%;">投注</th>
-            <th style="width: 5%;">输赢</th>
+            <th style="width: 5%;">状态</th>
+            <th style="width: 5%;">结算额</th>
             <th style="width: 5%;">转码量</th>
             <th style="width: 5%;">类型</th>
             <th style="width: 5%;">玩家IP</th>
@@ -112,7 +113,7 @@
             <th style="width: 5%;">桌号</th>
             <%--<th style="width: 5%;">发牌资料</th>--%>
             <%--<th style="width: 5%;">游戏结果GR</th>--%>
-            <th style="width: 5%;">状态</th>
+
         </tr>
         </thead>
         <tbody></tbody>
@@ -146,22 +147,23 @@
                     {"data": "orderTime"},
 //                    {"data": "uid"},
                     {"data": "loginId"},
-                    {"data": "agentNumber"},
+                    {"data": "agentName"},
                     {"data": "bAmount"},
-                    {"data": "aAmount"},
-                    {"data": "zmAmount"},
-                    {"data": "gameName"},
-                    {"data": "fromIp"},
-                    {"data": "issueId"},
-                    {"data": "tableId"},
-//                    {"data": "licensingInfor"},
-//                    {"data": "resultContent"},
                     {
                         "data": 'orderStatus',
                         "render": function (data, type, full, callback) {
                             return data.desc
                         }
-                    }
+                    },
+                    {"data": "aAmount"},
+                    {"data": "zmAmount"},
+                    {"data": "gameName"},
+                    {"data": "fromIp"},
+                    {"data": "issueId"},
+                    {"data": "tableId"}
+//                    {"data": "licensingInfor"},
+//                    {"data": "resultContent"},
+
                 ],
                 //行操作按钮定义
                 [
@@ -204,7 +206,7 @@
                     var agentList=data.data;
                     $(".agentId").append("<option value=''>全部</option>");
                     for(var i=0 ; i <agentList.length ;i++){
-                        $(".agentId").append("<option value='"+agentList[i].agentId+"'>"+agentList[i].loginName+"</option>");
+                        $(".agentId").append("<option value='"+agentList[i].agentId+"'>"+agentList[i].nickName+"</option>");
                     }
                 }
             });

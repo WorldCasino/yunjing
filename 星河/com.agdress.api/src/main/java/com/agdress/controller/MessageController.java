@@ -4,6 +4,7 @@ import com.agdress.commons.utils.ResponseWrapper;
 import com.agdress.commons.utils.cmsUtil;
 import com.agdress.entity.MessageContentEntity;
 import com.agdress.entity.Starship_UserEntity;
+import com.agdress.entity.UserAccountEntity;
 import com.agdress.entity.vo.ActivityResultVo;
 import com.agdress.entity.vo.MessageContenVo;
 import com.agdress.enums.RoleTypeEnum;
@@ -88,9 +89,12 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/updateStatus",method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity updateStatus(MessageContentEntity messageContentEntity){
-
-        boolean flag=messageContentService.updateById(messageContentEntity);
-
+        boolean flag=true;
+        if(messageContentEntity.getMessageContentId() != null){
+            flag=messageContentService.updateById(messageContentEntity);
+        }else{
+            messageContentService.updateAllStatus(messageContentEntity.getUserId());
+        }
         ResponseWrapper result = ResponseWrapper.succeed(flag);
         return ResponseEntity.ok(result);
     }

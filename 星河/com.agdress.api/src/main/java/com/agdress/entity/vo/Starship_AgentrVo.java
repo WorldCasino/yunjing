@@ -21,6 +21,24 @@ public class Starship_AgentrVo implements Serializable{
  	private String email;
  	private String remarks;
  	private Double defectionProportion;
+ 	private Long isDelete;
+ 	private Long userStatus;
+
+	public Long getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Long isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public Long getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(Long userStatus) {
+		this.userStatus = userStatus;
+	}
 
 	public String getBgAgentId() {
 		return bgAgentId;

@@ -47,6 +47,7 @@ module.exports = function (req, res, next) {
 
     Q.fcall(function () {
         pd.checkArgument(!!req.query.match_id, '参数match_id必须设置');
+        default_MatchId=req.query.match_id;
         match_id=req.query.match_id;
         return Q.ninvoke(mysql, 'query', {
             sql: "SELECT tm.match_id as matchId,tm.day_date as dayDate,tm.day_time as dayTime,tm.day_week as dayWeek,"+
@@ -75,14 +76,16 @@ module.exports = function (req, res, next) {
         }).then(function (result) {
             result[0].map(function (p1, p2, p3) {
                 if(p1.oddsnumber == 0){
-                    match_id=0;
+                    default_MatchId=0;
+                }else{
+                    default_MatchId=match_id;
                 }
             });
         });
     }).then(function () {
         return Q.ninvoke(mysql, 'query', {
             sql: oddslistsql,
-            values: [1,match_id]
+            values: [1,default_MatchId]
         }).then(function (result) {
             res.pkg.data=res.pkg.data.map(function (p1, p2, p3) {
                     p1.standardPlate=result[0];
@@ -91,7 +94,7 @@ module.exports = function (req, res, next) {
         }).then(function () {
             return Q.ninvoke(mysql, 'query', {
                 sql: countconcede,
-                values: [1,match_id]
+                values: [1,default_MatchId]
             }).then(function (result1) {
                 result1[0].map(function (p11, p21, p31) {
                     if(p11.cedenumber == 0){
@@ -111,14 +114,16 @@ module.exports = function (req, res, next) {
         }).then(function (result) {
             result[0].map(function (p1, p2, p3) {
                 if(p1.oddsnumber == 0){
-                    match_id=0;
+                      default_MatchId=0;
+                }else{
+                    default_MatchId= match_id;
                 }
             });
         });
-    }).then(function () {
+    }).then(function ( ) {
         return Q.ninvoke(mysql, 'query', {
             sql: oddslistsql,
-            values: [3,match_id]
+            values: [3,default_MatchId]
         }).then(function (result) {
             res.pkg.data=res.pkg.data.map(function (p1, p2, p3) {
                 p1.ballSize=result[0];
@@ -127,7 +132,7 @@ module.exports = function (req, res, next) {
         }).then(function () {
             return Q.ninvoke(mysql, 'query', {
                 sql: countconcede,
-                values: [3,match_id]
+                values: [3,default_MatchId]
             }).then(function (result1) {
                 result1[0].map(function (p11, p21, p31) {
                     if(p11.cedenumber == 0){
@@ -147,14 +152,16 @@ module.exports = function (req, res, next) {
         }).then(function (result) {
             result[0].map(function (p1, p2, p3) {
                 if(p1.oddsnumber == 0){
-                    match_id=0;
+                      default_MatchId = 0;
+                }else{
+                    default_MatchId = match_id;
                 }
             });
         });
-    }).then(function () {
+    }).then(function ( ) {
         return Q.ninvoke(mysql, 'query', {
             sql: oddslistsql,
-            values: [2,match_id]
+            values: [2,default_MatchId]
         }).then(function (result) {
             res.pkg.data=res.pkg.data.map(function (p1, p2, p3) {
                 p1.letTheBall=result[0]
@@ -163,7 +170,7 @@ module.exports = function (req, res, next) {
         }).then(function () {
             return Q.ninvoke(mysql, 'query', {
                 sql: countconcede,
-                values: [2,match_id]
+                values: [2,default_MatchId]
             }).then(function (result1) {
                 result1[0].map(function (p11, p21, p31) {
                     if(p11.cedenumber == 0){

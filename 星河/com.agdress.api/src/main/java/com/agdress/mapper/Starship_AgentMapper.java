@@ -14,4 +14,7 @@ import java.util.Map;
 public interface Starship_AgentMapper extends BaseMapper<Starship_AgentEntity> {
 
     List<Starship_AgentrVo> selectAgentListPage(Map<String, String> params);
+
+    Starship_AgentrVo fingAgentById(Long agentId);
+
 }

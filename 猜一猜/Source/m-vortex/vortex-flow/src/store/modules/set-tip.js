@@ -1,9 +1,10 @@
 import * as types from '../mutation-types'
 import * as API from '../../api/rest-api'
 import * as supporter from '../state-supporter'
+import * as storageTypes from '../storage-helper'
 
 const state = {
-  beanPrefer: false
+
 }
 
 const actions = {

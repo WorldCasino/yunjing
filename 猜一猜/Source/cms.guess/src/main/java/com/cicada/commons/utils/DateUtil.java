@@ -13,13 +13,15 @@ public class DateUtil {
 
     private final static SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy-MM-dd");
 
-    private final static SimpleDateFormat sdfDay2 = new SimpleDateFormat("MM-dd");
-
     private final static SimpleDateFormat sdfDays = new SimpleDateFormat("yyyyMMdd");
 
     private final static SimpleDateFormat sdfDayshms = new SimpleDateFormat("yyyyMMddhhmmss");
 
     private final static SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private final static SimpleDateFormat sdfDay2 = new SimpleDateFormat("MM-dd");
+
+    private final static SimpleDateFormat sdfTime2 = new SimpleDateFormat("HH:mm");
 
     /**
      * 获取YYYY格式
@@ -41,7 +43,16 @@ public class DateUtil {
 
 
     /**
-     * 获取YYYY-MM-DD格式
+     * 获取HH:mm格式
+     *
+     * @return
+     */
+    public static String getTime2() {
+        return sdfTime2.format(new Date());
+    }
+
+    /**
+     * 获取MM-DD格式
      *
      * @return
      */
@@ -148,6 +159,44 @@ public class DateUtil {
     public static String formatDateChange(String str){
         SimpleDateFormat sf1 = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat sf2 =new SimpleDateFormat("yyyy-MM-dd");
+        String sfstr = "";
+        try {
+            sfstr = sf2.format(sf1.parse(str));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sfstr;
+    }
+
+
+
+    /**
+     * 格式化日期 HH:mm
+     *
+     * @return
+     */
+    public static String formatDateChange2(String str){
+        SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sf2 =new SimpleDateFormat("HH:mm");
+        String sfstr = "";
+        try {
+            sfstr = sf2.format(sf1.parse(str));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sfstr;
+    }
+
+    /**
+     * 格式化日期 MM-dd
+     *
+     * @return
+     */
+    public static String formatDateChange3(String str){
+        SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sf2 =new SimpleDateFormat("MM-dd");
         String sfstr = "";
         try {
             sfstr = sf2.format(sf1.parse(str));
@@ -267,6 +316,30 @@ public class DateUtil {
         }
         day=(endDate.getTime()-beginDate.getTime())/(24*60*60*1000);
         return day;
+    }
+
+    /**
+     * <li>功能描述：时间相减得到小时
+     * @param beginDateStr
+     * @param endDateStr
+     * @return
+     * long
+     * @author Administrator
+     */
+    public static long getDayMinute(String beginDateStr,String endDateStr){
+        long hours=0;
+        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date beginDate = null;
+        java.util.Date endDate = null;
+
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate= format.parse(endDateStr);
+        } catch ( Exception e) {
+            e.printStackTrace();
+        }
+        hours=(endDate.getTime()-beginDate.getTime())/(60*1000);
+        return hours;
     }
 
     /**

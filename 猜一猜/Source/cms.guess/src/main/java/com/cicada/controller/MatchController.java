@@ -5,7 +5,9 @@ import com.cicada.commons.utils.*;
 import com.cicada.enums.MatchesTypeEnum;
 import com.cicada.job.Ball.BallUtil;
 import com.cicada.job.Ball.BasketballMatchUtil;
+import com.cicada.job.Ball.BasketballMatchUtil2;
 import com.cicada.job.Ball.FootBallMatchUtil;
+import com.cicada.job.BallMatchJob;
 import com.cicada.pojo.PlayOddsEntity;
 import com.cicada.pojo.TeamEntity;
 import com.cicada.redis.RedisHelper;
@@ -99,8 +101,13 @@ public class MatchController extends BaseController {
     public ResponseEntity addMatch( ) throws IOException{
         ResponseWrapper result;
         try{
+
             BasketballMatchUtil.setBallList();
+
             FootBallMatchUtil.setBallList();
+
+            BallMatchJob.deleteBalForTwo();
+
             result = ResponseWrapper.succeed(true);
         } catch (Exception e){
             e.printStackTrace();
@@ -217,5 +224,8 @@ public class MatchController extends BaseController {
         }
         return ResponseEntity.ok(result);
     }
+
+
+
 
 }

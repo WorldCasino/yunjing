@@ -53,11 +53,11 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/login/fast",method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity fastLogin(@RequestBody JSONObject params){
-
+  public ResponseEntity fastLogin(@RequestBody JSONObject params){
         String mobile = params.getString("mobile");
         String captcha = params.getString("captcha");
         String agent_id=params.getString("agent_id");
+
         LoginResultVo rtn = userService.fastLogin(mobile,captcha,agent_id);
 
         ResponseWrapper result = ResponseWrapper.succeed(rtn);

@@ -158,6 +158,7 @@
               <f7-link tab-link="#tab4" @click="selectTab(4)">
                 <img v-if="tabIndex === 4" class="tab-bar-img" src="../static/tabbar/tab_icon5.png">
                 <img v-else class="tab-bar-img" src="../static/tabbar/tab_icon5-2.png">
+                <RedDot :isShowDot="showRedDot" class="tab-bar-red-dot"></RedDot>
                 <p class="tab-bar-p">我的</p>
               </f7-link>
             </f7-toolbar>
@@ -613,11 +614,11 @@
               self.homepageQuizDetail([json.chat.room])
               break
             case 'observe':
-//              console.log('观察')
-//              if (self.tabIndex !== 2) {
-//                self.showRedDot = true
-//              }
-//              self.relatedQuizDetail([json.observe.task])
+              console.log('观察')
+              if (self.tabIndex !== 2) {
+                self.showRedDot = true
+              }
+              self.relatedQuizDetail([json.observe.task])
               break
             case 'observeActive':
               console.log('待领取奖励的任务个数为' + json.observeActive.cnt)
@@ -729,6 +730,8 @@
 //          如果未登录,弹出登录框
           this.$f7.popup('#login-choose')
         } else if (index === 4) {
+//          this.showRedDot = false
+//          this.getRelatedList([0])
           this.getUserInfo('')
         } else if (index === 2) {
           // this.showRedDot = false
@@ -859,16 +862,21 @@
               arr.push(self.ftime[i].matchId)
             }
           }
-          var flist = self.$store.state.sports.footballList.slice(0)
+          var flist = self.$store.state.sports.footballList
           for (i = 0; i < arr.length; i++) {
             for (j = 0; j < flist.length; j++) {
               if (arr[i] === flist[j].matchId) {
-                self.$store.state.sports.footballList.splice(j, 1)
-                if (!self.$store.state.sports.footballList.length) {
-                  self.$store.state.sports.isAnyMorefootball = false
-                }
+                flist.splice(j, 1)
+                j--
               }
             }
+          }
+
+          if (flist.length < 10 && self.$store.state.sports.footballLimit) {
+            self.getSportsPubList({
+              match_type: 1,
+              page: ++self.$store.state.sports.footpageNum
+            })
           }
 
           arr = []
@@ -877,16 +885,21 @@
               arr.push(self.btime[i].matchId)
             }
           }
-          var blist = self.$store.state.sports.basketballList.slice(0)
+          var blist = self.$store.state.sports.basketballList
           for (i = 0; i < arr.length; i++) {
             for (j = 0; j < blist.length; j++) {
               if (arr[i] === blist[j].matchId) {
-                self.$store.state.sports.basketballList.splice(j, 1)
-                if (!self.$store.state.sports.basketballList.length) {
-                  self.$store.state.sports.basketballList = false
-                }
+                blist.splice(j, 1)
+                j--
               }
             }
+          }
+
+          if (blist.length < 10 && self.$store.state.sports.basketLimit) {
+            self.getSportsPubList({
+              match_type: 2,
+              page: ++self.$store.state.sports.baskpageNum
+            })
           }
         }, 1000)
 
@@ -993,8 +1006,8 @@
           this.getShareJsSdkConf([servConf.WAP_ADDR])
         }
 
-        // 未登录，弹出红包
-        if (!this.token) {
+        // 弹出红包
+        if (page !== 'login' && !this.token) { // page === login：微信浏览器下，微信登录成功后回调的url里的参数
           this.$store.state.showLuckyMoney = true
         }
       }
@@ -1198,13 +1211,13 @@
     justify-content: space-between;
     align-items: center;
   }
-  
+
   input,textarea{
     caret-color:#666;
     -webkit-caret-color:#666;
     -webkit-user-select: auto;
   }
-  
+
   .seperator {
     height: 1px;
     width: 100%;
@@ -1278,7 +1291,7 @@
   }
 
   .tab-bar-img {
-    position: relative;
+    display: block;
     width: 23px;
     height: 23px;
   }
@@ -1305,7 +1318,8 @@
 
   .tab-bar-p {
     margin-top: 2px;
-    font-size: small;
+    margin-bottom: 0;
+    font-size: 12px;
     /*position: absolute;*/
   }
 

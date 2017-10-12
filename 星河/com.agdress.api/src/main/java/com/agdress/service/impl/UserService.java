@@ -86,33 +86,34 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
 
 
             //BG平台注册
-            if(user.getBgUserId() ==null || user.getBgUserId() == 0){
-
-                AgentEntity agentEntity=agentMapper.selectById(user.getAgentId());
-
-                if(agentEntity.getBgAgentId()==0){
-                    GameRsp<Long> agentResp = gameConnector.openAgentCreate(agentEntity.getBgLoginId(),agentEntity.getBgPwd());
-                    agentEntity.setBgAgentId(new Long(agentResp.getResult()));
-
-                    agentMapper.updateById(agentEntity);
-                }
+            if(user.getBgUserId() ==null || user.getBgUserId() == 0 ){
 
                 String loginId = String.format("XH002%s%d",
                         user.getPhone().substring(user.getPhone().length() - 4, user.getPhone().length()),
                         user.getUserId());
 
-                GameRsp<UserCreate> resp;
-                try {
-                    resp = gameConnector.openUserCreate(agentEntity.getBgLoginId(), agentEntity.getBgPwd(), loginId, user.getNickname());
-                }catch (Exception e){
-                    throw new ApiException(ErrorCodeEnum.BgUserCreateException);
-                }
+                AgentEntity agentEntity=agentMapper.selectById(user.getAgentId());
+                if(agentEntity != null){
+                    if(agentEntity.getBgAgentId()==0){
+                        GameRsp<Long> agentResp = gameConnector.openAgentCreate(agentEntity.getBgLoginId(),agentEntity.getBgPwd());
+                        agentEntity.setBgAgentId(new Long(agentResp.getResult()));
 
-                if(!resp.getResult().isSuccess() || resp.getResult().getUserId() ==0) throw new ApiException(ErrorCodeEnum.BgUserCreateException);
-                user.setBgUserId(resp.getResult().getUserId());
+                        agentMapper.updateById(agentEntity);
+                    }
+
+                    GameRsp<UserCreate> resp;
+                    try {
+                        resp = gameConnector.openUserCreate(agentEntity.getBgLoginId(), agentEntity.getBgPwd(), loginId, user.getNickname());
+                    }catch (Exception e){
+                        throw new ApiException(ErrorCodeEnum.BgUserCreateException);
+                    }
+
+                    if(!resp.getResult().isSuccess() || resp.getResult().getUserId() ==0) throw new ApiException(ErrorCodeEnum.BgUserCreateException);
+                    user.setBgUserId(resp.getResult().getUserId());
+                    user.setBgRegType(resp.getResult().getRegType());
+                    user.setAgentId(agentEntity.getAgentId());
+                }
                 user.setBgLoginId(loginId);
-                user.setBgRegType(resp.getResult().getRegType());
-                user.setAgentId(agentEntity.getAgentId());
                 userMapper.updateById(user);
             }
 
@@ -174,6 +175,8 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
             // related to customer service
             Map<String, Object> customerServiceMap = new HashMap<>();
             customerServiceMap.put("role_id", RoleTypeEnum.Salesman.getCode());
+            customerServiceMap.put("is_delete","0");
+            customerServiceMap.put("user_status", "0");
             List<UserEntity> customerServiceList = userMapper.selectByMap(customerServiceMap);
             if (customerServiceList.size() == 0) {
                 logger.error("没有一个客服角色可供使用!");
@@ -185,27 +188,29 @@ public class UserService extends ServiceImpl<UserMapper,UserEntity> implements I
             user = list.get(0);
         }
 
-        AgentEntity agentEntity=null;
-        if(!StringUtils.isEmpty(agent_id)){
-            agentEntity=agentMapper.selectById(Long.parseLong(agent_id));
-        }
-        if(agentEntity == null){
-            Map<String,Object> whereMap = new HashMap<>();
-            whereMap.put("is_delete",0);
-            whereMap.put("bg_login","ix00_601134");
-            List<AgentEntity> temp= agentMapper.selectByMap(whereMap);
-            if(temp==null||temp.size()==0){
-                whereMap = new HashMap<>();
-                whereMap.put("is_delete",0);
-                whereMap.put("bg_login","agdress");
-                temp= agentMapper.selectByMap(whereMap);
+        if(user.getUserId() == 0){
+            AgentEntity agentEntity=null;
+            if(!StringUtils.isEmpty(agent_id)){
+                agentEntity=agentMapper.selectById(Long.parseLong(agent_id));
             }
-            agentEntity = temp.get(0);
-            agent_id=String.valueOf(agentEntity.getAgentId());
+            if(agentEntity == null || agentEntity.getIsDelete() == 1 ){
+                Map<String,Object> whereMap = new HashMap<>();
+                whereMap.put("is_delete",0);
+                whereMap.put("bg_login","ix00_601134");
+                List<AgentEntity> temp= agentMapper.selectByMap(whereMap);
+                if(temp.size()==0){
+                    whereMap = new HashMap<>();
+                    whereMap.put("is_delete",0);
+                    temp= agentMapper.selectByMap(whereMap);
+                }
+                agentEntity=temp.get(0);
+                agent_id=String.valueOf(agentEntity.getAgentId());
+            }
+            if(!StringUtils.isEmpty(agent_id)){
+                user.setAgentId(Long.parseLong(agent_id));
+            }
         }
-        if(user.getAgentId() == null){
-            user.setAgentId(Long.parseLong(agent_id));
-        }
+
         String token = this.doLogin(user);
         resultVo.setUserId(user.getUserId());
         resultVo.setToken(token);

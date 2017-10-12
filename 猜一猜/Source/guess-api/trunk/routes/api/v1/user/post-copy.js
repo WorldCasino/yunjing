@@ -55,6 +55,13 @@ module.exports = function (req, res, next) {
 
                 params.orgTask = orgTask;
                 params.task_type = orgTask.task_type;
+
+                var lock_time=orgTask.lock_time;
+                //体育类竞猜开赛前15分钟前不能下注(锁定)，30分钟不能发布
+                if((params.task_type==1 || params.task_type==2) && new Date(new Date(lock_time).setMinutes(new Date(lock_time).getMinutes()-15)).getTime()<operate_time.getTime()){
+                    pd.checkArgument(false, '体育类竞猜开赛前半小时不能下注');
+                }
+
                 return orgTask;
             });
         })

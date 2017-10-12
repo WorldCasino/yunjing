@@ -39,10 +39,10 @@
                         <option value="-1">出金</option>
                      </select>
                 </div>
-                <%--<label for="tradeNo" class="col-sm-2 control-label">订单编号</label>--%>
-                <%--<div class="col-sm-2" >--%>
-                    <%--<input type="text" name="tradeNo" id="tradeNo" value="" style="width: 120%;">--%>
-                <%--</div>--%>
+                <label for="tradeNo" class="col-sm-2 control-label">订单编号</label>
+                <div class="col-sm-2" >
+                    <input type="text" name="tradeNo" id="tradeNo" value="" style="width: 120%;">
+                </div>
 
                 <div class="pull-right" style="margin-top: 5px;">
                     <div class="btn-group">
@@ -253,10 +253,10 @@
         }
         //消息记录用到的
         var messageContentId = agdress.getQueryString("messageContentId");
-//        var tradeNo = agdress.getQueryString("tradeNo");
-//        if(tradeNo != null && tradeNo != ''){
-//            $("#tradeNo").val(tradeNo);
-//        }
+        var tradeNo = agdress.getQueryString("tradeNo");
+        if(tradeNo != null && tradeNo != ''){
+            $("#tradeNo").val(tradeNo);
+        }
         //添加、修改异步提交地址
         var str = "";
         <shiro:hasPermission name="38examine">
@@ -346,7 +346,8 @@
 
         //返回列表
         $("#btnCancel").on("click", function () {
-            window.location.reload();
+            $(".modal").modal("hide");
+            tables.fnDraw(false);//刷新保持分页状态
         });
 
         //返回详情
@@ -357,6 +358,7 @@
         //查看详情
         $("#dataTable tbody").on("click", ".audit", function () {
             var data = tables.api().row($(this).parents("tr")).data();
+            console.log("提现详情："+data);
             $("#myModalLabel").html(data.nickName+"的账单明细");
             $("#loading").modal("show");
             showDetailUpdate(data.tradeId);
@@ -384,8 +386,8 @@
                          $(".cardNo").val(tradepd.cardNo);
                          $(".cardName").val(tradepd.cardName);
                           //余额以及总额
-                         $(".balance").val(tradepd.balance);
-                         $(".actionTotle").val(tradepd.actionTotle);
+                         $(".balance").val((tradepd.amount+tradepd.newBalance).toFixed(2));
+                         $(".actionTotle").val((tradepd.amount+tradepd.newBalance).toFixed(2));
                          $(".amount").val(tradepd.amount);
                          $("#loading").modal("hide");
                          $("#editModal").modal("show");

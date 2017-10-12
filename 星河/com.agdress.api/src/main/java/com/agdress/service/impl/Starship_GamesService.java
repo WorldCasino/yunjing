@@ -166,12 +166,7 @@ public class Starship_GamesService  implements Starship_IGamesService {
                 for (int i = 0; i < list.size(); i++) {
                     orderQueryItem=list.get(i);
 //                    System.out.println(i+"=="+orderQueryItem.toString());
-                    dbOrderGames=dbOrderGamesDao.findOne(orderQueryItem.getOrderId());
-                    if(dbOrderGames == null){
-                        dbOrderGames=new DBOrderGames();
-                    }else{
-                        continue;
-                    }
+                    dbOrderGames=new DBOrderGames();
                     dbOrderGames.setOrderId(orderQueryItem.getOrderId());
                     dbOrderGames.setUid(orderQueryItem.getUid());
                     dbOrderGames.setLoginId(orderQueryItem.getLoginId());
@@ -179,10 +174,12 @@ public class Starship_GamesService  implements Starship_IGamesService {
                     if(starship_agentrVo == null || starship_agentrVo.getAgentId() == null){
                         dbOrderGames.setAgentId("0");
                         dbOrderGames.setAgentNumber("0");
+                        dbOrderGames.setAgentName("0");
                         dbOrderGames.setBgAgentId("0");
                     }else{
                         dbOrderGames.setAgentId(String.valueOf(starship_agentrVo.getAgentId()));
                         dbOrderGames.setAgentNumber(String.valueOf(starship_agentrVo.getAgentNumber()));
+                        dbOrderGames.setAgentName(starship_agentrVo.getAgentName());
                         dbOrderGames.setBgAgentId(String.valueOf(starship_agentrVo.getBgAgentId()));
                     }
                     dbOrderGames.setTableId(String.valueOf(orderQueryItem.getTranId()));
@@ -193,7 +190,7 @@ public class Starship_GamesService  implements Starship_IGamesService {
                     dbOrderGames.setbAmount(orderQueryItem.getbAmount());
                     //判断转码总量：输赢是0，显示投注数，输赢不是0，显示0
                     if(orderQueryItem.getaAmount() == 0){
-                        dbOrderGames.setZmAmount(orderQueryItem.getbAmount());
+                        dbOrderGames.setZmAmount(-orderQueryItem.getbAmount());
                     }else{
                         dbOrderGames.setZmAmount(0F);
                     }

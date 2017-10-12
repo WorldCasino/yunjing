@@ -1214,6 +1214,28 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
     }
 
     /**
+     * 推荐竞猜项目到首页
+     * @param taskIds 所有需要推荐的竞猜项目
+     * @return
+     */
+    public boolean recommendTask(List<Long> taskIds) throws ApiException{
+        if(null == taskIds || taskIds.size()==0) throw new ApiException(ErrorCodeEnum.ArgumentException);
+
+        boolean rtn =false;
+        try{
+
+            for (long id:taskIds) {
+                taskMapper.updateTaskrecommend(id);
+            }
+
+        }catch (Exception e){
+            throw new ApiException(ErrorCodeEnum.ArgumentException);
+        }
+
+        return rtn;
+    }
+
+    /**
      * 检查所有待开奖任务（倒计时 未及时处理的）
      * @return
      * @throws ApiException

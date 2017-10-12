@@ -86,13 +86,13 @@
 //        close
         this.$store.state.confirm.isConfirm = false
         if (this.$store.state.confirm.context === 'isAbleBean') {
-          this.isAblePop()
+          this.isAblePop([1, 1])
         }
         if (this.$store.state.confirm.context === 'ispersonal') {
-          this.isAblePop(3)
+          this.isAblePop([3, 1])
         }
         if (this.$store.state.confirm.context === 'pubguess_missR') {
-          this.isAblePop(2)
+          this.isAblePop([2, 1])
           this.$store.state.userInfo.data.default_pic = 1
         }
       }

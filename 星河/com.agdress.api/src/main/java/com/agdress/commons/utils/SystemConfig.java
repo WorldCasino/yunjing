@@ -33,6 +33,8 @@ public class SystemConfig {
 
     private int FRONTEND_PLATFORM;
 
+    private int REBATE_PLATFORM;
+
     private int WITHDRAW_MONEY_MAX;//提现的最大额度
     private int RECHARGE_MONEY_MAX;//充值的最大额度
 
@@ -231,6 +233,14 @@ public class SystemConfig {
 
     public void setFRONTEND_PLATFORM(int FRONTEND_PLATFORM) {
         this.FRONTEND_PLATFORM = FRONTEND_PLATFORM;
+    }
+
+    public int getREBATE_PLATFORM() {
+        return REBATE_PLATFORM;
+    }
+
+    public void setREBATE_PLATFORM(int REBATE_PLATFORM) {
+        this.REBATE_PLATFORM = REBATE_PLATFORM;
     }
 
     // </editor-fold>

@@ -118,11 +118,11 @@
     </select>
 
 
-
-
-
-
-
-
+    <!--更改信息全部为已读-->
+    <update id="updateAllStatus" parameterType="java.lang.Long">
+        update t_message_content
+        set status=1
+        where user_id=#{userId}
+    </update>
 
 </mapper>

@@ -11,14 +11,16 @@ require('./auxs/Error.Extensions');
 
 function main() {
     try {
-        // football1.get();
-        // football3.get();
-        // football3.get();
-        // basketball.get();
-        const j = schedule.scheduleJob('0 0 12 * * *', function () {
+        football1.get();
+        football2.get();
+        football3.get();
+        basketball.get();
+
+        const j = schedule.scheduleJob('0 0 */1 * * *', function () {
             football1.get();
+            football2.get();
             football3.get();
-            football3.get();
+            basketball.get();
         });
     }catch (e){
         console.error('Error');

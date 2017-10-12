@@ -30,7 +30,7 @@ router.get('/rank/today', require('./rank/today'));
 // 用户资料
 router.get('/user/profile',profile);
 // 用户弹框判断
-router.get('/user/judge',judge);
+router.post('/user/judge',judge);
 //  app按钮功能
 router.get('/user/switch',app_switch);
 // 更新用户信息

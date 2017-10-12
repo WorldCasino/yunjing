@@ -13,4 +13,6 @@ public interface ICommonService {
     List<BankEntity> getBankInfo() throws ApiException;
 
     int getFrontendPlatform() throws ApiException;
+
+    int getRebatePlatform() throws ApiException;
 }

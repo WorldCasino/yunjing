@@ -56,7 +56,7 @@ module.exports = function (req,res,next) {
         // });
 
         return Q.ninvoke(mysql,'query',{
-            sql:'SELECT usr.user_id, usr.user_type, usr.nickname, usr.head_url, usr.gender, usr.phonenumber, usr.isablebean, usr.default_pic, usr.ispersonal ' +
+            sql:'SELECT usr.user_id, usr.user_type, usr.nickname, usr.head_url, usr.gender, usr.phonenumber, usr.isablebean, usr.default_pic, usr.ispersonal, usr.coin_first, usr.bet_first, usr.bet_tip ' +
             'FROM m_users AS usr ' +
             'WHERE usr.user_id = ?',
             values:[id]

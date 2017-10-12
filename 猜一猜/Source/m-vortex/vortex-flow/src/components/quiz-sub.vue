@@ -16,7 +16,6 @@
 <script>
 
   import * as TimeUtil from '../utils/time-util'
-  import * as StorageHelper from '../store/storage-helper'
   import BetProgress from './guess/bet-progress.vue'
   import Describe from './guess/describe.vue'
   import ReferencesSport from './guess/references-sport.vue'
@@ -26,7 +25,11 @@
 
   import { mapState, mapGetters, mapActions } from 'vuex'
 
+  import quizBet from '../utils/quiz-bet.js'
+
   export default {
+    // 下注逻辑写在混合quizBet里面
+    mixins: [quizBet],
     components: {
       BetProgress,
       Describe,
@@ -37,7 +40,6 @@
     },
     data () {
       return {
-
       }
     },
     props: {
@@ -68,11 +70,9 @@
         token: state => state.token,
         betShake: state => state.quizList.betShake,
         betStatus: state => state.quizList.betStatus,
-        userInfoData: state => state.userInfo.data,
-        beanPrefer: state => state.setTip.beanPrefer
+        userInfoData: state => state.userInfo.data
       }),
       ...mapGetters([
-        'showBetTip',
         'userInfoData'
       ]),
       // 当前下注总数
@@ -104,56 +104,16 @@
       ...mapActions([
         'navToQuizDetail',
         'getQuizDetail',
-        'homepageQuizBet'
+        'homepageQuizBet',
+        'isAblePop'
       ]),
       goDetail () {
         this.navToQuizDetail([this.task_id])
         this.$f7.mainView.router.load({url: '/quiz-detail/'})
       },
-      bet (value) {
-        const self = this
-        if (!this.loginCheck(false)) {
-          return
-        }
-
-        if (this.isBanker) {
-          this.$f7.addNotification({
-            title: '提示',
-            message: '不能参与自己发布的竞猜',
-            closeOnClick: true,
-            hold: 3000
-          })
-          return
-        }
-
-        if (this.showBetTip !== true) {
-          this.homepageQuizBet([this.task_id, value[0].answer_id, 1])
-          return
-        }
-        // todo 下注提醒
-        // 提示文字：金豆？金币
-        this.betValue = value
-        let winGold = this.quizDetail.sale_price * Math.round(value[0].odds * 100) / 100
-        let goldType = ''
-        // 提示文字：金豆？金币
-        if (this.quizDetail.like_peas === 1 && this.userInfoData.avalible_coin <= this.quizDetail.sale_price && this.userInfoData.bean_balance >= this.quizDetail.sale_price) {
-          // 接受金币 && 可用金币不足 && 金豆充足
-          goldType = '金豆'
-        } else {
-          goldType = '金币'
-        }
-        this.$dm.confirm({
-          title: `选择：${value[1]}. ${value[0].answer}`,
-          mes: `投<span style="color: #F95E00">${this.quizDetail.sale_price}</span> ${goldType}，猜中可得<span style="color: #F95E00">${parseInt(winGold)}</span> ${goldType}`,
-          checked: true,
-          btnType: 'bet',
-          confirmCb (checked) {
-            console.log(checked)
-            self.$store.state.betTip = !checked
-            StorageHelper.saveBetTip(!checked)
-            self.homepageQuizBet([self.task_id, self.betValue[0].answer_id, 1])
-          }
-        })
+      // 下注逻辑：不公共部分
+      goBet (goldPrefer) {
+        this.homepageQuizBet([this.task_id, this.betValue[0].answer_id, 1, goldPrefer])
       },
       loginCheck: function () {
         if (this.token === null) {

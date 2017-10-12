@@ -9,11 +9,13 @@
       <div class="content">
         <div class="title">{{title}}</div>
 
-        <div v-if="isChecked === 'noChecked'" class="text-wrapper">
+        <!--没有勾选-->
+        <div v-if="isChecked === 'noChecked' && goldConf === 'noGoldConf' && checks === 'noChecks'" class="text-wrapper">
           <div v-html="mes" class="text text-nochecked" :style="{textAlign}"></div>
         </div>
 
-        <div v-else class="text-wrapper">
+        <!--不再提示选择-->
+        <div v-else-if="isChecked !== 'noChecked' && goldConf === 'noGoldConf' && checks === 'noChecks'" class="text-wrapper">
           <div v-html="mes" class="text text-haschecked"></div>
           <div class="select-wrapper" @click="noMoreWarn">
             <div class="select">
@@ -22,6 +24,47 @@
             <span class="select-text">下次不再提醒</span>
           </div>
         </div>
+
+        <!-- 多个复选框 -->
+        <div v-else-if="checks !== 'noChecks' && goldConf === 'noGoldConf' && isChecked === 'noChecked'" class="text-wrapper">
+          <div v-html="mes" class="text text-haschecked"></div>
+          <div v-for="(item, index) in checks" class="select-wrapper" @click="setChecked(index)">
+            <div class="select">
+              <img v-if="item.checked" class="select-img" src="../../../../static/homepage/homepass_taikuang02.png">
+            </div>
+            <span class="select-text">{{item.text}}</span>
+          </div>
+        </div>
+
+        <!--金币金豆选择-->
+        <div v-else-if="isChecked === 'noChecked' && goldConf !== 'noGoldConf' && checks === 'noChecks'" class="text-wrapper">
+          <div v-html="mes" class="text text-haschecked text-choose"></div>
+          <div class="flex-row gold-conf">
+            <div class="select-wrapper">
+              <div class="select">
+                <img v-if="goldConf === 0" class="select-img" src="../../../../static/homepage/homepass_taikuang02.png">
+                <input type="radio" id="gold0" :value="0" v-model="goldConf">
+              </div>
+              <label for="gold0">金币下注</label>
+            </div>
+            <div v-if="enableBean" class="select-wrapper">
+              <div class="select">
+                <img v-if="goldConf === 1" class="select-img" src="../../../../static/homepage/homepass_taikuang02.png">
+                <input type="radio" id="gold1" :value="1" v-model="goldConf">
+              </div>
+              <label for="gold1">金豆下注</label>
+            </div>
+            <!--不能用金豆下注-->
+            <div v-else class="select-wrapper">
+              <div class="select">
+                <img v-if="goldConf === 1" class="select-img" src="../../../../static/homepage/homepass_taikuang02.png">
+                <input type="radio" id="" :value="0" v-model="goldConf">
+              </div>
+              <label for="gold0" style="color: #ccc">金豆下注</label>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="btn-wrapper">
@@ -53,22 +96,41 @@
       },
       confirm () {
         this.removeNode()
-        if (this.isChecked === 'nochecked') {
+        if (this.isChecked === 'noChecked' && this.goldConf === 'noGoldConf' && this.checks === 'noChecks') {
           this.confirmCb()
           return
         }
-        console.log('点击确定了，是否勾选复选框：', this.isChecked)
-        this.confirmCb(this.isChecked)
+        if (this.isChecked !== 'noChecked' && this.goldConf === 'noGoldConf' && this.checks === 'noChecks') {
+          console.log('点击确定了，是否勾选复选框：', this.isChecked)
+          this.confirmCb(this.isChecked)
+          return
+        }
+        if (this.isChecked === 'noChecked' && this.goldConf !== 'noGoldConf' && this.checks === 'noChecks') {
+          console.log('点击确定了，选择金币或金豆下注：', this.goldConf)
+          this.confirmCb(this.goldConf)
+          return
+        }
+        if (this.isChecked === 'noChecked' && this.goldConf === 'noGoldConf' && this.checks !== 'noChecks') {
+//          console.log('点击确定了，勾选多个复选框：', this.checks)
+          const checks = this.checks.map((val, index, arr) => {
+            return val.checked
+          })
+          console.log('点击确定了，勾选多个复选框：', checks)
+          this.confirmCb(checks)
+          return
+        }
       },
       noMoreWarn () {
         this.isChecked = !this.isChecked
+      },
+      setChecked (index) {
+        this.checks[index].checked = !this.checks[index].checked
       }
     },
     mounted () {
-      console.log('传给弹窗的参数：', this.options)
+      console.log('传给弹窗的参数：', this.options, this.checks)
     },
     watch: {
-
     }
   }
 </script>
@@ -131,6 +193,11 @@
     text-align: left;
   }
 
+  .text-choose {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
   .text {
     line-height: 20px;
     font-size: 15px;
@@ -144,15 +211,28 @@
     padding: 0 0 .32rem .88rem;
   }
 
+  .gold-conf {
+    padding: 0 1.0667rem;
+  }
+
+  .gold-conf .select-wrapper{
+    padding: 0 0 0 0;
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-start;
+  }
+
   .select{
     height: 10px;
     width: 10px;
     border: 1px solid #ccc;
     margin-right: 5px;
+    margin-top: 3px;
     position: relative;
   }
 
   .select-img{
+    padding: 0 0 .32rem 0;
     position: absolute;
     /*left:-8px;*/
     left: -1px;
@@ -160,6 +240,21 @@
     width: 12px;
     height: 12px;
     /*top:-8px;*/
+  }
+
+  .select input {
+    position: absolute;
+    left: -1px;
+    top:-1px;
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    opacity: 0;
+    padding: 0 0 .32rem 0;
+  }
+
+  .select-wrapper label {
+    padding: 0 0 .32rem 0;
   }
 
   .select-text{

@@ -113,6 +113,7 @@ public class SystemConfig {
      * nbakey值
      */
     private String BALL_MATCH_BASKETBALL_KEY;
+
     /**
      *
      * 足球对战赛场次
@@ -126,6 +127,8 @@ public class SystemConfig {
      * 足球对战赛结果
      */
     private String BALL_MATCH_FOOTBALL_KEY;
+
+
 
 
 

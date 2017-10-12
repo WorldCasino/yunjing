@@ -15,6 +15,7 @@ public class Starship_UserlistVo implements Serializable{
  	private String nickName;
  	private String passWord;
  	private String phone;
+ 	private Long userStatus;
 
 	private Long  agentId;
 	private String agentNumber;
@@ -40,6 +41,14 @@ public class Starship_UserlistVo implements Serializable{
 	private Timestamp registerStartTime ;
 
 	private Timestamp registerEndtime;
+
+	public Long getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(Long userStatus) {
+		this.userStatus = userStatus;
+	}
 
 	public String getAgentNumber() {
 		return agentNumber;

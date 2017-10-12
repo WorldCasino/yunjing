@@ -31,7 +31,9 @@ const state = {
   showDate2: null,
   isShowfDate: false,
   fScrollTop: false,
-  bScrollTop: false
+  bScrollTop: false,
+  baskpageNum: 1,
+  footpageNum: 1
 }
 
 const getters = {

@@ -31,6 +31,8 @@
             <result column="coin_expend" property="coinExpend" jdbcType="DECIMAL"/>
             <result column="coin_expend" property="coinExpend" jdbcType="DECIMAL"/>
             <result column="coin_locked" property="coinLocked" jdbcType="DECIMAL"/>
+            <result column="sumIncome" property="sumIncome" jdbcType="DECIMAL"/>
+            <result column="sumExpend" property="sumExpend" jdbcType="DECIMAL"/>
             <result column="recharge_amount" property="rechargeAmount" jdbcType="DECIMAL"/>
             <result column="member_points" property="memberPoints" jdbcType="DECIMAL"/>
         </association>
@@ -47,6 +49,8 @@
         FROM (select count(1),tao.user_id from t_task_orders tao JOIN t_tasks ta on tao.task_id=ta.task_id and ta.is_delete=0  where tao.is_delete = 0 GROUP BY tao.task_id,tao.user_id) as f
         where  f.user_id= t.user_id ) as task_join,
         (select count(1) from t_tasks where user_id= t.user_id and is_delete = 0 ) as task_count,
+
+
           a.coin_balance,a.coin_income,a.coin_expend,a.coin_locked,a.recharge_amount,
           a.member_points
         FROM ( SELECT * FROM m_users
@@ -102,12 +106,15 @@
         t.last_time,user_status,t.device_type,t.device_token,t.create_date,
         a.account_id,
 
-        (SELECT count(*)
-      FROM (select count(1),tao.user_id
-            from t_task_orders tao JOIN t_tasks ta on tao.task_id=ta.task_id and ta.is_delete=0
-            where tao.is_delete = 0 GROUP BY tao.task_id,tao.user_id) as f
-       where  f.user_id= t.user_id ) as task_join,
+        (   SELECT count(*)
+            FROM (select count(1),tao.user_id
+                  from t_task_orders tao JOIN t_tasks ta on tao.task_id=ta.task_id and ta.is_delete=0
+                    where tao.is_delete = 0 GROUP BY tao.task_id,tao.user_id) as f
+            where  f.user_id= t.user_id ) as task_join,
         (select count(1) from t_tasks where user_id= t.user_id and is_delete = 0 ) as task_count,
+
+        (SELECT  sum(t.coins) FROM t_user_account_detail t where t.user_id=#{userId} and t.from_type in ( '2','5' )) as sumIncome,
+        (SELECT  sum(t.coins) FROM t_user_account_detail t where t.user_id=#{userId} and t.from_type in ( '3','6' )) as sumExpend,
 
         a.coin_balance,a.coin_income,a.coin_expend,a.coin_locked,a.recharge_amount,
         a.member_points

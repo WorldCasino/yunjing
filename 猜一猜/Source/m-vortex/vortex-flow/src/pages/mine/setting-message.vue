@@ -11,24 +11,24 @@
 
     <div class="setting-main">
       <f7-list class="list-style">
-        <!--<f7-list-item class="item-wrapper">
+        <f7-list-item class="item-wrapper">
           <div class="content">
-            <div class="title">优先使用金豆下注</div>
-            <div class="desc">当我参与竞猜下注时，优先使用金豆下注</div>
+            <div class="title">优先下注方式</div>
+            <div class="desc">每次竞猜优先选用金币下注</div>
           </div>
           <div class="item-after">
             <div class="item-input">
               <label class="label-switch">
-                <input type="checkbox" v-model="beanPreferCk">
+                <input type="checkbox" v-model="beanPreferTf">
                 <div class="checkbox"></div>
               </label>
             </div>
           </div>
-        </f7-list-item>-->
+        </f7-list-item>
         <f7-list-item class="item-wrapper">
           <div class="content">
             <div class="title">下注确认</div>
-            <div class="desc">当我参与竞猜下注时，向我弹出确认提示</div>
+            <div class="desc">每次下注都需要我确认</div>
           </div>
           <div class="item-after">
             <div class="item-input">
@@ -97,47 +97,48 @@
 <script>
 
   import { mapState, mapActions, mapGetters } from 'vuex'
-  import * as StorageHelper from '../../store/storage-helper'
 
   export default {
 
     data () {
       return {
         // 下注提醒
-        checked: false,
-        // 优先使用金豆下注
-        beanPreferCk: false
+        checked: true,
+        // 优先使用金币下注
+        beanPreferTf: true
       }
     },
     computed: {
       ...mapState({
-        betTip: state => state.betTip,
-        beanPrefer: state => state.setTip.beanPrefer
-      }),
-      ...mapGetters([
-        'showBetTip'
+        userInfoData: state => state.userInfo.data
+      })
+    },
+    methods: {
+      ...mapActions([
+        'isAblePop',
+        'getUserInfoQuickly'
       ])
     },
     mounted () {
-      this.checked = this.showBetTip
-      this.beanPreferCk = this.beanPrefer
+//      this.checked = Boolean(this.userInfoData.bet_tip)
+//      this.beanPreferTf = Boolean(!this.userInfoData.coin_first)
+      this.checked = !!this.userInfoData.bet_tip
+      this.beanPreferTf = !this.userInfoData.coin_first
+    },
+    beforeDestroy () {
+//      this.getUserInfoQuickly()
     },
     watch: {
+      // 下注提醒
       checked: {
         handler: function (val) {
-          this.$store.state.betTip = val
-          StorageHelper.saveBetTip(val)
+          this.isAblePop([6, Number(val)])
         }
       },
-      betTip: {
+      // 是否优先金币下注
+      beanPreferTf: {
         handler: function (val) {
-          this.checked = val
-        }
-      },
-      beanPreferCk: {
-        handler: function (val) {
-          this.$store.state.setTip.beanPrefer = val
-          StorageHelper.saveBeanPrefer(val)
+          this.isAblePop([4, Number(!val)])
         }
       }
     }

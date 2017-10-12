@@ -35,12 +35,16 @@ public class BallUtil {
     private static final long serialVersionUID = -1L;
 
     private  static String   basketball_rediskey="ball_matches:basketball";//篮球球赛redistribution缓存的key
-    private static int basketBall_settletime=122;//篮球比赛结束时间定时（分）
+    private static int basketBall_settletime=150;//篮球比赛结束时间定时（分）
 
     private  static String  football_rediskey="ball_matches:football";//足球球赛redistribution缓存的key
-    private static int footBall_settletime=122;//足球比赛结束时间定时（分
+    private static int footBall_settletime=120;//足球比赛结束时间定时（分
 
-    private static int open_beforlocktime=-30;//比赛开始之前多少分钟锁定
+    private static int open_beforlocktime=-15;//比赛开始之前多少分钟锁定
+
+
+    private static int search_time=15;//（分）没过几分钟查询一下比赛结果
+    private static int overnot_searchtime=90;//(分)比赛结束后的多少时间就不查询结果；
 
 
     private static final Logger LOTTERY_LOGGER = LogManager.getLogger("ball");
@@ -50,56 +54,57 @@ public class BallUtil {
     /**
      * 新增赛事
      * @param home_team_name
-     * @param home_team_logo
      * @param away_team_name
-     * @param away_team_logo
-     * @param day_week
-     * @param day_date
-     * @param day_time
      * @param title
      * @param balltype
      */
-    public synchronized static void SaveMatch(String home_team_name,String home_team_logo,String  away_team_name,String away_team_logo,String day_week,String day_date,String day_time,String title,String balltype){
+    public synchronized static void SaveMatch(String home_team_name,String  away_team_name,String open_time,String title,String balltype,String gl_match_id){
         try{
-            String open_time= DateFormatUtil.getYear().trim()+"-"+day_date.trim()+" "+day_time.trim()+":00";
+            String day_week=StringUtils.getWeekOfDate(DateUtil.fomatDate1(open_time));
+            String day_date=DateUtil.formatDateChange3(open_time);
+            String day_time=DateUtil.formatDateChange2(open_time);
+
             int home_team_id=0;
             int away_team_id=0;
             //判断是否有主队球队信息
-            TeamEntity teamEntity=new TeamEntity();
-            teamEntity.setTeamName(home_team_name);
-            EntityWrapper<TeamEntity> wrapper = new EntityWrapper<TeamEntity>(teamEntity);
-            List<TeamEntity> selectList =  ((TeamServiceImpl) SpringContextUtil.getBean("teamServiceImpl")).selectList(wrapper);
+            EntityWrapper ew = new EntityWrapper();
+            ew.where("team_name = {0}",home_team_name);
+            List<TeamEntity> selectList =  ((TeamServiceImpl) SpringContextUtil.getBean("teamServiceImpl")).selectList(ew);
             if(selectList.size() == 0){
-                teamEntity.setTeamLogo(home_team_logo);
+                TeamEntity teamEntity=new TeamEntity();
+                teamEntity.setTeamName(home_team_name);
                 ((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).insert(teamEntity);
                 home_team_id=teamEntity.getTeamId();
             }else{
                 home_team_id=selectList.get(0).getTeamId();
             }
             //判断是否有客队球队信息
-            teamEntity=new TeamEntity();
-            teamEntity.setTeamName(away_team_name);
-            EntityWrapper<TeamEntity> wrapper2 = new EntityWrapper<TeamEntity>(teamEntity);
-            List<TeamEntity>   selectList2 =  ((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectList(wrapper2);
+            ew = new EntityWrapper();
+            ew.where("team_name = {0}",away_team_name);
+            List<TeamEntity>   selectList2 =  ((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectList(ew);
             if(selectList2.size() == 0){
-                teamEntity.setTeamLogo(away_team_logo);
+                TeamEntity teamEntity=new TeamEntity();
+                teamEntity.setTeamName(away_team_name);
                 ((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).insert(teamEntity);
                 away_team_id=teamEntity.getTeamId();
             }else{
                 away_team_id=selectList2.get(0).getTeamId();
             }
             MatchesEntity matchesEntity=new MatchesEntity();
+            if(!gl_match_id.equals("")){
+                matchesEntity.setGlMatchId(Long.parseLong(gl_match_id));
+            }
+            if(balltype.equals(String.valueOf(MatchesTypeEnum.Basketball.getCode()))){
+                matchesEntity.setMatchesTypeEnum(MatchesTypeEnum.Basketball);
+            }else{
+                matchesEntity.setMatchesTypeEnum(MatchesTypeEnum.Football);
+            }
             matchesEntity.setHomeTeamId(home_team_id);
             matchesEntity.setAwayTeamId(away_team_id);
             matchesEntity.setDayDate(day_date);
             matchesEntity.setDayTime(day_time);
             matchesEntity.setTitle(title);
             matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.NotStarted);
-            if(balltype.equals(String.valueOf(MatchesTypeEnum.Basketball.getCode()))){
-                matchesEntity.setMatchesTypeEnum(MatchesTypeEnum.Basketball);
-            }else{
-                matchesEntity.setMatchesTypeEnum(MatchesTypeEnum.Football);
-            }
             matchesEntity.setDayWeek(day_week);
             matchesEntity.setOpenTime(Timestamp.valueOf(open_time));
             //设置---锁定时间
@@ -113,17 +118,11 @@ public class BallUtil {
             matchesEntity.setSettleTime(Timestamp.valueOf(settleTime));
             matchesEntity.setUpdateTime(new Timestamp(System.currentTimeMillis()));
             //判断当前球队是否已经加入
-            EntityWrapper ew = new EntityWrapper();
+            ew = new EntityWrapper();
             ew.where("home_team_id = {0}",home_team_id)
                     .andNew("away_team_id = {0} ",away_team_id)
                     .andNew("day_date  = {0}",day_date)
                     .andNew("day_time  = {0}",day_time);
-//            MatchesEntity matchesEntity1=new MatchesEntity();
-//            matchesEntity1.setHomeTeamId(home_team_id);
-//            matchesEntity1.setAwayTeamId(away_team_id);
-//            matchesEntity1.setDayDate(day_date);
-//            matchesEntity1.setDayTime(day_time);
-//            EntityWrapper<MatchesEntity> wrapper3 = new EntityWrapper<MatchesEntity>(matchesEntity1); //判断当前球队是否已经加入
             if(((IMatchesService)SpringContextUtil.getBean("matchesServiceImpl")).selectList(ew).size() == 0){
                 ((IMatchesService)SpringContextUtil.getBean("matchesServiceImpl")).insert(matchesEntity);
                 TimerBall(  open_time, matchesEntity.getMatchId()); //根据球赛开始结束时间定时操作
@@ -148,7 +147,7 @@ public class BallUtil {
             long nowtime=new Date().getTime();
             long open_n=(opentime-nowtime)/1000;
             if(open_n < 0){
-                open_n=10;
+                open_n=5;
             }
             String strkey = ConstantInterface.REDIS_BALLKEY_LOTTERY_PREFIX +matchId;
             jedis = RedisHelper.getJedis();
@@ -187,7 +186,7 @@ public class BallUtil {
                  long nowtime = new Date().getTime();
                  long expire = (settletime - nowtime) / 1000 ;
                  if (expire <= 0) {
-                     expire = 10;
+                     expire = 5;
                  }
                  String strkey = ConstantInterface.REDIS_BALLKEY_LOTTERY_PREFIX + matchId;
                  jedis = RedisHelper.getJedis();
@@ -224,27 +223,29 @@ public class BallUtil {
         try {
             MatchesEntity matchesEntity= ((IMatchesService)SpringContextUtil.getBean("matchesServiceImpl")).selectById(matchId);
             int matchType=matchesEntity.getMatchesTypeEnum().getCode();
-            int home_team_id=matchesEntity.getHomeTeamId();
-            int away_team_id=matchesEntity.getAwayTeamId();
-            String home_team_name=((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectById(home_team_id).getTeamName();
-            String away_team_name=((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectById(away_team_id).getTeamName();
-            String day_date=matchesEntity.getDayDate();
-            String day_time=matchesEntity.getDayTime();
-            String title=matchesEntity.getTitle();
+            String home_team_name=((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectById(matchesEntity.getHomeTeamId()).getTeamName();
+            String away_team_name=((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectById(matchesEntity.getAwayTeamId()).getTeamName();
             boolean flag=false;
-            if(matchType == MatchesTypeEnum.Basketball.getCode()){
-                flag=BasketballMatchUtil.flagIsOver(  matchId,  home_team_name,  away_team_name,  day_date,  day_time);
+            long jhminute=DateUtil.getDayMinute(matchesEntity.getSettleTime().toString(),DateUtil.getTime());//现在的时间-结束时间
+            if(jhminute >= overnot_searchtime){
+                flag=true;
+                LOTTERY_LOGGER.info("ball-竞猜项目"+matchId+"未开奖，时间超过"+overnot_searchtime+"分钟=========");
             }else{
-                flag=FootBallMatchUtil.flagIsOver(  matchId,  home_team_name,  away_team_name,  day_date,  day_time , title);
+                if(matchType == MatchesTypeEnum.Basketball.getCode()){
+                    if(matchesEntity.getGlMatchId() == null){
+                        matchesEntity.setGlMatchId(0L);
+                    }
+                    flag=BasketballMatchUtil.flagIsOver(  matchId,  home_team_name,  away_team_name,  matchesEntity.getDayDate(),  matchesEntity.getDayTime(),matchesEntity.getGlMatchId());
+                }else{
+                    flag=FootBallMatchUtil.flagIsOver(matchId,home_team_name,away_team_name,matchesEntity.getDayDate(),matchesEntity.getDayTime() , matchesEntity.getTitle());
+                }
             }
             //flag：true表示比赛结束，false表示未结束，扔回倒计时
-              if(!flag){
+            if(!flag){
                   String key = ConstantInterface.REDIS_BALLKEY_LOTTERY_PREFIX + String.valueOf(matchId);
-                  int expire=900;//15分钟
+                  int expire=search_time*60;//15分钟
                   jedis = RedisHelper.getJedis();
-                  if(jedis.exists(key)){
-                      jedis.del(key);
-                  }
+
                   jedis.setex(key, expire, String.format("待开奖任务 %s", matchId));
 
                   LOTTERY_LOGGER.info(String.format("ball-竞猜项目【%s】 成功加入倒计时开奖队列，过期时间%s秒", matchId,expire));
@@ -267,7 +268,7 @@ public class BallUtil {
      * 更新redis中的球赛----缓存
      * @param matchType 1-篮球，2-足球
      */
-     public static  void changeRedisBallList(String matchType){
+     public synchronized static  void changeRedisBallList(String matchType){
          Jedis jedis = null;
          try{
              //发布成功提交redis缓存
@@ -293,10 +294,10 @@ public class BallUtil {
                  matchesVo=new MatchesVo();
                  //判断是最近几天
                  String open_time=matchesEntity1.getOpenTime().toString();
-//                 String lock_time=matchesEntity1.getLockTime().toString();
+                 String lock_time=matchesEntity1.getLockTime().toString();
                  String now_time=DateUtil.getTime();
-                 //设置---锁定时间(开赛前半个小时不给)
-                 long lockn=DateUtil.fomatDate2(DateUtil.getAfterMinuteDate(open_time,open_beforlocktime)).getTime();
+                 //设置---锁定时间
+                 long lockn=DateUtil.fomatDate2(lock_time).getTime();
                  long nown=DateUtil.fomatDate2(now_time).getTime();
                  long chajian=lockn-nown;
                  if(chajian <= 0){
@@ -339,7 +340,11 @@ public class BallUtil {
                      continue;
                  }else{
                      matchesVo.setHomeTeamId(teamEntity.getTeamId());
-                     matchesVo.setHomeTeamLogo(SystemConfig.getInstance().getBALL_MATCH_LOGO()+teamEntity.getTeamLogo());
+                     if(teamEntity.getTeamLogo() != null && teamEntity.getTeamLogo().contains("http")){
+                         matchesVo.setHomeTeamLogo(teamEntity.getTeamLogo());
+                     }else{
+                         matchesVo.setHomeTeamLogo(SystemConfig.getInstance().getBALL_MATCH_LOGO()+teamEntity.getTeamLogo());
+                     }
                      matchesVo.setHomeTeamName(teamEntity.getTeamName());
                  }
                  teamEntity=((ITeamService)SpringContextUtil.getBean("teamServiceImpl")).selectById(matchesEntity1.getAwayTeamId());
@@ -347,7 +352,11 @@ public class BallUtil {
                      continue;
                  }else{
                      matchesVo.setAwayTeamId(teamEntity.getTeamId());
-                     matchesVo.setAwayTeamLogo(SystemConfig.getInstance().getBALL_MATCH_LOGO()+teamEntity.getTeamLogo());
+                     if(teamEntity.getTeamLogo() != null && teamEntity.getTeamLogo().contains("http")){
+                         matchesVo.setAwayTeamLogo(teamEntity.getTeamLogo());
+                     }else{
+                         matchesVo.setAwayTeamLogo(SystemConfig.getInstance().getBALL_MATCH_LOGO()+teamEntity.getTeamLogo());
+                     }
                      matchesVo.setAwayTeamName(teamEntity.getTeamName());
                  }
                  //标准盘
@@ -362,7 +371,7 @@ public class BallUtil {
                  //=============================================
                  matchesVoList.add(matchesVo);
              }
-             //开始存储
+             //获取jedis
              jedis = RedisHelper.getJedis();
              //记录每一天的
              String timekey=strkey+DateFormatUtil.getYYYY_MM_DD();
@@ -371,7 +380,7 @@ public class BallUtil {
                  jedis.set( timekey , dayRedis );
              }
              if(jedis.exists(strkey)){
-                  jedis.del( strkey );
+                 jedis.del( strkey );
              }
              //循环比赛---缓存到rpush-分页
              MatchesVo matchesVo1=null;
@@ -388,14 +397,15 @@ public class BallUtil {
                      continue;
                  }
                  String matchjsonStr = ((JacksonSerializer)SpringContextUtil.getBean("jacksonSerializer")).toJson(matchesVo1);
+                 //开始存储
                  jedis.rpush( strkey , matchjsonStr );
-                 //添加缓存成功之后----根据球赛开始结束时间定时操作
+//                 添加缓存成功之后----根据球赛开始结束时间定时操作
                  TimerBall(open_time,matchesVo1.getMatchId());
              }
          }catch (Exception e){
              e.printStackTrace();
              RedisHelper.returnBrokenResource(jedis);
-             LOTTERY_LOGGER.info("ball-redis赛事列表获取失败(changeRedisBallList)matchType="+matchType+"*"+e.toString());
+             LOTTERY_LOGGER.info("ball-更新赛事缓存出错(changeRedisBallList)matchType="+matchType+"*"+e.toString());
              throw new ApiException(ErrorCodeEnum.SystemError.getCode(),"redis赛事列表获取失败");
          }finally {
              RedisHelper.returnResource(jedis);

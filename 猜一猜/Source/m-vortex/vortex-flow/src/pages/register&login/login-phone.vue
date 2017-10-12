@@ -109,14 +109,16 @@
     border: none;
   }
   .submit-content {
-    padding-top: 30px;
+    margin-top: 30px;
+    padding: 0 12px;
+    box-sizing: border-box;
   }
   .submit-btn {
     color: #000;
     border-width: 0px;
     background-color: gold;
     height:45px;
-    width: 90%;
+    width: 100%;
     font-size: 16px;
   }
   

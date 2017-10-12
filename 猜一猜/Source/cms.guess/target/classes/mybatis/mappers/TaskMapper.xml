@@ -225,10 +225,18 @@
         WHERE task_id =#{taskId}
     </update>
 
+    <!-- 推荐竞猜项目到首页 -->
+    <update id ="updateTaskrecommend" parameterType="java.lang.Long">
+        UPDATE t_tasks
+        SET is_recommend=1,
+        update_date = current_timestamp
+        WHERE task_id =#{taskId}
+    </update>
+
     <!--倒计时已到 未开奖项目-->
     <select id="selectWattingLotteryTasks" resultMap="taskVoResultMap">
        SELECT t.task_id,t.user_id,u.phonenumber,u.nickname,
-        t.task_title,t.task_content,t.task_type,t.task_status,t.hot,
+        t.task_title,t.task_content,t.task_type,t.task_status,t.hot,t.lottery_type,
         t.quantity,t.sale_price,t.sale_amount,t.lock_time,
         t.settle_coins,t.settle_time,t.create_date,
         a.answer_id,a.answer,a.odds,
@@ -241,8 +249,9 @@
         LEFT JOIN t_task_pictures p on p.task_id = t.task_id and p.is_delete = 0
         LEFT JOIN (select task_id, sum(quantity) qty from t_task_orders where is_delete =0 group by task_id) od on od.task_id = t.task_id
         WHERE t.is_delete = 0 AND t.task_status = 20
-    <!--AND exists(select 1 from t_task_answers ans where ans.task_id = t.task_id and ans.is_right = 1)-->
-  <![CDATA[ AND (t.settle_time < current_timestamp  or od.qty = t.quantity) ]]>
+          -- 手动开奖的竞猜超时后 没有正确答案也需要自动开奖（平分金币），有正确答案的超时未开奖的需要尝试开奖
+          AND (t.lottery_type = 1  OR exists(select 1 from t_task_answers ans where ans.task_id = t.task_id and ans.is_right = 1))
+          <![CDATA[  AND (t.settle_time < current_timestamp  or od.qty = t.quantity) ]]>
 </select>
 
 <!--根据TaskId查询竞猜项目-->

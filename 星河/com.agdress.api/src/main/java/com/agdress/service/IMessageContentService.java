@@ -19,5 +19,5 @@ public interface IMessageContentService extends IService<MessageContentEntity> {
 
     DatatablesResult<MessageContenVo> selectMessageListVoPage(Map<String, String> whereMap, Integer page, Integer rows, Integer draw);
 
-
+    void updateAllStatus(Long userId);
 }

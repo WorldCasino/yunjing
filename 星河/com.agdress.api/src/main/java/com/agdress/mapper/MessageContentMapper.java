@@ -24,4 +24,6 @@ public interface MessageContentMapper extends BaseMapper<MessageContentEntity> {
 
         Integer countMessage(Map<String, String> params);
 
+        void updateAllStatus(Long userId);
+
  }

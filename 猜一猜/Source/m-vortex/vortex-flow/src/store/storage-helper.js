@@ -6,10 +6,6 @@ import * as storageTypes from './storage-types'
 
 // todo 跟storage-types 合并成一个
 
-export const saveBetTip = function (value) {
-  localStorage.setItem(storageTypes.BET_TIP, JSON.stringify(value))
-}
-
-export const saveBeanPrefer = function (value) {
-  localStorage.setItem(storageTypes.BEAN_PREFER, JSON.stringify(value))
-}
+// export const saveBeanPrefer = function (value) {
+//   localStorage.setItem(storageTypes.BEAN_PREFER, JSON.stringify(value))
+// }

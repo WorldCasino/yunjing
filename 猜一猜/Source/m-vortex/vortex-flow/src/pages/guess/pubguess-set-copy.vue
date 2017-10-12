@@ -247,7 +247,8 @@
         'isAblePop',
         'getTaskDailyData',
         'getTaskGrowData',
-        'getQuizzes'
+        'getQuizzes',
+        'getQuizDetail'
       ]),
       showtip (type) {
         if (type === 2) {
@@ -271,7 +272,7 @@
       change () {
         if (!this.isAbleBean && this.isablebean === 0) {
           this.$store.state.userInfo.data.isablebean = 1
-          this.isAblePop()
+          this.isAblePop([1, 1])
           this.$dm.confirm({
             title: `不可使用金豆参与竞猜`,
             mes: '当玩家金币不足时，用金豆参与竞猜，输赢将以金豆结算，选择该选项表示不可以使用金豆参与竞猜。',
@@ -284,7 +285,7 @@
       isPrivateFu () {
         if (!this.isPrivate && this.ispersonal === 0) {
           this.$store.state.userInfo.data.ispersonal = 1
-          this.isAblePop(3)
+          this.isAblePop([3, 1])
           this.$dm.confirm({
             title: `仅邀请人可见`,
             mes: '只有你邀请的人可以参与到这个竞猜，其它用户无法在大厅发现你的竞猜。',
@@ -313,7 +314,7 @@
           ]
         }
         data['taskId'] = this.copyTaskId
-
+        data['concede_points_show'] = this.$store.state.quizDetail.data.concede_points_show
         data['lottery_type'] = Number(!this.isAutoDraw)
         data['personal'] = Number(this.isPrivate)
         data['like_peas'] = Number(!this.isAbleBean)
@@ -480,12 +481,13 @@
               })
               this.$router.back()
               this.$f7.closeModal('#post')
-              this.$store.state.quizDetail.taskId = this.publishData.task_id
+              this.$store.state.quizDetail.taskId = this.$store.state.uploadData.data.task_id
               this.$store.state.uploadData.uploadImages = []
               this.$f7.mainView.router.load({url: '/quiz-detail/'})
               this.$f7.popup('#pub-succeed')
               this.getTaskDailyData()
               this.getTaskGrowData()
+              this.getQuizDetail([this.$store.state.uploadData.data.task_id])
               this.getQuizzes([0])
             } else {
               if (self.status.id === 1001) {

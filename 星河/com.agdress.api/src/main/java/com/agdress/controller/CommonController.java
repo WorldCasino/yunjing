@@ -48,4 +48,13 @@ public class CommonController extends BaseController {
     public ResponseWrapper getPlatformInfo(@RequestBody JSONObject req) {
         return ResponseWrapper.succeed(commonService.getFrontendPlatform());
     }
+
+    @RequestMapping(value = "/rebate/platform", method = RequestMethod.GET)
+    public int getRebatePlatform() {
+        try {
+            return commonService.getRebatePlatform();
+        } catch (Exception e) {
+            return 10;
+        }
+    }
 }

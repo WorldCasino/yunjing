@@ -311,6 +311,34 @@ public class TaskController extends BaseController {
     }
 
     /**
+     * 推荐竞猜项目到首页
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/recommend",method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity recommendTask(@RequestBody JSONObject params){
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            return  ResponseEntity.ok(ResponseWrapper.failed(ErrorCodeEnum.AuthenticationException.getCode(),
+                    ErrorCodeEnum.AuthenticationException.getDesc()));
+        }
+
+        boolean rtn = false;
+        try {
+            JSONArray taskIds = params.getJSONArray("taskIds");
+            List<Long> ids = new ArrayList<>();
+            for (Object id:taskIds) {
+                ids.add(Long.valueOf(id.toString()));
+            }
+            rtn = taskService.recommendTask(ids);
+        }catch (ApiException e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return ResponseEntity.ok(ResponseWrapper.succeed(rtn));
+    }
+
+    /**
      * 获取竞猜详情
      * @param params
      * @return

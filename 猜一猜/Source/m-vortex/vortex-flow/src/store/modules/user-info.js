@@ -36,6 +36,19 @@ const actions = {
           commit(types.GET_USER_INFO_FAILED, err)
         })
     }
+  },
+  getUserInfoQuickly ({state, commit, rootState}, payload) {
+    API.getUserInfo(rootState.token)
+      .then(function (data) {
+        console.log(window._vds)
+        console.log(data.user_id)
+        window._vds.push(['setCS1', 'user_id', data.user_id])
+        commit(types.GET_USER_INFO_SUCCEED, data)
+      })
+      .catch(function (err) {
+        supporter.resolveError(rootState, err)
+        commit(types.GET_USER_INFO_FAILED, err)
+      })
   }
 }
 

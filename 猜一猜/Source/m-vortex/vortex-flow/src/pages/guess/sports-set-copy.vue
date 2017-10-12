@@ -14,18 +14,18 @@
     <div class="pub-guess-setting" :style="{height: height - 44 + 'px'}">
       <div class="set-content" :style="{height: height - 99 + 'px'}">
         <div class="content">
-          
+
           <div class="part1">
             <textarea v-model="desc" :maxlength="textMax" :class="{'desc-warn': descAcount}" class="desc-input" placeholder="给你的竞猜想一个6个字以上的好玩的描述吧">
             </textarea>
-    
+
             <div class="text-wrapper">
               <span class="text-count" :class="{'text-warn': descAcount}">{{desc.length}}</span>
               <span class="text-center">/</span>
               <span class="text-max">{{textMax}}</span>
             </div>
           </div>
-          
+
           <div class="part1">
             <section class="m-sports-item">
               <p class="m-sports-title" v-if="ballType == 1">{{footballCurData.title}} {{openTime}}</p>
@@ -51,12 +51,12 @@
                     <img :src="basketballCurData.awayTeamLogo" class="m-team-logo" v-else-if="ballType == 2"/>
                     <div v-if="ballType == 1">{{footballCurData.awayTeamName}} <p class="blue m-visit-word">[客]</p></div>
                     <div v-else-if="ballType == 2">{{basketballCurData.awayTeamName}} <p class="blue m-visit-word">[客]</p></div>
-                  </div>  
+                  </div>
                 </div>
               </div>
             </section>
           </div>
-          
+
           <div class="part1">
             <div class="part1-title">设置奖额</div>
             <div class="seperater1"></div>
@@ -128,6 +128,20 @@
               </div>
             </div>
             
+            <div class="seperater1" v-if="type == 1 && ballType == 1"></div>
+            <div class="amount-content" v-if="type == 1 && ballType == 1">
+              <h5>平</h5>
+              <div class="select-content">
+                <div class="minus-btn" @click="averageReduce">
+                  <img src="../../../static/guess/fabu_jian.png">
+                </div>
+                <input class="select-input" v-model="averagefund" type="number" @blur="averageFu">
+                <div class="add-btn" @click="averageAdd">
+                  <img src="../../../static/guess/fabu_jia.png">
+                </div>
+              </div>
+            </div>
+            
             <div class="seperater2"></div>
 						<div class="amount-content">
               <h5 v-if="type != 2">客胜</h5>
@@ -170,7 +184,7 @@
           <div class="part5" style="height: 66px;"></div>
         </div>
       </div>
-		
+
       <div class="submit-content">
         <div class="submit-amount">
           <p class="submit-number">需冻结金币
@@ -261,7 +275,7 @@
         height: 0,
 
         averagefund: 1.80,
-        i: 0
+        i: -1
       }
     },
     computed: {
@@ -339,23 +353,23 @@
         if (this.i < this.handicapArr.length - 1) {
           this.i++
           if (this.type === 2) {
-            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds
-            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds
+            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds.toFixed(2)
           } else if (this.type === 3) {
-            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds
-            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds
+            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds.toFixed(2)
           }
         }
       },
-      handicapReduce () { 
+      handicapReduce () {
         if (this.i !== 0) {
           this.i--
           if (this.type === 2) {
-            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds
-            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds
+            this.trueRefund = this.footballCurData.ballSize[this.i].bigBallOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.ballSize[this.i].smallBallOdds.toFixed(2)
           } else if (this.type === 3) {
-            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds
-            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds
+            this.trueRefund = this.footballCurData.letTheBall[this.i].hisOdds.toFixed(2)
+            this.falseRefund = this.footballCurData.letTheBall[this.i].winOdds.toFixed(2)
           }
         }
       },
@@ -397,7 +411,7 @@
       change () {
         if (!this.isAbleBean && this.isablebean === 0) {
           this.$store.state.userInfo.data.isablebean = 1
-          this.isAblePop()
+          this.isAblePop([1, 1])
           this.$dm.confirm({
             title: `不可使用金豆参与竞猜`,
             mes: '当玩家金币不足时，用金豆参与竞猜，输赢将以金豆结算，选择该选项表示不可以使用金豆参与竞猜。',
@@ -410,7 +424,7 @@
       isPrivateFu () {
         if (!this.isPrivate && this.ispersonal === 0) {
           this.$store.state.userInfo.data.ispersonal = 1
-          this.isAblePop(3)
+          this.isAblePop([3, 1])
           this.$dm.confirm({
             title: `仅邀请人可见`,
             mes: '只有你邀请的人可以参与到这个竞猜，其它用户无法在大厅发现你的竞猜。',
@@ -438,7 +452,7 @@
           task_content: this.$store.state.sports.desc,
           concede_points_show: this.handicapArr[this.i]
         }
-        this.$f7.showPreloader('转发中...') 
+        this.$f7.showPreloader('转发中...')
         if (this.ballType === 1 && this.type === 1) {
           PubData.answerList = [
             {answerId: this.quizDetail.answer[0].answer_id, odds: this.trueRefund},
@@ -601,7 +615,7 @@
                 this.getQuizzesFoot([0])
               } else if (this.ballType === 2) {
                 this.getQuizzesBask([0])
-              } 
+              }
             } else if (this.copyStatus.id === 1001) {
               this.$dm.confirm({
                 title: `提示`,
@@ -629,7 +643,7 @@
       }
     },
     destroyed () {
-      
+
     }
   }
 </script>
@@ -911,15 +925,15 @@
   .select-input-p{
     width:53px; height:29px;
     text-align:center;
-    border: 1px solid #e5e5e5; 
+    border: 1px solid #e5e5e5;
     line-height:29px; margin:0 4px;
     background: #f6f6f6;
   }
-  
+
   .rotate180{
     transform: rotateY(180deg);
   }
-  
+
   .desc-input {
     background-color: #f6f6f6;
     border-width: 0;
@@ -940,7 +954,7 @@
   .desc-warn{
     border: 1px solid #ff3c3c;
   }
-  
+
   .text-count{
     color:#FAA719;
     font-size: 12px;
@@ -960,7 +974,7 @@
     color:#999;
     font-size: 12px;
   }
-  
+
   .text-wrapper{
     position:absolute;
     right:16px;
@@ -984,16 +998,16 @@
     text-align: center; line-height: 1;
     height: auto;
   }
-  
+
   .m-sports-vs>p:nth-of-type(1){
     margin-top: .5466rem; font-size: .53333rem; color: #333;
-    line-height: 1; 
+    line-height: 1;
   }
   .m-sports-vs>p:nth-of-type(2){
     margin-top: .09rem; font-size: .26666rem; color: #666;
   }
   .m-sports-item{
-    text-align: left; 
+    text-align: left;
   }
   .m-sports-title{
     font-size: .26666rem;
@@ -1020,22 +1034,22 @@
   .m-team-logo{
     width: 1.066666rem; height: auto;
   }
-  
+
   .m-sports-keTeam>.m-sports-img>div{
     position: absolute; left: 50%;
     word-break: keep-all; transform: translateX(-50%);
   }
-  
+
   .m-sports-mainTeam>.m-sports-img>div{
     position: absolute; left: 50%;
     word-break: keep-all; transform: translateX(-50%);
   }
-  
+
   .m-visit-word{
     position: absolute;
     right: -24px; top: 0;
   }
-  
+
   .m-home-word{
     position: absolute;
     left: -24px; top: 0;

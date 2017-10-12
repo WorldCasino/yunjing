@@ -273,6 +273,29 @@ public class Starship_UserController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
+	/**
+	 * 修改用户状态
+	 * @param userId
+	 * @param userStatus
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/updateUserForStatus",method = RequestMethod.POST)
+	public ResponseEntity updateUserForStatus(String userId,String userStatus) throws IOException{
+		ResponseWrapper result;
+		try {
+			Starship_UserEntity starship_userEntity=new Starship_UserEntity();
+			starship_userEntity.setUserId(Long.parseLong(userId));
+			starship_userEntity.setUserStatus(userStatus.equals("1")?UserStatusEnum.Locked:UserStatusEnum.Normall);
+			boolean n=userService.updateById(starship_userEntity);
+			result = ResponseWrapper.succeed(n);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+		return ResponseEntity.ok(result);
+	}
+
 
 	/**
 	 * 修改用户密码

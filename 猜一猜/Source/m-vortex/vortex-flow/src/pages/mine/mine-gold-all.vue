@@ -99,6 +99,7 @@
     padding-left: 22px; box-sizing: border-box;
   }
   .doubt-icon {
+    position: relative; top: -3px;
     width: 14px;
     height: 14px;
     border: 1px solid #666;

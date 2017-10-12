@@ -198,6 +198,30 @@
         </div>
     </div>
 </div>
+
+<!--隐藏的退出弹窗点击退出显示-->
+<div class="modal fade" id="updateStatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title textStatus">确定要启用吗？</h4>
+            </div>
+            <input type="hidden"  class="userId" value="">
+            <input type="hidden"  class="userStatus" value="">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">我在想想
+                </button>
+                <button type="button" class="btn btn-primary" id="sureChange">
+                    确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
 </body>
 </html>
 <%@ include file="../../../currency/js.jsp"%>
@@ -227,6 +251,7 @@
 
 
 
+
         var tables = $("#dataTable").dataTable(
             //URL
             agdress.getDatatableSettings('ss_user/xtdataGrid',
@@ -250,14 +275,29 @@
                             return agdress.timeStamp2String(data)
                         }
                     },
-                    {"data": 'columnDefs'}
+                    {
+                        "data": 'userStatus',
+                        "render": function (data, type, full, callback) {
+                            var thisstr=str;
+
+                            <shiro:hasPermission name="13status">
+                            if(data ==1){
+                                thisstr+= "<div class='btn-group' style='margin-left: 20px;'>" +
+                                    "<button  class='btn btn-primary btn-sm toupdateStatus'  id='btn-query'  type='button'>启用</button>" +
+                                    "</div>"
+                            }else if(data ==0){
+                                thisstr+= "<div class='btn-group' style='margin-left: 20px;'>" +
+                                    "<button  class='btn btn-primary btn-sm toupdateStatus'  id='btn-query'  type='button'>停用</button>" +
+                                    "</div>"
+                            }
+                            </shiro:hasPermission>
+                            return thisstr
+                        }
+                    }
                 ],
                 //行操作按钮定义
                 [
-                    {
-                        targets: -1,
-                        defaultContent: str
-                    }
+
                 ],
                 // 在每次table被draw完后回调函数
                 function () {
@@ -364,6 +404,40 @@
                         $("#okUpdate").hide();
                     } else {
                         layer.msg("操作失败！", {icon: 2});
+                    }
+                }
+            });
+        });
+
+
+        //修改状态
+        $("#dataTable tbody").on("click", ".toupdateStatus", function () {
+            var data = tables.api().row($(this).parents("tr")).data();
+            $(".userId").val(data.userId);
+            if(data.userStatus == 0){
+                $(".userStatus").val("1");
+                $(".textStatus").html("确定要停用？");
+            }else if(data.userStatus == 1){
+                $(".userStatus").val("0");
+                $(".textStatus").html("确定要启用？");
+            }
+            $("#updateStatus").modal("show");
+        });
+        //修改启用停用状态
+        $("#sureChange").on("click", function () {
+            $.ajax({
+                type: "POST",
+                url: agdress.CONSTS.URL_BASE_API+"ss_user/updateUserForStatus",
+                data: {
+                    "userId":$(".userId").val(),
+                    "userStatus":$(".userStatus").val()
+                },
+                async: false,
+                success: function (data) {
+                    if (data.data == true) {
+                        $(".btnCancel").click();
+                    } else {
+                        layer.msg("操作失败！", {icon: 2});return;
                     }
                 }
             });

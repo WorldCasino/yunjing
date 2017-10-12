@@ -431,9 +431,9 @@
                 for(var i=0;i<listMessage.length;i++){
                     var str="";
                     if(listMessage[i].messageType.code == 50){
-                        str="addTabs({id:'38',title: '出金审核列表',close: true,url: 'audit/withdrawal?tradeNo="+listMessage[i].tradeNo+"&messageContentId="+listMessage[i].messageContentId+"'})";
+                        str="addTabs({id:'"+listMessage[i].messageContentId+"',title: '出金审核列表"+listMessage[i].messageContentId+"',close: true,url: 'audit/withdrawal?tradeNo="+listMessage[i].tradeNo+"&messageContentId="+listMessage[i].messageContentId+"'})";
                     }else{
-                        str="addTabs({id:'5',title: '账户出入金明细',close: true,url: 'ss_ac_detail/manager?tradeNo="+listMessage[i].tradeNo+"&messageContentId="+listMessage[i].messageContentId+"'})";
+                        str="addTabs({id:'"+listMessage[i].messageContentId+"',title: '账户出入金明细"+listMessage[i].messageContentId+"',close: true,url: 'ss_ac_detail/manager?tradeNo="+listMessage[i].tradeNo+"&messageContentId="+listMessage[i].messageContentId+"'})";
                     }
 
                     $(".listMessage").append("<li>  <a onclick=\""+str+"\"> <i class=\""+listMessage[i].icon+"\"></i>"+listMessage[i].content+"</a> </li>");

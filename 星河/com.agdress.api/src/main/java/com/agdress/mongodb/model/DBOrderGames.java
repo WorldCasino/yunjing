@@ -31,6 +31,7 @@ public class DBOrderGames implements Serializable {
     private String loginId;//用户登录ID-查代理商ID
     private String agentId;//代理商ID
     private String agentNumber;
+    private String agentName;
     private String bgAgentId;
     private Integer moduleId;
     private String moduleName;
@@ -89,6 +90,14 @@ public class DBOrderGames implements Serializable {
     private Double btotal;//下注额
 
     private Double zmtotal;//转码总量
+
+    public String getAgentName() {
+        return agentName;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
 
     public String getBgAgentId() {
         return bgAgentId;

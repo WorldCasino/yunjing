@@ -8,7 +8,10 @@ const state = {
   lastCount: 0,
   data: null,
   status: null,
-  shake: 0
+  shake: 0,
+  isAblePopShake: 0,
+  isAblePopStatus: null,
+  isAblePopData: null
 }
 
 const actions = {
@@ -28,7 +31,13 @@ const actions = {
       })
   },
   isAblePop ({state, commit, rootState}, payload) {
-    API.isAblePop(rootState.token, payload)
+    API.isAblePop(rootState.token, payload[0], payload[1])
+      .then(function (data) {
+        commit(types.IS_ABLE_POP_SUCCEED, data)
+      })
+      .catch(function (err) {
+        commit(types.IS_ABLE_POP_FAILED, err)
+      })
   }
 }
 
@@ -53,6 +62,18 @@ const mutations = {
     state.offset = state.data.length
     state.shake++
     state.lastCount = result.length
+  },
+
+  [types.IS_ABLE_POP_SUCCEED] (state, result) {
+    state.isAblePopShake++
+    state.isAblePopStatus = null
+    state.isAblePopData = result
+  },
+
+  [types.IS_ABLE_POP_FAILED] (state, err) {
+    state.isAblePopShake++
+    state.isAblePopStatus = err
+    state.isAblePopData = null
   }
 }
 

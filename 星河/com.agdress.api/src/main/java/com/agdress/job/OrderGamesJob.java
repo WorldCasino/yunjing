@@ -44,7 +44,7 @@ public class OrderGamesJob {
 
 
     /**
-     * 每隔10分通知一次
+     * 每隔5分通知一次
      */
     @Scheduled(fixedRate = 300000)
     public void notifyJob2(){
