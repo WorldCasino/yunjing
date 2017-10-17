@@ -79,6 +79,11 @@ const actions = {
         if (rootState.quizDetail.taskId === payload[0]) {
           commit(types.GET_QUIZ_DETAIL_SUCCEED, data)
         }
+        console.log(data)
+        // 竞猜被加推到首页的话，也要更新首页列表
+        if (data.is_recommend) {
+          commit(types.GET_QUIZ_DETAIL_FOR_PUSH_SUCCESS, data)
+        }
         switch (data.task_type) {
           case 0 :
           case 3 :

@@ -180,6 +180,7 @@
         shareShake: state => state.quizDetail.shareShake,
 
         showShare: state => state.showShare,
+        showShareShake: state => state.showShareShake,
         shareType: state => state.shareType
       }),
       ...mapGetters([
@@ -349,42 +350,45 @@
       this.wxUserSubscribed([])
     },
     watch: {
-      showShare: {
-        handler: function (val) {
+      showShareShake: {
+        handler: function (val) {  
           console.log('show share')
           console.log(val)
           let self = this
-          if (val && servConf.APP === 1) {
+          let title
+          let imgUrl
+          let desc
+          var mineTitle
+          var otherPeopleTitle
+          var shareUrl
+          if (servConf.APP === 1) {
             self.$store.state.showShare = false
-            if (typeof (Wechat) !== 'undefined') {
-              let title
-              let imgUrl
-              let desc
-
-              if (self.quizDetail.task_type === 0 || self.quizDetail.task_type === 3) {
-                let mineTitle = '我觉得你们没人能猜对这是' + self.quizDetail.answer[0].answer + '还是' + self.quizDetail.answer[1].answer + ',不服来猜！——来自猜一猜'
-                let otherPeopleTitle = self.quizDetail.user.nick + '让我们猜一猜这是' + self.quizDetail.answer[0].answer + '还是' + self.quizDetail.answer[1].answer + ',不服来猜！——来自猜一猜'
-                title = self.isBanker ? mineTitle : otherPeopleTitle
-                imgUrl = self.quizDetail.pics[0].pic_url
-                desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer
-              } else if (self.quizDetail.task_type === 1) {
-                title = self.quizDetail.teams[0].team_name + 'VS' + self.quizDetail.teams[1].team_name + ',猜一猜谁会赢! ——来自猜一猜'
-                imgUrl = servConf.WAP_FOOTBALL_LOGO_ADDR
+            if (self.quizDetail.task_type === 0 || self.quizDetail.task_type === 3) {
+              mineTitle = '我觉得你们没人能猜对这是' + self.quizDetail.answer[0].answer + '还是' + self.quizDetail.answer[1].answer + ',不服来猜！——来自猜一猜'
+              otherPeopleTitle = self.quizDetail.user.nick + '让我们猜一猜这是' + self.quizDetail.answer[0].answer + '还是' + self.quizDetail.answer[1].answer + ',不服来猜！——来自猜一猜'
+              title = self.isBanker ? mineTitle : otherPeopleTitle
+              imgUrl = self.quizDetail.pics[0].pic_url
+              desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer
+            } else if (self.quizDetail.task_type === 1) {
+              title = self.quizDetail.teams[0].team_name + 'VS' + self.quizDetail.teams[1].team_name + ',猜一猜谁会赢! ——来自猜一猜'
+              imgUrl = servConf.WAP_FOOTBALL_LOGO_ADDR
+              if (self.quizDetail.answer[2]) {
                 desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer + 'C.' + self.quizDetail.answer[2].answer
-              } else if (self.quizDetail.task_type === 2) {
-                title = self.quizDetail.teams[0].team_name + 'VS' + self.quizDetail.teams[1].team_name + ',猜一猜谁会赢! ——来自猜一猜'
-                imgUrl = servConf.WAP_BASKETBALL_LOGO_ADDR
+              } else {
                 desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer
-              }
+              }  
+            } else if (self.quizDetail.task_type === 2) {
+              title = self.quizDetail.teams[0].team_name + 'VS' + self.quizDetail.teams[1].team_name + ',猜一猜谁会赢! ——来自猜一猜'
+              imgUrl = servConf.WAP_BASKETBALL_LOGO_ADDR
+              desc = self.quizDetail.task_content + '\r\n' + 'A.' + self.quizDetail.answer[0].answer + ' B.' + self.quizDetail.answer[1].answer
+            }           
+            
+            shareUrl = servConf.WAP_ADDR + '?page=quiz_detail&task_id=' + self.quizDetail.task_id
+            if (self.token) {
+              shareUrl = servConf.WAP_ADDR + '?page=quiz_detail&task_id=' + self.quizDetail.task_id + '&operate_type=18' + '&task_type=' + self.$store.state.quizDetail.data.task_type + '&token=' + self.token
+            }
 
-//            console.log(title)
-//            console.log(imgUrl)
-//            console.log(desc)
-              var shareUrl = servConf.WAP_ADDR + '?page=quiz_detail&task_id=' + self.quizDetail.task_id
-              if (self.token) {
-                shareUrl = servConf.WAP_ADDR + '?page=quiz_detail&task_id=' + self.quizDetail.task_id + '&operate_type=18' + '&task_type=' + self.$store.state.quizDetail.data.task_type + '&token=' + self.token
-              }
-
+            if (typeof (Wechat) !== 'undefined') {              
               if (self.shareType === 0) {
                 Wechat.share({
                   message: {
@@ -426,6 +430,29 @@
                 }, function (reason) {
                   console.log('share failed:' + reason)
                 })
+              }
+            } else if (window.android) {             
+              window.androidShareSuccess = () => {
+                console.log('share succeed')
+                if (self.token) {
+                  self.operateType = 16
+                  self.shareQuiz({taskId: self.taskId, operateType: 16, taskType: self.$store.state.quizDetail.data.task_type})
+                }
+              }
+              
+              window.androidShareFailed = () => {
+                self.$f7.addNotification({
+                  title: '提示',
+                  message: '分享失败！',
+                  closeOnClick: true,
+                  hold: 3000
+                })
+              }
+              
+              if (self.shareType === 0) {
+                window.android.share(1, shareUrl, title, unescape(desc)) // 1 安卓定义为分享朋友圈
+              } else {
+                window.android.share(0, shareUrl, title, unescape(desc)) // 0 安卓定义为分享好友 
               }
             }
           }

@@ -175,6 +175,7 @@
       shareWx (shareWhere) {
         this.$store.state.quizDetail.isShowMore = false
         this.$store.state.showShare = true
+        this.$store.state.showShareShake++
         this.$store.state.shareType = shareWhere
       },
       copyPub () {

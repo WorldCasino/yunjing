@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50637
 File Encoding         : 65001
 
-Date: 2017-10-09 09:08:02
+Date: 2017-10-16 17:06:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -167,7 +167,7 @@ CREATE TABLE `m_modules` (
   `opened` int(11) NOT NULL DEFAULT '0' COMMENT '是否打开新窗口（1：打开 0：不打开）',
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '资源状态（1：有效 0：无效）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资源模块';
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资源模块';
 
 -- ----------------------------
 -- Records of m_modules
@@ -216,6 +216,7 @@ INSERT INTO `m_modules` VALUES ('42', '消息列表', '0', 'message/dataGrid', '
 INSERT INTO `m_modules` VALUES ('43', '消息查询', '1', null, '42', '1', 'search', null, '0', '1', '1');
 INSERT INTO `m_modules` VALUES ('44', '消息更新', '1', null, '42', '1', 'update', null, '0', '1', '1');
 INSERT INTO `m_modules` VALUES ('45', '用户充值', '1', null, '20', '1', 'recharge', null, '0', '1', '1');
+INSERT INTO `m_modules` VALUES ('46', '账号启用/停用', '1', null, '13', '1', 'status', null, '0', '1', '1');
 
 -- ----------------------------
 -- Table structure for `m_role_modules`
@@ -226,7 +227,7 @@ CREATE TABLE `m_role_modules` (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   `module_id` bigint(20) NOT NULL COMMENT '模块ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=299 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色权限';
+) ENGINE=InnoDB AUTO_INCREMENT=300 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色权限';
 
 -- ----------------------------
 -- Records of m_role_modules
@@ -354,6 +355,7 @@ INSERT INTO `m_role_modules` VALUES ('295', '3', '41');
 INSERT INTO `m_role_modules` VALUES ('296', '3', '42');
 INSERT INTO `m_role_modules` VALUES ('297', '3', '43');
 INSERT INTO `m_role_modules` VALUES ('298', '3', '44');
+INSERT INTO `m_role_modules` VALUES ('299', '1', '46');
 
 -- ----------------------------
 -- Table structure for `m_roles`
@@ -398,7 +400,7 @@ CREATE TABLE `t_audit_logs` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`audit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_audit_logs
@@ -451,6 +453,12 @@ INSERT INTO `t_audit_logs` VALUES ('52', '15', '1', '1', '出金审核通过', '
 INSERT INTO `t_audit_logs` VALUES ('53', '15', '1', '2', '出金审核通过', '1', '17000022', '2017-09-30 17:28:20', '17000022', '2017-09-30 17:28:20', '0');
 INSERT INTO `t_audit_logs` VALUES ('54', '10', '1', '2', '出金审核通过', '1', '17000022', '2017-09-30 17:28:31', '17000022', '2017-09-30 17:28:31', '0');
 INSERT INTO `t_audit_logs` VALUES ('55', '28', '1', '2', '财务审核不通过', '1', '17000022', '2017-09-30 17:28:46', '17000022', '2017-09-30 17:28:46', '0');
+INSERT INTO `t_audit_logs` VALUES ('56', '14', '1', '1', '出金审核通过', '1', '4', '2017-10-10 15:19:25', '4', '2017-10-10 15:19:25', '0');
+INSERT INTO `t_audit_logs` VALUES ('57', '12', '1', '1', '出金审核通过', '1', '4', '2017-10-10 15:21:02', '4', '2017-10-10 15:21:02', '0');
+INSERT INTO `t_audit_logs` VALUES ('58', '13', '1', '1', '出金审核通过', '1', '4', '2017-10-10 15:22:56', '4', '2017-10-10 15:22:56', '0');
+INSERT INTO `t_audit_logs` VALUES ('59', '15', '1', '1', '测试不通过', '1', '4', '2017-10-12 16:42:01', '4', '2017-10-12 16:42:01', '0');
+INSERT INTO `t_audit_logs` VALUES ('60', '12', '1', '1', '测试不通过', '1', '4', '2017-10-12 16:42:12', '4', '2017-10-12 16:42:12', '0');
+INSERT INTO `t_audit_logs` VALUES ('61', '11', '1', '1', '出金审核通过', '1', '4', '2017-10-12 16:46:03', '4', '2017-10-12 16:46:03', '0');
 
 -- ----------------------------
 -- Table structure for `t_audit_template`
@@ -551,7 +559,7 @@ CREATE TABLE `t_message` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_message
@@ -564,6 +572,7 @@ INSERT INTO `t_message` VALUES ('5', '10', 'fa fa-user text-red', '187', '1', '1
 INSERT INTO `t_message` VALUES ('6', '10', 'fa fa-user text-red', '188', '1', '1', '2017-09-29 12:04:33', null, '2017-09-29 12:04:33', '0');
 INSERT INTO `t_message` VALUES ('7', '10', 'fa fa-user text-red', '189', '1', '4', '2017-09-29 13:30:30', null, '2017-09-29 13:30:30', '0');
 INSERT INTO `t_message` VALUES ('8', '10', 'fa fa-users text-aqua', '190', '1', '4', '2017-09-30 17:19:10', null, '2017-09-30 17:19:10', '0');
+INSERT INTO `t_message` VALUES ('9', '10', 'fa fa-users text-aqua', '191', '1', '1', '2017-10-09 11:45:43', null, '2017-10-09 11:45:43', '0');
 
 -- ----------------------------
 -- Table structure for `t_message_content`
@@ -583,20 +592,25 @@ CREATE TABLE `t_message_content` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`message_content_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_message_content
 -- ----------------------------
-INSERT INTO `t_message_content` VALUES ('1', '28', '3', '4', '你 有 一 笔 订 单 (W150450675145482207) 待审 核', '1', '2', '1', '2017-09-30 17:22:03', '4', '2017-09-30 17:22:03', '0');
-INSERT INTO `t_message_content` VALUES ('2', '15', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '2', '1', '2017-09-30 17:27:08', '4', '2017-09-30 17:27:08', '0');
-INSERT INTO `t_message_content` VALUES ('3', '10', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '4', '1', '2017-09-30 17:27:16', '4', '2017-09-30 17:27:16', '0');
-INSERT INTO `t_message_content` VALUES ('4', '11', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '9', '1', '2017-09-30 17:27:19', '4', '2017-09-30 17:27:19', '0');
-INSERT INTO `t_message_content` VALUES ('5', '28', '3', '4', '你有一笔订单（W150450675145482207）待审核。', '1', '1', '4', '2017-09-30 17:17:18', null, '2017-09-30 17:17:18', '0');
-INSERT INTO `t_message_content` VALUES ('27', '28', '4', null, '你有一笔新的提现审核，编号：W150450675145482207。', '1', '1', '4', '2017-09-30 17:29:01', '4', '2017-09-30 17:29:01', '0');
-INSERT INTO `t_message_content` VALUES ('28', '190', '1', '1', '阳光大佬2]充值了111.0元，订单编号：R150676314947856715。', '1', '1', '4', '2017-09-30 19:13:08', null, '2017-09-30 19:13:08', '0');
-INSERT INTO `t_message_content` VALUES ('29', '10', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '1', '1', '4', '2017-09-30 17:28:26', '4', '2017-09-30 17:28:26', '0');
-INSERT INTO `t_message_content` VALUES ('30', '15', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '1', '1', '4', '2017-09-30 17:28:14', '4', '2017-09-30 17:28:14', '0');
+INSERT INTO `t_message_content` VALUES ('1', '28', '3', '4', '你 有 一 笔 订 单 (W150450675145482207) 待审 核', '1', '2', '1', '2017-10-10 15:18:34', '4', '2017-10-10 15:18:34', '0');
+INSERT INTO `t_message_content` VALUES ('2', '15', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '3', '1', '2017-10-10 15:18:35', '4', '2017-10-12 16:42:01', '0');
+INSERT INTO `t_message_content` VALUES ('3', '10', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '4', '1', '2017-10-10 15:18:37', '4', '2017-10-10 15:18:37', '0');
+INSERT INTO `t_message_content` VALUES ('4', '11', '3', '4', '你有一笔订单（R150407330550765201）待审核', '1', '10', '1', '2017-10-10 15:18:37', '4', '2017-10-12 16:46:03', '0');
+INSERT INTO `t_message_content` VALUES ('5', '28', '3', '4', '你有一笔订单（W150450675145482207）待审核。', '1', '1', '4', '2017-10-10 15:18:31', null, '2017-10-10 15:18:31', '0');
+INSERT INTO `t_message_content` VALUES ('27', '28', '4', null, '你有一笔新的提现审核，编号：W150450675145482207。', '0', '1', '4', '2017-10-10 11:36:04', '4', '2017-10-10 11:36:04', '0');
+INSERT INTO `t_message_content` VALUES ('28', '190', '1', '1', '阳光大佬2]充值了111.0元，订单编号：R150676314947856715。', '1', '1', '4', '2017-10-10 12:26:39', null, '2017-10-10 12:26:39', '0');
+INSERT INTO `t_message_content` VALUES ('29', '10', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '0', '1', '4', '2017-10-10 11:36:05', '4', '2017-10-10 11:36:05', '0');
+INSERT INTO `t_message_content` VALUES ('30', '15', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '0', '1', '4', '2017-10-10 11:36:05', '4', '2017-10-10 11:36:05', '0');
+INSERT INTO `t_message_content` VALUES ('31', '191', '1', '1', '阳光大佬2 ]充值了111.0元，订单编号：R150752074327839455。', '1', '1', '1', '2017-10-10 12:26:42', null, '2017-10-10 12:26:42', '0');
+INSERT INTO `t_message_content` VALUES ('32', '14', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '0', '1', '4', '2017-10-10 15:19:25', '4', '2017-10-10 15:19:25', '0');
+INSERT INTO `t_message_content` VALUES ('33', '12', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '0', '1', '4', '2017-10-10 15:21:02', '4', '2017-10-10 15:21:02', '0');
+INSERT INTO `t_message_content` VALUES ('34', '13', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '0', '1', '4', '2017-10-10 15:21:47', '4', '2017-10-10 15:21:47', '0');
+INSERT INTO `t_message_content` VALUES ('35', '11', '4', null, '你有一笔新的提现审核，编号：R150407330550765201。', '0', '1', '4', '2017-10-12 16:46:03', '4', '2017-10-12 16:46:03', '0');
 
 -- ----------------------------
 -- Table structure for `t_payment_records`
@@ -1301,7 +1315,7 @@ CREATE TABLE `t_recharges` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`recharge_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='充值记录';
+) ENGINE=InnoDB AUTO_INCREMENT=313 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='充值记录';
 
 -- ----------------------------
 -- Records of t_recharges
@@ -1606,6 +1620,7 @@ INSERT INTO `t_recharges` VALUES ('308', '17000001', 'R150659319559076277', '1',
 INSERT INTO `t_recharges` VALUES ('309', '17000001', 'R150665786893796729', '1', '101.00', '测试', '0', null, '1', '1', '2017-09-29 12:04:29', '1', '2017-09-29 12:04:29', '0');
 INSERT INTO `t_recharges` VALUES ('310', '17000001', 'R150666302761560229', '1', '120.00', '测试充值', '0', null, '1', '1', '2017-09-29 13:30:28', '1', '2017-09-29 13:30:28', '0');
 INSERT INTO `t_recharges` VALUES ('311', '17000001', 'R150676314947856715', '1', '111.00', '测试金额', '0', null, '1', '1', '2017-09-30 17:19:09', '1', '2017-09-30 17:19:09', '0');
+INSERT INTO `t_recharges` VALUES ('312', '17000001', 'R150752074327839455', '1', '111.00', '测试充值admin', '0', null, '1', '1', '2017-10-09 11:45:43', '1', '2017-10-09 11:45:43', '0');
 
 -- ----------------------------
 -- Table structure for `t_user_account`
@@ -1635,7 +1650,7 @@ CREATE TABLE `t_user_account` (
 -- Records of t_user_account
 -- ----------------------------
 INSERT INTO `t_user_account` VALUES ('1', '1', '1', '0', '6.00', '0.00', '0.00', '0.00', '0.00', '0.00', '1', '1', '2017-09-04 10:32:04', '1', '2017-09-04 10:32:04', '0');
-INSERT INTO `t_user_account` VALUES ('3', '17000001', '1', '0', '0.00', '633.00', '3.00', '0.00', '0.00', '0.00', '144', '17000001', '2017-09-25 16:07:33', '17000001', '2017-09-30 17:28:31', '0');
+INSERT INTO `t_user_account` VALUES ('3', '17000001', '1', '0', '0.00', '0.00', '-1.00', '0.00', '0.00', '0.00', '154', '17000001', '2017-10-12 16:42:03', '4', '2017-10-12 16:42:12', '0');
 INSERT INTO `t_user_account` VALUES ('6', '17000002', '1', '0', '41.00', '100.00', '0.00', '0.00', '0.00', '0.00', '266', '17000002', '2017-09-05 20:05:00', '17000002', '2017-09-08 21:55:37', '0');
 INSERT INTO `t_user_account` VALUES ('7', '17000009', '1', '0', '6.00', '2.00', '0.00', '0.00', '0.00', '0.00', '2', '17000009', '2017-09-04 10:32:08', '17000009', '2017-09-04 10:32:08', '0');
 INSERT INTO `t_user_account` VALUES ('8', '17000003', '1', '0', '736.00', '736.00', '0.00', '0.00', '0.00', '0.00', '77', '17000003', '2017-09-08 15:27:53', '17000003', '2017-09-08 18:04:51', '0');
@@ -1666,17 +1681,17 @@ CREATE TABLE `t_user_account_detail` (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
   `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '记录是否已删除',
   PRIMARY KEY (`trade_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户交易明细';
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='账户交易明细';
 
 -- ----------------------------
 -- Records of t_user_account_detail
 -- ----------------------------
-INSERT INTO `t_user_account_detail` VALUES ('10', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '1.00', '50', '2', '', '2', '0', '17000001', '2017-09-30 17:29:28', '1', '2017-09-30 17:29:28', '0');
-INSERT INTO `t_user_account_detail` VALUES ('11', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '1', '测试数据', '1', '0', '17000001', '2017-09-30 17:26:47', '4', '2017-09-30 17:26:48', '0');
-INSERT INTO `t_user_account_detail` VALUES ('12', '3', '17000001', 'R150407330550765201', '-1', '1.00', null, '2.00', '50', '1', '测试数据 ', '1', '0', '17000001', '2017-09-30 17:20:46', '4', '2017-09-30 17:20:46', '0');
-INSERT INTO `t_user_account_detail` VALUES ('13', '3', '17000001', 'R150407330550765201', '-1', '1.00', null, '2.00', '50', '1', '测试不通过', '1', '0', '17000001', '2017-09-30 17:19:30', '4', '2017-09-30 17:19:30', '0');
-INSERT INTO `t_user_account_detail` VALUES ('14', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '1', '测试数据', '1', '0', '17000001', '2017-09-30 17:22:19', '4', '2017-09-30 17:22:19', '0');
-INSERT INTO `t_user_account_detail` VALUES ('15', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '3.00', '50', '2', '', '2', '0', '17000001', '2017-09-30 17:29:31', '1', '2017-09-30 17:29:31', '0');
+INSERT INTO `t_user_account_detail` VALUES ('10', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '1.00', '50', '0', '', '1', '0', '17000001', '2017-10-12 16:26:58', '1', '2017-10-12 16:26:58', '0');
+INSERT INTO `t_user_account_detail` VALUES ('11', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '0', '', '2', '0', '17000001', '2017-10-12 16:46:21', '4', '2017-10-12 16:46:03', '0');
+INSERT INTO `t_user_account_detail` VALUES ('12', '3', '17000001', 'R150407330550765201', '-1', '1.00', null, '2.00', '50', '1', '测试不通过', '1', '0', '17000001', '2017-10-12 16:42:29', '4', '2017-10-12 16:42:11', '0');
+INSERT INTO `t_user_account_detail` VALUES ('13', '3', '17000001', 'R150407330550765201', '-1', '1.00', null, '2.00', '50', '0', '', '1', '0', '17000001', '2017-10-12 16:26:59', '4', '2017-10-12 16:26:59', '0');
+INSERT INTO `t_user_account_detail` VALUES ('14', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '2.00', '50', '0', '', '1', '0', '17000001', '2017-10-12 16:27:00', '4', '2017-10-12 16:27:00', '0');
+INSERT INTO `t_user_account_detail` VALUES ('15', '3', '17000001', 'R150407330550765201', '-1', '0.00', null, '3.00', '50', '1', '测试不通过', '1', '0', '17000001', '2017-10-12 16:42:19', '4', '2017-10-12 16:42:01', '0');
 INSERT INTO `t_user_account_detail` VALUES ('20', '3', '17000001', 'R150424242620597557', '1', '10.00', '4', '11.00', '10', '2', '测试金额测试充值10块', '1', '1', '17000001', '2017-09-04 19:40:42', '1', '2017-09-04 19:40:42', '0');
 INSERT INTO `t_user_account_detail` VALUES ('23', '6', '17000002', 'R150424941331079226', '1', '10.00', '4', '10.00', '10', '2', '测试', '1', '1', '17000002', '2017-09-04 19:40:43', '1', '2017-09-04 19:40:43', '0');
 INSERT INTO `t_user_account_detail` VALUES ('24', '3', '17000001', 'R150425020769560470', '1', '11.00', '4', '22.00', '10', '2', '测试', '1', '1', '17000001', '2017-09-04 19:40:43', '1', '2017-09-04 19:40:43', '0');
@@ -1836,6 +1851,7 @@ INSERT INTO `t_user_account_detail` VALUES ('187', '3', '17000001', 'R1506593195
 INSERT INTO `t_user_account_detail` VALUES ('188', '3', '17000001', 'R150665786893796729', '1', '101.00', '4', '107.00', '11', '2', '测试', null, '1', '17000001', '2017-09-29 12:04:29', '17000001', '2017-09-29 12:04:29', '0');
 INSERT INTO `t_user_account_detail` VALUES ('189', '3', '17000001', 'R150666302761560229', '1', '120.00', '4', '227.00', '11', '2', '测试充值', null, '1', '17000001', '2017-09-29 13:30:28', '17000001', '2017-09-29 13:30:28', '0');
 INSERT INTO `t_user_account_detail` VALUES ('190', '3', '17000001', 'R150676314947856715', '1', '111.00', '4', '400.00', '11', '2', '测试金额', null, '1', '17000001', '2017-09-30 17:19:09', '17000001', '2017-09-30 17:19:09', '0');
+INSERT INTO `t_user_account_detail` VALUES ('191', '3', '17000001', 'R150752074327839455', '1', '111.00', '4', '511.00', '11', '2', '测试充值admin', null, '1', '17000001', '2017-10-09 11:45:43', '17000001', '2017-10-09 11:45:43', '0');
 
 -- ----------------------------
 -- Table structure for `t_user_cards`
@@ -1896,14 +1912,14 @@ CREATE TABLE `t_users` (
   `bg_login_id` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qq` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17000025 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户信息';
+) ENGINE=InnoDB AUTO_INCREMENT=17000031 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户信息';
 
 -- ----------------------------
 -- Records of t_users
 -- ----------------------------
-INSERT INTO `t_users` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', '15260282340', '2', '0', '1', '1', 'http://img.jsqq.net/uploads/allimg/150111/1_150111080328_19.jpg', '2017-09-28 12:09:34', '0', null, null, null, '3', '1', '2017-09-28 12:09:34', '1', '2017-09-28 12:09:34', '0', null, '2');
+INSERT INTO `t_users` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', '15260282340', '2', '0', '1', '1', 'http://img.jsqq.net/uploads/allimg/150111/1_150111080328_19.jpg', '2017-10-10 20:32:15', '0', null, null, null, '5', '1', '2017-09-28 12:09:34', '1', '2017-09-28 12:09:34', '0', null, '2');
 INSERT INTO `t_users` VALUES ('3', 'KF001', 'e10adc3949ba59abbe56e057f20f883e', '客服001', '15260282340', '2', '0', '3', '3', null, '2017-09-28 12:09:32', '0', '1', '3', null, '1', '1', '2017-09-28 12:09:32', '1', '2017-09-28 12:09:32', '0', null, '1977704195');
-INSERT INTO `t_users` VALUES ('4', 'KF002', 'e10adc3949ba59abbe56e057f20f883e', '客服003', '15260282340', '2', '0', '3', '4', null, '2017-09-30 14:11:22', '0', '2', '4', null, '1', '1', '2017-09-30 14:11:22', '1', '2017-09-30 14:11:22', '0', null, '1977704192');
+INSERT INTO `t_users` VALUES ('4', 'KF002', 'e10adc3949ba59abbe56e057f20f883e', '客服003', '15260282340', '2', '0', '3', '4', null, '2017-10-10 12:02:58', '0', '2', '4', null, '1', '1', '2017-10-10 12:02:58', '1', '2017-10-10 12:02:58', '0', null, '1977704192');
 INSERT INTO `t_users` VALUES ('5', 'agdress', 'e10adc3949ba59abbe56e057f20f883e', '星河娱乐', '15901794296', '2', '0', '5', '5', null, '2017-09-25 11:16:09', '0', '1', null, null, '1', '1', '2017-09-25 11:16:09', null, '2017-09-25 11:16:09', '0', null, null);
 INSERT INTO `t_users` VALUES ('6', 'agdress1', '81dc9bdb52d04dc20036dbd8313ed055', '我自己a', '15260282340', '2', '0', '5', '6', null, '2017-09-25 11:16:12', '0', '2', null, null, '3', '1', '2017-09-25 11:16:12', null, '2017-09-25 11:16:12', '0', null, null);
 INSERT INTO `t_users` VALUES ('17000001', '15901794296', '423350', '阳光大佬2', '15901794296', '-1', '1', '0', '4', '2017090809061430402302.jpeg', '2017-09-30 17:01:18', '0', '1', '20361890', 'n', '6', '0', '2017-09-30 17:01:18', '1', '2017-09-30 17:01:18', '0', 'gogogo3', '9');
@@ -1921,3 +1937,4 @@ INSERT INTO `t_users` VALUES ('17000015', 'root', 'e10adc3949ba59abbe56e057f20f8
 INSERT INTO `t_users` VALUES ('17000022', 'CW001', 'e10adc3949ba59abbe56e057f20f883e', '财务', '15260282340', '2', '0', '4', null, null, '2017-09-28 14:52:41', '0', '4', null, null, '1', '1', '2017-09-28 14:52:41', null, '2017-09-28 14:52:41', '0', null, null);
 INSERT INTO `t_users` VALUES ('17000023', 'agdresstest1', 'e10adc3949ba59abbe56e057f20f883e', '代理商测试1', '15260282342', '2', '0', '5', null, null, '2017-09-28 20:42:25', '0', '5', null, null, '1', '1', '2017-09-28 20:42:25', null, '2017-09-28 20:42:25', '0', null, null);
 INSERT INTO `t_users` VALUES ('17000024', 'agdresstest22', 'e10adc3949ba59abbe56e057f20f883e', '代理商测试', '15260282340', '2', '0', '5', null, null, null, '0', '6', null, null, '1', '1', '0000-00-00 00:00:00', null, null, '0', null, null);
+INSERT INTO `t_users` VALUES ('17000030', '15260282340', '473753', '15260282340', '15260282340', '-1', '1', null, '3', null, '2017-10-10 15:16:46', '0', '1', '24635209', 'n', '1', '1', '2017-10-10 15:16:02', '17000030', '2017-10-10 15:16:46', '0', 'XH002234017000030', null);

@@ -39,7 +39,7 @@
       </div>
 
       <!-- 体育倒计时 -->
-      <div v-if="task_type === 1 || task_type === 2" class="item-count-down">
+      <div v-else-if="task_type === 1 || task_type === 2" class="item-count-down">
         <div v-if="!isPublished" class="item-count-down-title">
 
           <div v-if="!openTime">
@@ -103,7 +103,9 @@
       // 详情
       quizDetail: Object,
       // 开赛时间显示格式化类型：0  MM/dd day hh:mm(首页,体育页)、 1 hh:mm(详情页)
-      showOpenTimeType: { type: Number, default: 0 }
+      showOpenTimeType: { type: Number, default: 0 },
+      // 模块：首页quizList， 篮球quizListBask， 足球quizListFoot
+      model: { type: String, default: '' }
     },
     computed: {
       ...mapState({
@@ -114,10 +116,18 @@
         return new Date(this.publishTime.replace(/-/g, '/')).getTime()
       },
       openTimeFormat0 () {
-        let oDate = new Date(this.quizDetail.open_time.replace(/-/g, '/'))
-        let hours = TimeUtil.formatDoubleDigit(parseInt(oDate.getHours()))
-        let minutes = TimeUtil.formatDoubleDigit(parseInt(oDate.getMinutes()))
-        return hours + ':' + minutes
+        switch (this.model) {
+          // 首页的列表
+          case 'quizList' :
+            return TimeUtil.formatSportItemTime(this.quizDetail.open_time, 'hh:mm')
+          // 体育页面的列表
+          case 'quizListFoot' :
+          case 'quizListBask' :
+            let oDate = new Date(this.quizDetail.open_time.replace(/-/g, '/'))
+            let hours = TimeUtil.formatDoubleDigit(parseInt(oDate.getHours()))
+            let minutes = TimeUtil.formatDoubleDigit(parseInt(oDate.getMinutes()))
+            return hours + ':' + minutes
+        }
       },
       // 详情页
       openTimeFormat1 () {

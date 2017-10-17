@@ -16,28 +16,15 @@
             <div class="title">优先下注方式</div>
             <div class="desc">每次竞猜优先选用金币下注</div>
           </div>
-          <div class="item-after">
-            <div class="item-input">
-              <label class="label-switch">
-                <input type="checkbox" v-model="beanPreferTf">
-                <div class="checkbox"></div>
-              </label>
-            </div>
-          </div>
+          <!--f7的switch控件在安卓部分机型不兼容，引用yd-switch-->
+          <yd-switch v-model="beanPreferTf" color="#fd0"></yd-switch>
         </f7-list-item>
         <f7-list-item class="item-wrapper">
           <div class="content">
             <div class="title">下注确认</div>
             <div class="desc">每次下注都需要我确认</div>
           </div>
-          <div class="item-after">
-            <div class="item-input">
-              <label class="label-switch">
-                <input type="checkbox" v-model="checked">
-                <div class="checkbox"></div>
-              </label>
-            </div>
-          </div>
+          <yd-switch v-model="checked" color="#fd0"></yd-switch>
         </f7-list-item>
       </f7-list>
 
@@ -48,14 +35,7 @@
             <div class="title">开奖提醒</div>
             <div class="desc">当我参与的竞猜开奖时，向我发送消息</div>
           </div>
-          <div class="item-after">
-            <div class="item-input">
-              <label class="label-switch">
-                <input type="checkbox" value="">
-                <div class="checkbox"></div>
-              </label>
-            </div>
-          </div>
+          <yd-switch color="#fd0"></yd-switch>
         </f7-list-item>
 
         <f7-list-item>
@@ -63,14 +43,7 @@
             <div class="title">下注提醒</div>
             <div class="desc">当有玩家参与我发布的竞猜时，向我发送消息</div>
           </div>
-          <div class="item-after">
-            <div class="item-input">
-              <label class="label-switch">
-                <input type="checkbox" value="">
-                <div class="checkbox"></div>
-              </label>
-            </div>
-          </div>
+          <yd-switch color="#fd0"></yd-switch>
         </f7-list-item>
 
         <f7-list-item>
@@ -78,14 +51,7 @@
             <div class="title">消息提醒</div>
             <div class="desc">当有玩家在我发布的竞猜发言时，向我发送消息</div>
           </div>
-          <div class="item-after">
-            <div class="item-input">
-              <label class="label-switch">
-                <input type="checkbox" value="" checked="checked">
-                <div class="checkbox"></div>
-              </label>
-            </div>
-          </div>
+          <yd-switch v-model="mesTip" color="#fd0"></yd-switch>
         </f7-list-item>
 
       </f7-list>
@@ -105,7 +71,8 @@
         // 下注提醒
         checked: true,
         // 优先使用金币下注
-        beanPreferTf: true
+        beanPreferTf: true,
+        mesTip: true
       }
     },
     computed: {
@@ -122,8 +89,19 @@
     mounted () {
 //      this.checked = Boolean(this.userInfoData.bet_tip)
 //      this.beanPreferTf = Boolean(!this.userInfoData.coin_first)
-      this.checked = !!this.userInfoData.bet_tip
-      this.beanPreferTf = !this.userInfoData.coin_first
+//      this.checked = !!this.userInfoData.bet_tip
+//      this.beanPreferTf = !this.userInfoData.coin_first
+      if (this.userInfoData.bet_tip === 0) {
+        this.checked = false
+      } else if (this.userInfoData.bet_tip === 1) {
+        this.checked = true
+      }
+
+      if (this.userInfoData.coin_first === 0) {
+        this.beanPreferTf = true
+      } else if (this.userInfoData.coin_first === 1) {
+        this.beanPreferTf = false
+      }
     },
     beforeDestroy () {
 //      this.getUserInfoQuickly()
@@ -132,12 +110,14 @@
       // 下注提醒
       checked: {
         handler: function (val) {
+          console.log(val)
           this.isAblePop([6, Number(val)])
         }
       },
       // 是否优先金币下注
       beanPreferTf: {
         handler: function (val) {
+          console.log(val)
           this.isAblePop([4, Number(!val)])
         }
       }

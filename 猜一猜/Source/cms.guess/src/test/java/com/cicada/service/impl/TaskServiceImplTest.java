@@ -2,6 +2,7 @@ package com.cicada.service.impl;
 
 import com.cicada.commons.utils.EscapeUnescape;
 import com.cicada.commons.utils.StringUtils;
+import com.cicada.job.Ball.BasketballMatchUtil;
 import com.cicada.mapper.ClientMapper;
 import com.cicada.mapper.TaskMapper;
 import com.cicada.pojo.ClientEntity;
@@ -36,7 +37,7 @@ public class TaskServiceImplTest {
 
     @Test
     public void Test1() throws Exception {
-        LotteryResultVo resultVo = taskService.runLotteryProcess(725,true);
+        LotteryResultVo resultVo = taskService.runLotteryProcess(930,true);
 
         ClientEntity dealer = clientMapper.selectById(resultVo.getUserId());
 
@@ -96,6 +97,11 @@ public class TaskServiceImplTest {
         String orgContent = task.getTaskContent();
         orgContent = EscapeUnescape.unescape(orgContent);
         System.out.println(orgContent);
+    }
+
+    @Test
+    public void Test3() throws UnsupportedEncodingException {
+        BasketballMatchUtil.setBallList();
     }
 
 }

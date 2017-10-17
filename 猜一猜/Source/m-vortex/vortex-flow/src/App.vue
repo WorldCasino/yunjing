@@ -42,8 +42,8 @@
                   <f7-link tab-link="#tab2_1" class="sport-tab" :class="{'sport-tab-active': sportType === 1}" @click="selectSportTab(1)">足球</f7-link>
                   <f7-link tab-link="#tab2_2" class="sport-tab" :class="{'sport-tab-active': sportType === 2}" @click="selectSportTab(2)">篮球</f7-link>
               </f7-subnavbar>
-              <div v-if="sportType === 1" class="toolbar-opentime">{{oTTbFoot}}</div>
-              <div v-else-if="sportType === 2" class="toolbar-opentime">{{oTTbBask}}</div>
+              <div v-if="sportType === 1 && quizListFoot !== null && quizListFoot.length > 0" class="toolbar-opentime">{{oTTbFoot}}</div>
+              <div v-else-if="sportType === 2 && quizListBask !== null && quizListBask.length > 0" class="toolbar-opentime">{{oTTbBask}}</div>
 
             </f7-navbar>
 
@@ -419,10 +419,12 @@
         quizListLimit: state => state.quizList.limit,
 
         // sport
+        quizListFoot: state => state.quizListFoot.quizzes,
         quizListFootStatus: state => state.quizListFoot.status,
         quizListFootShake: state => state.quizListFoot.shake,
         quizListFootLastCount: state => state.quizListFoot.lastCount,
         quizListFootLimit: state => state.quizListFoot.limit,
+        quizListBask: state => state.quizListBask.quizzes,
         quizListBaskStatus: state => state.quizListBask.status,
         quizListBaskShake: state => state.quizListBask.shake,
         quizListBaskLastCount: state => state.quizListBask.lastCount,
@@ -470,7 +472,7 @@
         footballList: state => state.sports.footballList
       }),
       coinBanlaceFormat () {
-        return balanceFormat(this.userInfoData.coin_balance)
+        return balanceFormat(this.userInfoData.avalible_coin)
       },
       BeanBanlaceFormat () {
         return balanceFormat(this.userInfoData.bean_balance)
@@ -1191,6 +1193,9 @@
 //          }
 //          self.initMainApp()
         }
+      },
+      quizListBask (val) {
+        console.log(val)
       }
     }
   }

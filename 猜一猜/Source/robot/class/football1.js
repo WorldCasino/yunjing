@@ -44,10 +44,6 @@ module.exports.get = function () {
                 const draw = cheer(tds.get(3)).attr('data-sort');
                 const lose = cheer(tds.get(4)).attr('data-sort');
 
-                if(teams=='斯特拉斯堡 v 马赛'){
-                    console.log(teams);
-                }
-
                 //console.log([time,teams,win,draw,lose].join(' - ') );
                 const home_team_name_bwin = teams.split(' v ')[0];
                 const away_team_name_bwin = teams.split(' v ')[1];
@@ -94,7 +90,7 @@ module.exports.get = function () {
                             }
 
                         })
-
+ 
                     })
 
                 })

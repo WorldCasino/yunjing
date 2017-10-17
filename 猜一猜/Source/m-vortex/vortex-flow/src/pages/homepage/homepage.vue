@@ -2,7 +2,7 @@
   <div>
     <div class="list" v-on:touchend="onTouchEnd()">
       <div v-for="quiz in quizzes">
-        <QuizSub :quizDetail="quiz" :task_id="quiz.task_id" :task_type="quiz.task_type" :user_id="quiz.user_id" :task_content="quiz.task_content" :sale_price="quiz.sale_price" :quantity="quiz.quantity"
+        <QuizSub :model="model" :quizDetail="quiz" :task_id="quiz.task_id" :task_type="quiz.task_type" :user_id="quiz.user_id" :task_content="quiz.task_content" :sale_price="quiz.sale_price" :quantity="quiz.quantity"
                  :task_status="quiz.task_status" :hot="quiz.hot" :create_date="quiz.create_date" :settle_time="quiz.settle_time" :update_date="quiz.update_date"
                  :user="quiz.user" :pics="quiz.pics" :teams="quiz.teams" :answer="quiz.answer" :message_count="quiz.message_count" :lock_time="quiz.lock_time" ref="quizItem"></QuizSub>
 

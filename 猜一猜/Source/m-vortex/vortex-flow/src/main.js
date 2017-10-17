@@ -10,16 +10,20 @@ import Framework7Vue from 'framework7-vue'
 import VueLazyLoad from 'vue-lazyload'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import confirm from './plugin/confirm'
+import confirmSet from './plugin/confirm-set'
 import myDate from './plugin/datepick'
 import chatInput from './plugin/chatInput'
+import {Switch} from 'vue-ydui/dist/lib.rem/switch'
 
 Vue.prototype.$dm = {}
 Vue.prototype.$dm.confirm = confirm
+Vue.prototype.$dm.confirmSet = confirmSet
 
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
 Vue.use(myDate)
 Vue.use(chatInput)
+Vue.component(Switch.name, Switch)
 // Import F7 iOS Theme Styles
 import Framework7Theme from 'framework7/dist/css/framework7.ios.min.css'
 import Framework7ThemeColors from 'framework7/dist/css/framework7.ios.colors.min.css'

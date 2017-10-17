@@ -1,0 +1,117 @@
+package com.kk.entity.vo;
+
+
+import java.io.Serializable;
+
+
+public class AgentVo implements Serializable{
+
+	private Long agentId;
+	private Long userId;
+	private String bgAgentId;
+ 	private String agentName;
+ 	private String agentNumber;
+ 	private String passWord;
+ 	private String phone;
+ 	private String email;
+ 	private String remarks;
+ 	private Double defectionProportion;
+ 	private Long isDelete;
+ 	private Long userStatus;
+
+	public Long getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Long isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public Long getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(Long userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public String getBgAgentId() {
+		return bgAgentId;
+	}
+
+	public void setBgAgentId(String bgAgentId) {
+		this.bgAgentId = bgAgentId;
+	}
+
+	public Double getDefectionProportion() {
+		return defectionProportion;
+	}
+
+	public void setDefectionProportion(Double defectionProportion) {
+		this.defectionProportion = defectionProportion;
+	}
+
+	public Long getAgentId() {
+		return agentId;
+	}
+
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getAgentName() {
+		return agentName;
+	}
+
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+
+	public String getAgentNumber() {
+		return agentNumber;
+	}
+
+	public void setAgentNumber(String agentNumber) {
+		this.agentNumber = agentNumber;
+	}
+
+	public String getPassWord() {
+		return passWord;
+	}
+
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+}

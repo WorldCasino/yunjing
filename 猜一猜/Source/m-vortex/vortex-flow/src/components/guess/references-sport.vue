@@ -57,7 +57,7 @@
       // 盘口
       concede_points_show: {
         type: String,
-        default: 0
+        default: '0'
       },
       // 是否开奖
       isPublished: {

@@ -29,6 +29,7 @@ public interface TaskMapper extends BaseMapper<Task> {
     int updateTaskrecommend(long taskId);
 
     List<TaskVo> selectWattingLotteryTasks();
+    List<TaskVo> selectWattingCopyLotteryTasks();
 
     TaskVo selectTaskVo(Map<String,Object> params);
 
@@ -39,5 +40,5 @@ public interface TaskMapper extends BaseMapper<Task> {
     double selectConcedePoints(long taskId);
     List<Long> selectWattingScoreTasks();
 
-
+    int resetScore(Map<String,Object> param);
 }

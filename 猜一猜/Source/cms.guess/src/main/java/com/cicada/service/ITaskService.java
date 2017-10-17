@@ -53,6 +53,12 @@ public interface ITaskService extends IService<Task> {
     LotteryResultVo runLotteryProcess(long taskId,long answerId) throws ApiException;
 
     /**
+     * 开奖处理(体育)
+     * @throws ApiException
+     */
+    void runLotteryMatchProcess(JSONObject params);
+
+    /**
      * 开奖成功结果通知
      * @param resultVo 竞猜项目开奖结果
      */
@@ -123,6 +129,14 @@ public interface ITaskService extends IService<Task> {
      * @throws ApiException
      */
     List<TaskVo> selectWattingLotteryTasks() throws ApiException;
+
+    /**
+     * 检查所有待开奖任务（转发的竞猜）
+     * @return
+     * @throws ApiException
+     */
+    List<TaskVo> selectWattingCopyLotteryTasks() throws ApiException;
+
 
     /**
      * 检查所有比赛结束待处理比分的任务（倒计时 未及时处理的）

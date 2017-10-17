@@ -2,7 +2,7 @@
 <template>
   <div class="quiz-item">
     <div @click="goDetail()">
-      <Publisher :userId="user_id" :avatar="user.head_url" :username="user.nick" :is-male="user.gender" :is-hot="hot" :is-published="isPublished"
+      <Publisher :model="model" :userId="user_id" :avatar="user.head_url" :username="user.nick" :is-male="user.gender" :is-hot="hot" :is-published="isPublished"
                  :refresh-time="update_date" :publish-time="settle_time" :task_type="task_type" :open_time="quizDetail.open_time" :quizDetail="quizDetail"></Publisher>
       <Describe :desc="task_content" :gold="sale_price"></Describe>
       <QuizReferences v-if="(task_type === 0 || task_type === 3) &&  typeof pics !== 'undefined'" :result-placeholder="pics[0]" :references="pics.slice(1, 4)" :is-published="isPublished"></QuizReferences>
@@ -63,7 +63,8 @@
       title: String,
       play_type: Number,
       concede_points_show: String,
-      lock_time: String
+      lock_time: String,
+      model: String
     },
     computed: {
       ...mapState({

@@ -391,7 +391,7 @@
             lottery_type: 0,
             personal: this.isPrivate ? 1 : 0,
             like_peas: this.isAbleBean ? 1 : 0,
-            content: this.$store.state.sports.desc, // 描述
+            content: escape(this.$store.state.sports.desc), // 描述
             price: this.amount, // 单注价格
             quantity: this.count, // 总注数
             home_logo: this.footballCurData.homeTeamLogo,
@@ -421,7 +421,7 @@
             lottery_type: 0,
             personal: this.isPrivate ? 1 : 0,
             like_peas: this.isAbleBean ? 1 : 0,
-            content: this.$store.state.sports.desc, // 描述
+            content: escape(this.$store.state.sports.desc), // 描述
             price: this.amount, // 单注价格
             quantity: this.count, // 总注数
             home_logo: this.basketballCurData.homeTeamLogo,

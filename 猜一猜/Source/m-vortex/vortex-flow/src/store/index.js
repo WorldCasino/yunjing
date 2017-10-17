@@ -57,6 +57,7 @@ const state = {
 
   // 分享弹窗
   showShare: false,
+  showShareShake: 0,
   shareType: 0,
   // 红包
   showLuckyMoney: false,

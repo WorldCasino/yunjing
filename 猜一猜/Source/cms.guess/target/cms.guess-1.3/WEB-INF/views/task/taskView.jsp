@@ -432,7 +432,6 @@
 
         //关闭页面
         $("#btn-close").on('click',function () {
-            debugger;
             var id = "task_"+window.taskId;
             window.parent.closeMyTab(id);
         });

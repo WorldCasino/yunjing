@@ -110,11 +110,11 @@ public class BasketballMatchUtil {
                         BallUtil.SaveMatch( home_team_name, away_team_name,  open_time, title, MatchesTypeEnum.Basketball.getCode()+"" ,gl_match_id);
                     }
                 }else{
-                    LOTTERY_LOGGER.info(String.format("ball-参数对应无数据"+object.get("error_code")+"原因"+object.getString("reason")));
+                    LOTTERY_LOGGER.info(String.format("参数对应无数据"+object.get("error_code")+"原因"+object.getString("reason")));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程是吧",e.toString()));
+                LOTTERY_LOGGER.error(String.format("获取篮球赛程",e));
             }
         }
         //开始redis存储
@@ -146,6 +146,7 @@ public class BasketballMatchUtil {
             JSONObject object = JSONObject.parseObject(result);
             if(object.getString("reason").equals("success")) {
                 JSONObject jsonObject= object.getJSONObject("result") ;
+                LOTTERY_LOGGER.info(String.format("当前球赛【"+matchId+"】结果记录"+jsonObject.toString()));
                 int status=jsonObject.getIntValue("status");
                 int home_score=jsonObject.getIntValue("home_score");
                 int away_score=jsonObject.getIntValue("away_score");
@@ -162,13 +163,13 @@ public class BasketballMatchUtil {
                 }
                 matchesEntity.setHomeScore(home_score);
                 matchesEntity.setAwayScore(away_score);
-                ((MatchesServiceImpl)SpringContextUtil.getBean("matchesServiceImpl")).updateById(matchesEntity);
+                ((IMatchesService)SpringContextUtil.getBean("matchesServiceImpl")).updateById(matchesEntity);
             }else{
-                LOTTERY_LOGGER.info(String.format("ball-暂无当前球赛记录"+object.get("error_code")+"原因"+object.getString("reason")));
+                LOTTERY_LOGGER.info(String.format("暂无当前球赛【"+matchId+"】记录"+object.get("error_code")+"原因"+object.getString("reason")));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程结果失败",e.toString()));
+            LOTTERY_LOGGER.error(String.format("获取篮球赛程【"+matchId+"】结果失败",e));
         }
         return  flag;
     }

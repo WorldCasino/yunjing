@@ -308,11 +308,16 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper,ClientEntity> im
 
         String token = "";
         Map<String, Object> map = new HashMap<>();
-        map.put("wxopenid", userInfo.getOpenId());
+        map.put("wxunionid", userInfo.getUnionId());
 
         ClientEntity user;
         List<ClientEntity> list = userMapper.selectByMap(map);
 
+        if(list.size()==0){
+            map = new HashMap<>();
+            map.put("wxopenid", userInfo.getOpenId());
+            list = userMapper.selectByMap(map);
+        }
         try {
 
             if(list.size()==0){
@@ -341,7 +346,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper,ClientEntity> im
                 user.setCreateDate(new Timestamp(System.currentTimeMillis()));
                 userMapper.insert(user);
 
-                LOGGER.info(String.format("微信新用户注册【%s】【%s】",user.getUserId(),user.getNickname()));
+                LOGGER.info(String.format("微信新用户注册【%s】【%s】 ，UnionId：【%s】",user.getUserId(),user.getNickname(),user.getWxUnionId()));
             }else{
                 user = list.get(0);
                 user.setWxUnionId(userInfo.getUnionId());
@@ -370,7 +375,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper,ClientEntity> im
                 wrapper.where("user_id = {0}", user.getUserId());
                 userMapper.update(user, wrapper);
 
-                LOGGER.info(String.format("微信老用户登录【%s】【%s】",user.getUserId(),user.getNickname()));
+                LOGGER.info(String.format("微信老用户登录【%s】【%s】 ，UnionId：【%s】",user.getUserId(),user.getNickname(),user.getWxUnionId()));
             }
 
             token = AesTokenUtil.generateToken(user.getUserId());

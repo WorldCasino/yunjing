@@ -20,21 +20,19 @@ export default {
     // 首次下注设置
     setBet () {
       const self = this
-      this.$dm.confirm({
+      this.$dm.confirmSet({
         title: `下注设置`,
-        mes: `设置下注的方式`,
         btnText: '确定',
         btnType: 'bet',
         checks: [
           {
-            checked: true,
-            text: '优先使用金币下注'
+            checked: true
           }, {
-            checked: false,
-            text: '每次下注都需要确认'
+            checked: false
           }],
         confirmCb (checks) {
           // todo 去设置，与后端交互
+          console.log(checks)
           self.isAblePop([5, 0])
           self.isAblePop([4, Number(!checks[0])])
           self.isAblePop([6, Number(checks[1])])

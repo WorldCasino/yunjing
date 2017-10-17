@@ -40,6 +40,7 @@ module.exports = function (req, res, next) {
             't.lottery_type, ' +
             't.lock_time, ' +
             't.parent_id, ' +
+            't.is_recommend, ' +
             'u.user_name, ' +
             'u.user_type, ' +
             'u.nickname, ' +
@@ -80,6 +81,7 @@ module.exports = function (req, res, next) {
                 sale_price: parseInt(v.sale_price),
                 quantity: v.quantity,
                 task_status: v.task_status,
+                is_recommend: v.is_recommend,
                 hot: !!parseInt(v.hot),
                 personal: parseInt(v.personal),//...  0:普通发布  1:私人发布
                 like_peas: parseInt(v.like_peas),//...  0:不接受金豆  1：接受金豆

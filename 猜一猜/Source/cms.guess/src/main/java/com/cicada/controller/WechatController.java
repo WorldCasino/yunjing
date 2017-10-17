@@ -257,7 +257,6 @@ public class WechatController {
             rtn.put("subscribe",subStatus);
             result = ResponseWrapper.succeed(rtn);
         }catch (ApiException e){
-            e.printStackTrace();
             result = ResponseWrapper.failed(e.getCode(),e.getMessage());
         }
         catch (Exception e){
@@ -344,7 +343,6 @@ public class WechatController {
             LOGGER.info(String.format("充值订单【%s】微信预支付生成成功！jspay:%s",outTradeNo,jspay));
 
         }catch (ApiException e){
-            e.printStackTrace();
             result = ResponseWrapper.failed(e.getCode(),e.getMessage());
             LOGGER.info(String.format("充值订单【%s】微信预支付生成失败！",outTradeNo),e);
         }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.cicada.commons.Exception.ApiException;
 import com.cicada.enums.DeviceTypeEnum;
 import com.cicada.enums.ErrorCodeEnum;
+import com.tencent.xinge.Message;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -30,10 +31,10 @@ public class XingeUtil {
      */
     public static JSONObject pushTokenAndroid(Long accessId,String secretKey,String content, String token,long taskId){
         //自定义推送
-        MessageIOS message = new MessageIOS();
-        message.setAlert(content);
-        message.setBadge(1);
-        message.setSound("notice.mp3");
+        Message message = new Message();
+        message.setContent(content);
+        message.setTitle("猜一猜");
+        message.setType(1);
 
         if(taskId > 0){
             Map<String,Object> custom = new HashMap<>();
@@ -42,7 +43,7 @@ public class XingeUtil {
         }
 
         XingeApp xinge = new XingeApp(accessId, secretKey);
-        JSONObject ret = xinge.pushSingleDevice(token, message, SystemConfig.getInstance().getIOS_ENVIRONMENT());
+        JSONObject ret = xinge.pushSingleDevice(token, message);
         return ret;
     }
 
@@ -105,6 +106,9 @@ public class XingeUtil {
                         SystemConfig.getInstance().getIOS_SUPPLY_SECRET_KEY(),
                         content, deviceToken,taskId);
             } else if (deviceType == DeviceTypeEnum.Android) {
+//                result = XingeUtil.pushTokenAndroid(2100268813L,
+//                        "86b000410c3733b6607e83e6ede3d40b",
+//                        content, deviceToken,taskId);
                 result = XingeUtil.pushTokenAndroid(SystemConfig.getInstance().getANDROID_SUPPLY_ACCESS_ID(),
                         SystemConfig.getInstance().getANDROID_SUPPLY_SECRET_KEY(),
                         content, deviceToken,taskId);

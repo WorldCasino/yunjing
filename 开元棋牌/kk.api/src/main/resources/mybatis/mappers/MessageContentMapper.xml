@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kk.mapper.MessageContentMapper">
+
+    <resultMap id="messageContentMap" type="com.kk.entity.vo.MessageContenVo">
+        <id column="message_content_id" property="messageContentId" jdbcType="BIGINT"/>
+        <result column="message_type" property="messageType" jdbcType="INTEGER" javaType="com.kk.enums.TradeTypeEnum"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="trade_id" property="tradeId" jdbcType="BIGINT"/>
+        <result column="trade_no" property="tradeNo" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="message_id" property="messageId" jdbcType="BIGINT"/>
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="amount" property="amount" jdbcType="FLOAT"/>
+    </resultMap>
+
+
+    <select id="getMessageList" parameterType="java.util.Map" resultMap="messageContentMap">
+        SELECT
+        a.message_content_id,
+        a.user_id,
+        a.role_id,
+        a.content,
+        a.status,
+        a.create_date,
+        a.update_date,
+        b.message_type,
+        b.icon,
+        b.trade_id,
+        c.login_name,
+        d.amount,
+        d.trade_no
+        FROM t_message_content a
+        LEFT JOIN  t_message b ON  a.trade_id=b.trade_id
+        LEFT JOIN  t_users c   ON  a.user_id=c.user_id
+        LEFT JOIN  t_user_account_detail d ON  a.trade_id=d.trade_id
+    WHERE
+        a.role_id=#{roleId}
+        <if test=" userId != null and userId != '' ">
+            and a.user_id=#{userId}
+        </if>
+        and a.status = 0
+    ORDER  BY a.create_date DESC
+    limit 6
+    </select>
+
+    <select id="countNotSaveMessage" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+          COUNT(1)
+        FROM
+          t_message_content
+        WHERE
+          role_id=#{roleId}
+            <if test=" userId != null and userId != '' ">
+                and user_id=#{userId}
+            </if>
+           and  status = 0
+    </select>
+
+
+    <sql id="search">
+        a.is_delete = 0
+        <if test=" roleId != null and roleId != '' ">
+            and   a.role_id = #{roleId}
+        </if>
+        <if test=" loginbeUserId != null and loginbeUserId != '' ">
+            and   a.user_id = #{loginbeUserId}
+        </if>
+        <if test=" tradeId != null and tradeId != '' ">
+            and   a.trade_id = #{tradeId}
+        </if>
+        <if test=" tradeNo != null and tradeNo != '' ">
+            and   d.trade_no=#{tradeNo}
+        </if>
+    </sql>
+
+
+
+
+    <select id="selectMessageListVoPage" parameterType="java.util.Map" resultMap="messageContentMap">
+        SELECT
+            a.message_content_id,
+            a.user_id,
+            a.role_id,
+            a.content,
+            a.status,
+            a.create_date,
+            a.update_date,
+            b.message_type,
+            b.icon,
+            b.trade_id,
+            c.login_name,
+            d.amount,
+            d.trade_no
+        FROM t_message_content a
+        LEFT JOIN  t_message b ON  a.trade_id=b.trade_id
+        LEFT JOIN  t_users c   ON  a.user_id=c.user_id
+        LEFT JOIN  t_user_account_detail d ON  a.trade_id=d.trade_id
+        WHERE
+          <include refid="search"/>
+        ORDER  BY  a.status, a.create_date DESC
+    </select>
+
+    <select id="countMessage" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+             count(1)
+        FROM t_message_content a
+        LEFT JOIN  t_message b ON  a.trade_id=b.trade_id
+        LEFT JOIN  t_users c   ON  a.user_id=c.user_id
+        WHERE
+             <include refid="search"/>
+        ORDER  BY  a.status, a.create_date DESC
+    </select>
+
+
+    <!--更改信息全部为已读-->
+    <update id="updateAllStatus" parameterType="java.lang.Long">
+        update t_message_content
+        set status=1
+        where user_id=#{userId}
+    </update>
+
+</mapper>

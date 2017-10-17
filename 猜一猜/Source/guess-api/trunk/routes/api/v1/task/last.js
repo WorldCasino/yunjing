@@ -49,6 +49,7 @@ var latest = function (req, res, next) {
                 't.lottery_type, ' +
                 't.lock_time, ' +
                 't.parent_id, ' +
+                't.is_recommend, ' +
                 'u.user_name, ' +
                 'u.user_type, ' +
                 'u.nickname, ' +
@@ -91,6 +92,7 @@ var latest = function (req, res, next) {
                 't.lottery_type, ' +
                 't.lock_time, ' +
                 't.parent_id, ' +
+                't.is_recommend, ' +
                 'u.user_name, ' +
                 'u.user_type, ' +
                 'u.nickname, ' +
@@ -98,10 +100,12 @@ var latest = function (req, res, next) {
                 'u.head_url, ' +
                 'p.user_id as parent_user_id, ' +
                 'p.user_type as parent_type, ' +
-                'p.nickname as parent_nickname ' +
+                'p.nickname as parent_nickname, ' +
+                'm.open_time ' +
                 'FROM t_tasks AS t ' +
                 'LEFT JOIN m_users AS u ON t.user_id = u.user_id ' +
                 'LEFT JOIN m_users AS p on t.parent_id = p.user_id ' +
+                'LEFT JOIN t_matches AS m on t.match_id = m.match_id ' +
                 'WHERE t.is_delete = 0 and t.task_status = 20 ' +
                 'AND (t.task_type in (0,3) or t.is_recommend=1) ' +
                 'AND (SYSDATE()<t.lock_time OR t.lock_time IS NULL) ' +
@@ -140,6 +144,7 @@ var latest = function (req, res, next) {
                 sale_price: parseInt(currentValue.sale_price),
                 quantity: currentValue.quantity,
                 task_status: currentValue.task_status,
+                is_recommend: currentValue.is_recommend,
                 hot: !!parseInt(currentValue.hot),
                 personal: currentValue.personal, //...  0:平台发布  1:私人发布
                 like_peas: currentValue.like_peas, //...  0:不接受金豆  1：接受金豆

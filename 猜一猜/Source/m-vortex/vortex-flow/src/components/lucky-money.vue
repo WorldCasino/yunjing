@@ -85,6 +85,15 @@
               console.log('wechat auth failed.')
               console.log(reason)
             })
+          } else if (window.android) {
+            window.android.wxAndroidLogin()
+            window.wxAndroidLoginSuccess = function (code, appid) {
+              self.wxLogin([code, appid])
+            }
+           
+            window.wxAndroidLoginFailed = function () {
+              console.log('wxAndroidLoginFailed.')
+            }           
           }
         }
       }

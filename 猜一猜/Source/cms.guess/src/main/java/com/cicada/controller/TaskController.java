@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -251,6 +252,25 @@ public class TaskController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 开奖处理(体育类)
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/lotteryMatch",method ={ RequestMethod.POST})
+    @ResponseBody
+    public ResponseEntity runFrontLotteryMatchProcess(@RequestBody JSONObject params){
+        ResponseWrapper result = null;
+        try {
+            taskService.runLotteryMatchProcess(params);
+            result = ResponseWrapper.succeed("");
+        }catch (ApiException e){
+            e.printStackTrace();
+            result = ResponseWrapper.failed(ErrorCodeEnum.SystemError.getCode(),"开奖处理失败！");
+        }
+        return ResponseEntity.ok(result);
+    }
+
     private ResponseWrapper letteryProcess(long taskId,long answerId){
         ResponseWrapper result = null;
         LotteryResultVo rtn;
@@ -271,11 +291,9 @@ public class TaskController extends BaseController {
                     result = ResponseWrapper.failed(ErrorCodeEnum.SystemError.getCode(),"开奖处理失败！");
                 }
             }
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-            result = ResponseWrapper.failed(ErrorCodeEnum.SystemError.getCode(),"开奖处理失败！");
-
         }catch (ApiException e){
+            result = ResponseWrapper.failed(e.getCode(),e.getMessage());
+        }catch (Exception e) {
             e.printStackTrace();
             result = ResponseWrapper.failed(ErrorCodeEnum.SystemError.getCode(),"开奖处理失败！");
         }

@@ -1,0 +1,118 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+	<!-- 使用spring自带的占位符替换功能 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<!-- 允许JVM参数覆盖 -->
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<!-- 忽略没有找到的资源文件 -->
+		<property name="ignoreResourceNotFound" value="true" />
+		<!-- 配置资源文件 -->
+		<property name="locations">
+			<list>
+				<value>classpath:log4j.properties</value>
+				<value>classpath:environment/env-dev.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--系统参数-->
+	<bean id="systemConfig" class="com.kk.commons.utils.SystemConfig">
+		<property name="URL_BASE_IMG" value="${config.system.url_base_img}"/>
+		<property name="GAME_API" value="${game.config.api}"/>
+		<property name="GAME_DESKEY" value="${game.config.deskey}"/>
+		<property name="GAME_MD5KEY" value="${game.config.md5key}"/>
+		<property name="GAME_AGENT" value="${game.config.agent}"/>
+        <property name="PAYMENT_API_VERSION" value="${config.payment.version}"/>
+        <property name="PAYMENT_PARTNER" value="${config.payment.partner}"/>
+		<property name="PAYMENT_SECRET_KEY" value="${config.payment.secret_key}"/>
+		<property name="PAYMENT_REQUEST_URL" value="${config.payment.request_url}"/>
+		<property name="PAYMENT_NOTIFY_URL" value="${config.payment.notify_url}"/>
+		<property name="PAYMENT_RETURN_URL" value="${config.payment.return_url}"/>
+		<property name="FTP_HOST_URL" value="${config.ftp.host.url}"/>
+		<property name="FTP_HOST_PORT" value="${config.ftp.host.port}"/>
+		<property name="FTP_USER" value="${config.ftp.user.name}"/>
+		<property name="FTP_PWD" value="${config.ftp.user.passwd}"/>
+		<property name="FTP_ROOT_BASE_IMAGE" value="${config.ftp.root.path}"/>
+		<property name="FRONTEND_PLATFORM" value="${switch.frontend.platform}"/>
+		<property name="WITHDRAW_MONEY_MAX" value="${message.money.max.withdraw}"/>
+		<property name="RECHARGE_MONEY_MAX" value="${message.money.max.recharge}"/>
+		<property name="WIDTHDRAWMAX_MESSAGE_OPEN" value="${message.open.withdrawmax}"/>
+		<property name="EXAMINE_MESSAGE_OPEN" value="${message.open.examine}"/>
+		<property name="USERRECHARGE_MESSAGE_OPEN" value="${message.open.userrechargemax}"/>
+		<property name="SYSTEMRECHARGE_MESSAGE_OPEN" value="${message.open.systemrechargemax}"/>
+		<property name="TOURIST_URL" value="${game.cofing.tourist.url}"/>
+		<property name="RX_PAYMENT_API_VERSION" value="${config.payment.rx_version}"/>
+		<property name="RX_PAYMENT_PARTNER" value="${config.payment.rx_partner}"/>
+		<property name="RX_PAYMENT_SECRET_KEY" value="${config.payment.rx_secret_key}"/>
+		<property name="RX_PAYMENT_REQUEST_URL" value="${config.payment.rx_request_url}"/>
+		<property name="RX_PAYMENT_NOTIFY_URL" value="${config.payment.rx_notify_url}"/>
+		<property name="RX_PAYMENT_RETURN_URL" value="${config.payment.rx_return_url}"/>
+	</bean>
+
+	<!--短信实例-->
+	<bean id="smsAdapter" class="com.kk.message.SmsAdapter">
+		<property name="DINGDONG_SMS_APIKEY" value="${config.sms.apikey}"/>
+		<property name="DINGDONG_SMS_URL_SENDYZM" value="${config.smsurl.sendyzm}"/>
+		<property name="DINGDONG_SMS_URL_SENDGJYZM" value="${config.smsurl.sendgjyzm}"/>
+		<property name="DINGDONG_SMS_URL_SENDYYYZM" value="${config.smsurl.sendyyyzm}"/>
+		<property name="DINGDONG_SMS_URL_SENDTZ" value="${config.smsurl.sendtz}"/>
+	</bean>
+
+	<!--声明式事务失效 根本原因：由子容器扫描装配了@Service 注解的实例。-->
+	<!--spring的context是父子容器，由ServletContextListener 加载spring配置文件产生的是父容器，springMVC加载配置文件产生的是子容器，
+	    子容器对Controller进行扫描装配时装配了@Service注解的实例 (@Controller 实例依赖@Service实例)，
+	    而该实例理应由父容器进行初始化以保证事务的增强处理，所以此时得到的将是原样的Service（没有经过事务加强处理，故而没有事务处理能力。-->
+	<!--解决办法：不扫描带有@Controller注解的类 ,让 springMVC 子容器加载。-->
+	<context:component-scan base-package="com.kk">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!--初始化appliationUtil类，并完成ApplicationContext的注入-->
+	<bean id="springContextUtil" class="com.kk.commons.utils.SpringContextUtil"/>
+
+	<!--&lt;!&ndash; 开启这个配置，spring才能识别@Scheduled注解 &ndash;&gt;-->
+	<task:annotation-driven scheduler="qbScheduler" mode="proxy"/>
+	<task:scheduler id="qbScheduler" pool-size="10"/>
+
+	<!-- 定义数据源 数据库连接池(BoneCP)-->
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<!-- 数据库驱动 -->
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<!-- 相应驱动的jdbcUrl -->
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<!-- 数据库的用户名 -->
+		<property name="username" value="${jdbc.username}" />
+		<!-- 数据库的密码 -->
+		<property name="password" value="${jdbc.password}" />
+		<!-- 连接池中未使用的链接最大存活时间(分) 默认：240，如果要取消则设置为0 -->
+		<property name="idleMaxAgeInMinutes" value="30"/>
+		<!-- 每个分区最大的连接数 判断依据：请求并发数-->
+		<property name="maxConnectionsPerPartition" value="100" />
+		<!-- 每个分区最小的连接数 -->
+		<property name="minConnectionsPerPartition" value="5" />
+		<!-- 检查数据库连接池中空闲连接的间隔时间(分) 默认：240 -->
+		<property name="idleConnectionTestPeriodInMinutes" value="30"/>
+	</bean>
+	
+	<!-- 上传文件 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <property name="defaultEncoding" value="utf-8" />  
+	    <!-- 以字节为单位的最大上传文件的大小 -->    
+	    <property name="maxUploadSize" value="100000" />  
+    </bean>
+
+	<!-- 在spring配置文件中需要导入 -->
+	<import resource="applicationContext-mongodb.xml"/>
+</beans>

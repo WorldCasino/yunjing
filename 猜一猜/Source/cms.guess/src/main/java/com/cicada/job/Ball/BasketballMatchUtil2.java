@@ -103,11 +103,11 @@ public class BasketballMatchUtil2 {
                      }
                }
              }else{
-                  LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程失败"+object.get("error_code")+":"+object.get("reason")));
+                  LOTTERY_LOGGER.info(String.format("获取篮球赛程失败"+object.get("error_code")+":"+object.get("reason")));
              }
          } catch (Exception e) {
             e.printStackTrace();
-             LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程是吧",e.toString()));
+             LOTTERY_LOGGER.error(String.format("获取篮球赛程是吧",e));
         }
         //开始redis存储
         BallUtil.changeRedisBallList(MatchesTypeEnum.Basketball.getCode()+"");
@@ -178,11 +178,11 @@ public class BasketballMatchUtil2 {
                     }
                 }
             }else{
-                LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程失败"+object.get("error_code")+":"+object.get("reason")));
+                LOTTERY_LOGGER.info(String.format("获取篮球赛程失败"+object.get("error_code")+":"+object.get("reason")));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LOTTERY_LOGGER.info(String.format("ball-获取篮球赛程是吧",e.toString()));
+            LOTTERY_LOGGER.error(String.format("获取篮球赛程是吧",e));
         }
         return  flag;
     }

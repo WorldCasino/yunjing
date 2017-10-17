@@ -6,7 +6,7 @@
     <div class="rank-gold">
       <div class="right-sep" style="margin-right: 10px;color: red;"></div>
       <p style="margin-right: 5px;color: red;">{{parseInt(coins)}}</p>
-      <img src="./../../static/rank/wode_gold.png" style="margin-right: 10px;width: 18px;height: 18px"/>
+      <img src="./../../static/homepage/homepass_jinbi.png" style="margin-right: 10px;width: 14px;height: 14px; margin-bottom: 2px;"/>
     </div>
     <div class="left-part">
       <!--<img v-if="index <= 2" :src="getIndexImg()" style="width: 22px;height: 29px"/>-->

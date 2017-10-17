@@ -97,12 +97,12 @@ public class FootBallMatchUtil {
                         }
                     }
                 }else{
-                    LOTTERY_LOGGER.info(String.format("ball-获取足球赛程失败"+object.get("error_code")+":"+object.get("reason")));
+                    LOTTERY_LOGGER.info(String.format("获取足球赛程失败"+object.get("error_code")+":"+object.get("reason")));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LOTTERY_LOGGER.info(String.format("ball-获取足球赛程失败",e.toString()));
+            LOTTERY_LOGGER.error(String.format("获取足球赛程失败",e));
         }
         //开始存储
         BallUtil.changeRedisBallList(MatchesTypeEnum.Football.getCode()+"");
@@ -158,6 +158,7 @@ public class FootBallMatchUtil {
                         if(!home_team_name2.equals(home_team_name) || !away_team_name2.equals(away_team_name)){
                             continue;
                         }
+                        LOTTERY_LOGGER.info(String.format("当前足球球赛【"+matchId+"】结果记录"+jsonObject2.toString()));
                         String c1=jsonObject2.getString("c1");
                         String score=jsonObject2.getString("c4R");
                         if(c1.equals("已结束") && !score.equals("VS")){
@@ -175,11 +176,11 @@ public class FootBallMatchUtil {
                     }
                 }
             }else{
-                LOTTERY_LOGGER.info(String.format("ball-获取足球赛程结果失败"+object.get("error_code")+":"+object.get("reason")));
+                LOTTERY_LOGGER.info(String.format("获取足球赛程【"+matchId+"】结果失败"+object.get("error_code")+":"+object.get("reason")));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LOTTERY_LOGGER.info(String.format("ball-获取足球赛程结果失败",e.toString()));
+            LOTTERY_LOGGER.error(String.format("获取足球赛程【"+matchId+"】结果失败",e));
         }
         return  flag;
     }

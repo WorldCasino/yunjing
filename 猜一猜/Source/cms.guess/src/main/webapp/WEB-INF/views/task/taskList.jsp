@@ -417,50 +417,106 @@
                 return;
             }
 
-            var content = "<div class='table'><div>" +
-                "<label class='control-label col-sm-6'>请选择正确答案：</label>" +
-                "<select class='form-control col-sm-6' style='width: 95%;margin-left: 10px;' id='answerId'><option value='0'></option></select>" +
-                "</div>" +
-                "<div class='pull-right' style='margin-top: 30px;margin-right: 10px;'>" +
-                "<button type='button' class='btn btn-danger btn-sm' id='btnCommit'><i class='fa fa-save'></i> 开奖</button>" +
-                "<button type='button' class='btn btn-default btn-sm' id='btnCancel'><i class='fa fa-close'></i> 取消</button>" +
-                "</div>"+
-                "</div>";
 
-            layer.open({
-                type: 1,
-                area: ['350px', '200px'],
-                fix: true,
-                maxmin: false,
-                shade: 0.4,
-                title: '开奖',
-                content:content
-            });
-            for(var i=0;i<rowData.answerVoList.length;i++){
-                var ans = rowData.answerVoList[i];
-                var op = "<option value='"+ans.answerId+"'>"+ans.answer+"</option>";
-                $("#answerId").append(op);
+            if(rowData.taskType.code == cicada.ENUMS.TASK_TYPE.normal || rowData.taskType.code == cicada.ENUMS.TASK_TYPE.coming){
+                var content = "<div class='table'><div>" +
+                    "<label class='control-label col-sm-6'>请选择正确答案：</label>" +
+                    "<select class='form-control col-sm-6' style='width: 95%;margin-left: 10px;' id='answerId'><option value='0'></option></select>" +
+                    "</div>" +
+                    "<div class='pull-right' style='margin-top: 30px;margin-right: 10px;'>" +
+                    "<button type='button' class='btn btn-danger btn-sm' id='btnCommit'><i class='fa fa-save'></i> 开奖</button>" +
+                    "<button type='button' class='btn btn-default btn-sm' id='btnCancel'><i class='fa fa-close'></i> 取消</button>" +
+                    "</div>"+
+                    "</div>";
+
+                layer.open({
+                    type: 1,
+                    area: ['350px', '200px'],
+                    fix: true,
+                    maxmin: false,
+                    shade: 0.4,
+                    title: '开奖',
+                    content:content
+                });
+                for(var i=0;i<rowData.answerVoList.length;i++){
+                    var ans = rowData.answerVoList[i];
+                    var op = "<option value='"+ans.answerId+"'>"+ans.answer+"</option>";
+                    $("#answerId").append(op);
+                }
+
+                var saveBtn = $("#btnCommit");
+                var answerSelect = $("#answerId");
+                var cancelBtn = $("#btnCancel");
+                saveBtn.on("click", function () {
+                    var answerId = answerSelect.val();
+                    if (cicada.isNullOrEmpty(answerId) || answerId == 0) {
+                        layer.msg("请先指定正确答案！",{icon:2});
+                    } else {
+                        cicada.post('task/lottery',JSON.stringify({taskId:taskId,answerId:answerId}),function (result) {
+                            layer.msg('开奖成功！');
+                        },function (err) {
+                            layer.msg('开奖失败！'+ err.message, {icon: 2});
+                        },"application/json");
+
+                        layer.closeAll();
+                    }
+                });
             }
 
-            var saveBtn = $("#btnCommit");
-            var answerSelect = $("#answerId");
-            var cancelBtn = $("#btnCancel");
-            saveBtn.on("click", function () {
-                var answerId = answerSelect.val();
-                if (cicada.isNullOrEmpty(answerId) || answerId == 0) {
-                    layer.msg("请先指定正确答案！",{icon:2});
-                } else {
-                    cicada.post('task/lottery',JSON.stringify({taskId:taskId,answerId:answerId}),function (result) {
-                        layer.msg('开奖成功！');
-                    },function (err) {
-                        layer.msg('开奖失败！'+ err.message, {icon: 2});
-                    },"application/json");
+            if(rowData.taskType.code == cicada.ENUMS.TASK_TYPE.football || rowData.taskType.code == cicada.ENUMS.TASK_TYPE.basketball){
+                var content = "<div class='table'><div>" +
+                    "<div style='margin-left:20px;font-size: 14px;'>比分</div>"+
+                    "<div id='team1' style='margin-left:20px;margin-top: 10px;'><span style='display:inline-block;width:100px;'>"+rowData.footballVoList[0].teamName+"</span><input type='text' id='teamScore1' value='' style='margin-left:12px;'/></div>" +
+                    "<div id='team2' style='margin-left:20px;margin-top: 10px;'><span style='display:inline-block;width:100px;'>"+rowData.footballVoList[1].teamName+"</span><input type='text' id='teamScore2' value='' style='margin-left:12px;'/></div>" +
+                    "<div style='font-size: 12px; color: #666;margin: 10px 0 0 130px;'>              注：足球比赛根据90分钟赛过开赛<div>"+
+                    "</div>" +
+                    "<div class='' style='margin: 30px auto 0'>" +
+                    "<button type='button' class='btn btn-danger btn-sm' id='btnCommit'><i class='fa fa-save'></i> 开奖</button>" +
+                    "<button type='button' class='btn btn-default btn-sm' id='btnCancel'><i class='fa fa-close'></i> 取消</button>" +
+                    "</div>"+
+                    "</div>";
+                layer.open({
+                    type: 1,
+                    area: ['350px', '250px'],
+                    fix: true,
+                    maxmin: false,
+                    shade: 0.4,
+                    title: '开奖',
+                    content:content
+                });
 
-                    layer.closeAll();
-                }
-            });
+                var saveBtn = $("#btnCommit");
+                var cancelBtn = $("#btnCancel");
+                saveBtn.on("click", function () {
+                    var teamScore1 = $("#teamScore1").val();
+                    var teamScore2 = $("#teamScore2").val();
+                    alert(teamScore1+":"+teamScore2)
+                    if (cicada.isNullOrEmpty(teamScore1) || cicada.isNullOrEmpty(teamScore2)) {
+                        layer.msg("请输入比分！",{icon:2});
+                    } else {
+                        var params=JSON.stringify({
+                            taskId: taskId,
+                            team1: rowData.footballVoList[0].ftbId,
+                            teamType1: rowData.footballVoList[0].courtType.code,
+                            teamScore1: teamScore1,
+                            team2: rowData.footballVoList[1].ftbId,
+                            teamType2: rowData.footballVoList[1].courtType.code,
+                            teamScore2: teamScore2
+                        });
+                        cicada.post('task/lotteryMatch',params,function (result) {
+                            layer.msg('开奖成功！');
+                        },function (err) {
+                            layer.msg('开奖失败！'+ err.message, {icon: 2});
+                        },"application/json");
+
+                        layer.closeAll();
+                    }
+                });
+            }
+
+
             cancelBtn.on("click", function () {
-                answerSelect.val(0);
+                //answerSelect.val(0);
                 layer.closeAll();
             });
         });

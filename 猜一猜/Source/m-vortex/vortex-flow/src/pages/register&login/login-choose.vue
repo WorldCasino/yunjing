@@ -94,6 +94,15 @@
               console.log('wechat auth failed.')
               console.log(reason)
             })
+          } else if (window.android) {
+            window.android.wxAndroidLogin()
+            window.wxAndroidLoginSuccess = function (code, appid) {
+              self.wxLogin([code, appid])
+            }
+            
+            window.wxAndroidLoginFailed = function () {
+              console.log('wxAndroidLoginFailed.')
+            }           
           }
         }
       },
@@ -165,6 +174,7 @@
       },
       wxLoginShake: {
         handler: function (val) {
+          var self = this
           if (this.wxLoginStatus === null) {
             this.$store.state.token = this.wxLoginData.token
             this.getUserInfo('')
@@ -178,6 +188,10 @@
                 .catch(function (data) {
 
                 })
+            }
+            
+            if (window.android) {
+              this.registerDeviceToken([window.android.getPushID()])  
             }
 
             this.$f7.closeModal('#login-choose')
@@ -221,7 +235,6 @@
 
                 })
             }
-
             this.$f7.closeModal('#login-choose')
           } else {
             this.$f7.addNotification({

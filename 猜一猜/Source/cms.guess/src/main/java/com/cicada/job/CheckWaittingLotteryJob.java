@@ -44,4 +44,22 @@ public class CheckWaittingLotteryJob {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 每隔60秒通知一次（父竞猜已开奖）
+     */
+    @Scheduled(cron = "*/60 * * * * ?")
+    public void lotteryJob2(){
+
+        try{
+            List<TaskVo> list = taskService.selectWattingCopyLotteryTasks();
+            if(null==list || list.size()==0) return;
+
+            for (TaskVo t:list) {
+                taskService.pushCountDownLotteryQueue(t.getTaskId(),5);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

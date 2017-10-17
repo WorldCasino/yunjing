@@ -76,6 +76,6 @@
     <select id="isSharedActive" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select count(1)
         from t_share_log
-        WHERE user_id = #{userId} and task_id = #{taskId}
+        WHERE user_id = #{userId} and task_id = #{taskId} and share_type = #{shareType}
     </select>
 </mapper>

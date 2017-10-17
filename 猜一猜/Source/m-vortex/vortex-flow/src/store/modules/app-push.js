@@ -15,7 +15,11 @@ const state = {
 
 const actions = {
   registerDeviceToken ({state, commit, rootState}, payload) {
-    API.deviceToken(rootState.token, 1, payload[0])
+    var deviceType = 1
+    if (window.android) {
+      deviceType = 2
+    }
+    API.deviceToken(rootState.token, deviceType, payload[0])
       .then(function (data) {
         commit(types.APP_DEVICE_TOKEN_PUSH_SUCCEED, data)
       })

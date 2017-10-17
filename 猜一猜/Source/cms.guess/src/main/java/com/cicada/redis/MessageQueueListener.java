@@ -141,7 +141,6 @@ public class MessageQueueListener {
                 });
             }
         }catch (ApiException e) {
-            e.printStackTrace();
             LOTTERY_LOGGER.error(String.format("开奖处理失败，原因：%s，参数：%s",e.getMessage(),lotteryMessage),e);
             //throw e;
         }catch (Exception e){

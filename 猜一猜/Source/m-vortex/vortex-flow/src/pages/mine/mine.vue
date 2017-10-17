@@ -288,6 +288,10 @@
               case 6 :
                 this.$store.state.userInfo.data.bet_tip = flag
                 break
+              // 首次提醒
+              case 5 :
+                this.$store.state.userInfo.data.bet_first = flag
+                break
             }
           }
         }

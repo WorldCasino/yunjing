@@ -140,14 +140,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                     && task.getSettleTime().getTime() > System.currentTimeMillis()) {
 
 //                LOTTERY_LOGGER.error(String.format("竞猜项目【%s】开奖时间没到不能开奖！",task.getTaskId()));
-                throw new ApiException(ErrorCodeEnum.SystemError.getCode(),String.format("竞猜项目【%s】开奖时间没到不能开奖！",task.getTaskId()));
+                throw new ApiException(ErrorCodeEnum.TaskLotteryCantSettle.getCode(),String.format("竞猜项目【%s】开奖时间没到不能开奖！",task.getTaskId()));
             }
         }
 
         //已开奖的不能重复开奖
         if(task.getTaskStatus() == TaskStatusEnum.Complete) {
 //            LOTTERY_LOGGER.error(String.format("竞猜项目【%s】已开奖，不能重复开奖！",task.getTaskId()));
-            throw new ApiException(ErrorCodeEnum.SystemError.getCode(),String.format("竞猜项目【%s】已开奖，不能重复开奖！",task.getTaskId()));
+            throw new ApiException(ErrorCodeEnum.TaskLotteryRepetitive.getCode(),String.format("竞猜项目【%s】已开奖，不能重复开奖！",task.getTaskId()));
 
         }
         else if(task.getTaskStatus() != TaskStatusEnum.Published)
@@ -822,6 +822,41 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
     }
 
     /**
+     * 开奖处理(比赛类)
+     * @return
+     * @throws ApiException
+     */
+    public void runLotteryMatchProcess(JSONObject params) throws ApiException{
+        long taskId = params.getLongValue("taskId");
+        //long team1 = params.getLongValue("team1");
+        int teamType1 = params.getIntValue("teamType1");
+        int teamScore1 = params.getIntValue("teamScore1");
+        //long team2 = params.getLongValue("team2");
+        int teamType2 = params.getIntValue("teamType2");
+        int teamScore2 = params.getIntValue("teamScore2");
+
+        Map<String,Object> match=taskMapper.selectMatch(taskId);
+        Long match_id= (Long) match.get("match_id");
+
+        int homeScore=0;
+        int awayScore=0;
+        if(teamType1==0){
+            homeScore=teamScore1;
+            awayScore=teamScore2;
+        }else if(teamType1==1){
+            homeScore=teamScore2;
+            awayScore=teamScore1;
+        }
+        //设置比分
+        Map<String,Object> param=new HashMap<String,Object>();
+        param.put("matchId", match_id);
+        param.put("homeScore", homeScore);
+        param.put("awayScore", awayScore);
+        taskMapper.resetScore(param);
+    }
+
+
+    /**
      * 开奖成功结果通知
      * @param resultVo 竞猜项目开奖结果
      */
@@ -1242,6 +1277,15 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
      */
     public List<TaskVo> selectWattingLotteryTasks() throws ApiException{
         return taskMapper.selectWattingLotteryTasks();
+    }
+
+    /**
+     * 检查所有待开奖任务（转发的竞猜）
+     * @return
+     * @throws ApiException
+     */
+    public List<TaskVo> selectWattingCopyLotteryTasks() throws ApiException{
+        return taskMapper.selectWattingCopyLotteryTasks();
     }
 
     /**

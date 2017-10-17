@@ -57,67 +57,63 @@ public class BallMatchJob {
  	@Scheduled(cron = "0 10 0 * * *")
  	public  void overGoodsFee() {
  		try {
-			LOTTERY_LOGGER.info("ball------更新赛事"+ DateFormatUtil.dateToString(new Date()));
+			LOTTERY_LOGGER.info("更新篮球赛事"+ DateFormatUtil.dateToString(new Date()));
 			BasketballMatchUtil.setBallList();
  		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			LOTTERY_LOGGER.info(String.format("ball-获取赛事报错",e.toString()));
+			LOTTERY_LOGGER.error(String.format("获取篮球赛事报错",e));
  		}
 	}
 
 	@Scheduled(cron = "0 15 0 * * *")
 	public  void overGoodsFeeTwo() {
 		try {
-			LOTTERY_LOGGER.info("ball------更新赛事"+ DateFormatUtil.dateToString(new Date()));
+			LOTTERY_LOGGER.info("更新足球赛事"+ DateFormatUtil.dateToString(new Date()));
 			FootBallMatchUtil.setBallList();
 			//处理重复的数据
 			deleteBalForTwo();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			LOTTERY_LOGGER.info(String.format("ball-获取赛事报错",e.toString()));
+			LOTTERY_LOGGER.error(String.format("获取足球赛事报错",e));
 		}
 	}
 
 
 
-	@Scheduled(fixedDelay = 1200000)//20分钟
+	@Scheduled(fixedRate = 20*60*1000)//20分钟
 	public  void changeRedisBallListTwo() {
 		try {
-			LOTTERY_LOGGER.info("ball-----蓝球更新缓存数据"+ DateFormatUtil.dateToString(new Date()));
+
+			LOTTERY_LOGGER.info("蓝球更新缓存数据"+ DateFormatUtil.dateToString(new Date()));
 			//开始redis存储
 			BallUtil.changeRedisBallList(MatchesTypeEnum.Basketball.getCode()+"");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			LOTTERY_LOGGER.info(String.format("ball-获取赛事报错",e.toString()));
-		}
-	}
 
-
-
-	@Scheduled(fixedDelay = 1800000)//半个小时
-	public  void changeRedisBallList() {
-		try {
-			LOTTERY_LOGGER.info("ball------足球更新缓存数据"+ DateFormatUtil.dateToString(new Date()));
+			LOTTERY_LOGGER.info("足球更新缓存数据"+ DateFormatUtil.dateToString(new Date()));
 			//开始存储
 			BallUtil.changeRedisBallList(MatchesTypeEnum.Football.getCode()+"");
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			LOTTERY_LOGGER.info(String.format("ball-获取赛事报错",e.toString()));
+			LOTTERY_LOGGER.error(String.format("获取赛事报错",e));
 		}
 	}
 
 
+	@Scheduled(fixedRate = 10*60*1000)//10分钟
+	public void changeStatus(){
+		changeMatchOne();
+		changeMatchTwo();
+	}
 
-
-	@Scheduled(fixedDelay = 720000)//12分钟
 	public  void changeMatchOne() {
 		Jedis jedis = null;
 		try {
-			LOTTERY_LOGGER.info("ball----未开赛是否存在redis中"+ DateFormatUtil.dateToString(new Date()));
+			LOTTERY_LOGGER.info("未开赛是否存在redis中"+ DateFormatUtil.dateToString(new Date()));
+			jedis = RedisHelper.getJedis();
 			MatchesEntity matchesEntity=new MatchesEntity();
 			//获取今天未开赛的所有比赛
 			matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.NotStarted);
@@ -126,7 +122,6 @@ public class BallMatchJob {
 			List<MatchesEntity> selectList =  iMatchesService.selectList(wrapper);
 			for (MatchesEntity matchesEntity1   : selectList ) {
 				String strkey = ConstantInterface.REDIS_BALLKEY_LOTTERY_PREFIX +matchesEntity1.getMatchId();
-				jedis = RedisHelper.getJedis();
 				if(jedis.exists(strkey)){
 					continue;
 				}
@@ -138,24 +133,23 @@ public class BallMatchJob {
 					open_n=5;
 				}
 				jedis.setex(strkey,(int) open_n,String.format("待开赛任务 %s", matchesEntity1.getMatchId()));
-				LOTTERY_LOGGER.info(String.format("ball-竞猜项目【%s】 成功加入倒计时开赛队列，过期时间%s秒",matchesEntity1.getMatchId(),open_n));
+				LOTTERY_LOGGER.info(String.format("竞猜项目【%s】 成功加入倒计时开赛队列，过期时间%s秒",matchesEntity1.getMatchId(),open_n));
 			}
  		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RedisHelper.returnBrokenResource(jedis);
-			LOTTERY_LOGGER.info(String.format("ball-更新赛果报错",e.toString()));
+			LOTTERY_LOGGER.error(String.format("未开赛更新赛果报错",e));
 		}finally {
 			RedisHelper.returnResource(jedis);
 		}
 	}
 
-
-	@Scheduled(fixedDelay = 780000)//13分钟
 	public  void changeMatchTwo() {
 		Jedis jedis = null;
 		try {
-			LOTTERY_LOGGER.info("ball----正在比赛是否存在redis中"+ DateFormatUtil.dateToString(new Date()));
+			LOTTERY_LOGGER.info("正在比赛是否存在redis中"+ DateFormatUtil.dateToString(new Date()));
+			jedis = RedisHelper.getJedis();
 			MatchesEntity matchesEntity=new MatchesEntity();
 			//获取今天正在进行的所有比赛
 			matchesEntity.setMatchesStatusEnum(MatchesStatusEnum.Underway);
@@ -163,7 +157,7 @@ public class BallMatchJob {
 			List<MatchesEntity> selectList =  iMatchesService.selectList(wrapper);
 			for (MatchesEntity matchesEntity1   : selectList ) {
 				String strkey = ConstantInterface.REDIS_BALLKEY_LOTTERY_PREFIX +matchesEntity1.getMatchId();
-				jedis = RedisHelper.getJedis();
+
 				if(jedis.exists(strkey)){
 					continue;
 				}
@@ -175,13 +169,13 @@ public class BallMatchJob {
 					open_n=5;
 				}
 				jedis.setex(strkey,(int) open_n,String.format("待开赛任务 %s", matchesEntity1.getMatchId()));
-				LOTTERY_LOGGER.info(String.format("ball-竞猜项目【%s】 成功加入倒计时赛果队列，过期时间%s秒",matchesEntity1.getMatchId(),open_n));
+				LOTTERY_LOGGER.info(String.format("竞猜项目【%s】 成功加入倒计时赛果队列，过期时间%s秒",matchesEntity1.getMatchId(),open_n));
 			}
  		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RedisHelper.returnBrokenResource(jedis);
-			LOTTERY_LOGGER.info(String.format("ball-更新赛果报错",e.toString()));
+			LOTTERY_LOGGER.error(String.format("正在比赛更新赛果报错",e));
 		}finally {
 			RedisHelper.returnResource(jedis);
 		}
@@ -203,9 +197,6 @@ public class BallMatchJob {
 		for ( MatchesEntity _match : selectList ) {
 			long l1=_match.getMatchId();
 //			if(l1 == 849){
-//				System.out.println("");
-//			}
-//			if(l1 == 833){
 //				System.out.println("");
 //			}
 			if(((IMatchesService) SpringContextUtil.getBean("matchesServiceImpl")).selectById(l1) == null  ){

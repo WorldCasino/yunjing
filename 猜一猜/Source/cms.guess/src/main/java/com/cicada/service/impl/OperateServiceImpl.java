@@ -60,8 +60,16 @@ public class OperateServiceImpl extends ServiceImpl<OperateMapper,OperateEntity>
         Map<String,Object> Params=new HashMap<String,Object>();
         long userId = operateVo.getUserId();
         long taskId = operateVo.getTaskId();
+        int operateType=operateVo.getOperateType();
+
+        int shareType=1;
+        if(operateType==17){
+            shareType=2;
+        }
+
         Params.put("userId",userId);
         Params.put("taskId",taskId);
+        Params.put("shareType",shareType);
 
         int cnt=activeService.isSharedActive(Params);
         return cnt;

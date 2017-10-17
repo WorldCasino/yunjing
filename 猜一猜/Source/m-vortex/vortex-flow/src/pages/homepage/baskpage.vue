@@ -4,7 +4,7 @@
       <div v-for="(quiz, index) in quizListBask" class="list-wrapper">
         <div v-if="(quiz.task_type === 1 || quiz.task_type === 2) && typeof quiz.teams !== 'undefined' && aOpenTime[index] !== null && index === 0" class="open-time" :ref="'openTime' + index"></div>
         <div v-if="(quiz.task_type === 1 || quiz.task_type === 2) && typeof quiz.teams !== 'undefined' && aOpenTime[index] !== null && index !== 0" class="open-time" :ref="'openTime' + index">{{aOpenTime[index]}}</div>
-        <QuizSub :quizDetail="quiz" :task_id="quiz.task_id" :task_type="quiz.task_type" :user_id="quiz.user_id" :task_content="quiz.task_content" :sale_price="quiz.sale_price" :quantity="quiz.quantity"
+        <QuizSub :model="model" :quizDetail="quiz" :task_id="quiz.task_id" :task_type="quiz.task_type" :user_id="quiz.user_id" :task_content="quiz.task_content" :sale_price="quiz.sale_price" :quantity="quiz.quantity"
                  :task_status="quiz.task_status" :hot="quiz.hot" :create_date="quiz.create_date" :settle_time="quiz.settle_time" :update_date="quiz.update_date"
                  :user="quiz.user" :pics="quiz.pics" :teams="quiz.teams" :answer="quiz.answer" :message_count="quiz.message_count"
                  :title="quiz.title" :play_type="quiz.play_type" :concede_points_show="quiz.concede_points_show" :lock_time="quiz.lock_time"
