@@ -1,0 +1,78 @@
+html
+{
+  height: 100%;
+  touch-action: manipulation; /* 解决单击300ms延迟问题 */
+}
+body
+{
+  -webkit-overflow-scrolling: touch; /* 解决ios端滑动卡顿问题 */
+}
+html, body, button, ul, ol, p, pre, td, th, textarea
+{
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: rgba(0,0,0,0); /* 取消ios点击元素高光 */
+}
+body
+{
+  font-family: "Helvetica"; /* 设置ios、android英文数字字体 */
+}
+li
+{
+  list-style: none;
+}
+a, button
+{
+  outline: none;
+  text-decoration: none;
+}
+input
+{
+  border: none !important;
+  outline: none !important;
+}
+*[id*='ads']
+{
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  display: none !important;
+  visibility: hidden !important;
+  z-index: -9999 !important;
+}
+::-webkit-scrollbar
+{
+  height: 0;
+  width: 0;
+}
+.flex-row
+{
+  display: box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+
+  /* 旧版box兼容 */
+  -webkit-box-lines: single;
+  box-lines: single;
+  -webkitbox-pack: center;
+  box-pack: center;
+  -webkit-box-align: center;
+  box-align: center;
+
+  /* 新版flex兼容 */
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.txt-over-hide
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

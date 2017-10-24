@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kk.mapper.UserMapper">
+
+    <resultMap id="UserWebVo" type="com.kk.entity.vo.UserWebVo">
+        <id column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="nickname" property="nickName" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="beUserQq" property="beUserQq" jdbcType="VARCHAR"/>
+        <result column="beUserPhone" property="beUserPhone" jdbcType="VARCHAR"/>
+        <result column="card_id" property="cardId" jdbcType="BIGINT"/>
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR"/>
+        <result column="card_bank" property="cardBank" jdbcType="VARCHAR"/>
+        <result column="card_name" property="cardName" jdbcType="VARCHAR"/>
+        <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
+        <result column="balance" property="balance" jdbcType="DECIMAL"/>
+        <result column="bank_icon" property="bankIcon" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--更新会员版本号-->
+    <update id="updateVersion"    >
+        UPDATE t_users SET  version_no=#{versionNo} WHERE user_id=#{userId}
+     </update>
+
+    <!--获取首页信息-->
+    <select id="getUserInfo" resultMap="UserWebVo" parameterType="java.lang.Long">
+     SELECT t.user_id, t.nickname, t.phone, t.gender, t.head_url,
+          t_user_cards.card_id, t_user_cards.card_no, t_user_cards.card_bank, t_user_cards.card_name,
+          m_bank_types.bank_name, m_bank_types.bank_icon,
+          t_user_account.balance,
+          kf.qq as beUserQq,
+          kf.phone as beUserPhone
+        FROM t_users t
+        LEFT JOIN t_user_cards ON t_user_cards.user_id = t.user_id AND t_user_cards.is_delete = 0
+        LEFT JOIN m_bank_types ON m_bank_types.bank_type = t_user_cards.bank_type AND m_bank_types.is_delete = 0
+        LEFT JOIN t_user_account ON t_user_account.user_id = t.user_id AND t_user_account.is_delete = 0
+        LEFT JOIN t_users kf ON kf.user_id = t.be_user_id
+        WHERE t.user_id = #{userId}
+            AND t.is_delete = 0
+    </select>
+
+    <!-- 后台 -->
+
+    <!--查询会员的分页查询-->
+    <select id="selectUserListVoPage" parameterType="java.util.Map"   resultType="com.kk.entity.vo.UserResultVo">
+        SELECT
+        a.user_id as userId,
+        a.bg_login_id as bgLoginId,
+        a.login_name as loginName,
+        a.password as passWord,
+        a.nickname as nickName,
+        a.phone,
+        a.create_date as createDate,
+        a.update_date as updateDate,
+        a.qq,
+        a.role_id as roleId,
+        a.user_status as userStatus,
+        c.balance,
+        (select count(*) from t_user_cards uc  where a.user_id=uc.user_id) as cardNumber,
+
+        b.agent_id as agentId,
+        b.login_name as agentNumber,
+        b.nickname as agentName,
+
+        e.user_id as beUserId,
+        e.nickname as beUserName,
+        e.login_name as beUserNumber,
+
+        d.role_name as roleName
+        FROM
+        t_users a
+        left join t_user_account c  on c.user_id=a.user_id
+        left join t_users b  on b.agent_id=a.agent_id and b.role_id=5
+        left join t_users e  on e.user_id=a.be_user_id and e.role_id=3
+        LEFT JOIN  m_roles d on a.role_id=d.role_id
+        where
+        a.is_delete = 0
+        <if test=" bgLoginId != null and bgLoginId != '' ">
+            and   a.bg_login_id LIKE CONCAT('%',CONCAT(#{bgLoginId},'%') )
+        </if>
+        <if test=" userId != null and userId != '' ">
+            and   a.user_id LIKE CONCAT('%',CONCAT(#{userId},'%') )
+        </if>
+        <if test=" loginName != null and loginName != '' ">
+            and   a.login_name LIKE CONCAT('%',CONCAT(#{loginName},'%') )
+        </if>
+        <if test=" nickName != null and nickName != '' ">
+            and   a.nickname   LIKE CONCAT('%',CONCAT(#{nickName},'%') )
+        </if>
+        <if test=" userType != null and userType != '' ">
+            and   a.user_type = #{userType}
+        </if>
+        <if test=" phone != null and phone != '' ">
+            and   a.phone LIKE CONCAT('%',CONCAT(#{phone},'%') )
+        </if>
+        <if test=" qq != null and qq != '' ">
+            and   a.qq LIKE CONCAT('%',CONCAT(#{qq},'%') )
+        </if>
+        <if test=" roleId != null and roleId != '' ">
+            and   a.role_id = #{roleId}
+        </if>
+        <if test=" agentNumber != null and agentNumber != '' ">
+            and   b.login_name  = #{agentNumber}
+        </if>
+        <if test=" beUserNumber != null and beUserNumber != '' ">
+            and   e.login_name  LIKE CONCAT('%',CONCAT( #{beUserNumber},'%') )
+        </if>
+        <if test=" loginbeUserId != null and loginbeUserId != '' ">
+            and   a.be_user_id = #{loginbeUserId}
+        </if>
+        <if test=" loginagentId != null and loginagentId != '' ">
+            and   a.agent_id  = #{loginagentId}
+        </if>
+        <if test=" loginStartTime != null and loginStartTime != '' ">
+            <![CDATA[ and TO_DAYS(a.update_date) >= TO_DAYS( #{loginStartTime}) ]]>
+        </if>
+        <if test=" loginEndTime != null and loginEndTime != '' ">
+            <![CDATA[ and TO_DAYS(a.update_date) <= TO_DAYS( #{loginEndTime}) ]]>
+        </if>
+        <if test=" registerStartTime != null and registerStartTime != '' ">
+            <![CDATA[ and  TO_DAYS(a.create_date) >= TO_DAYS( #{registerStartTime}) ]]>
+        </if>
+        <if test=" registerEndTime != null and registerEndTime != '' ">
+            <![CDATA[ and TO_DAYS(a.create_date) <= TO_DAYS( #{registerEndTime}) ]]>
+        </if>
+
+        order by a.create_date desc
+    </select>
+
+
+    <!--查询会员的详情 -->
+    <select id="selectByUserId" parameterType="java.lang.Long"   resultType="com.kk.entity.vo.UserResultVo">
+        SELECT
+        a.head_url as headUrl,
+        a.nickname as nickName,
+        a.user_id as userId,
+        a.bg_login_id as bgLoginId,
+        a.phone,
+        a.create_date as createDate,
+        a.update_date as updateDate,
+        b.account_id as accountId,
+        b.balance,
+        b.total_recharge as totalRecharge,
+        b.total_expend as totalExpend,
+        b.total_income as totalIncone,
+        b.total_withdraw as totalWithdraw,
+        b.total_lottery as totalLottery,
+        cast((b.total_income-b.total_expend ) as decimal(10,2))  as  actionTotle,
+        c.card_id as cardId,
+        c.card_bank as cardBank,
+        c.card_no as cardNo,
+        c.card_name as cardName,
+        c.bank_type as bankType,
+
+        d.agent_id as agentId,
+        d.login_name as agentNumber,
+        d.nickname as agentName,
+
+        e.user_id as beUserId,
+        e.nickname as beUserName,
+        e.login_name as beUserNumber
+        FROM
+        t_users a
+        LEFT JOIN t_user_account  b  ON a.user_id=b.user_id
+        LEFT JOIN t_user_cards c   ON a.user_id=c.user_id
+        left join t_users d  on d.agent_id=a.agent_id and d.role_id=5
+        left join t_users e  on e.user_id=a.be_user_id and e.role_id=3
+        WHERE
+        a.user_id = #{userId}
+        limit 1
+    </select>
+
+
+    <!-- 获取账号 -->
+    <select id="getAgentId" parameterType="java.lang.String"   resultType="com.kk.entity.vo.AgentVo">
+        SELECT
+        ifnull(b.bg_agent_id,'0') as bgAgentId,
+        ifnull(c.login_name,'0') as agentNumber,
+        ifnull(a.agent_id,'0') as agentId,
+        ifnull(b.agent_name,'0') as agentName
+        FROM
+        t_users a
+        JOIN m_agents  b  ON a.agent_id=b.agent_id
+        LEFT  JOIN  t_users c ON b.agent_id=c.agent_id and c.role_id=5
+        WHERE
+        a.bg_login_id = #{bgLoginId}
+        limit 1
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

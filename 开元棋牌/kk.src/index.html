@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="telephone=no,email=no" name="format-detection">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>开元棋牌</title>
+    <!-- <script type="text/javascript">
+          var _vds = _vds || [];
+          window._vds = _vds;
+          (function(){
+            _vds.push(['setAccountId', '']);
+            _vds.push(['enableHT', true]);
+            (function() {
+              var vds = document.createElement('script');
+              vds.type='text/javascript';
+              vds.async = true;
+              vds.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'dn-growing.qbox.me/vds.js';
+              var s = document.getElementsByTagName('script')[0];
+              s.parentNode.insertBefore(vds, s);
+            })();
+          })();
+    </script> -->
+    <link rel="stylesheet" type="text/css" href="./css/zjsh-reset.css">
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <script src="./js/browser.js"></script>
+    <script src="./js/flexible.js"></script>
+  </head>
+  <body>
+    <div id="app" style="display: none;">
+      <div class="main">
+        <header class="main-header">
+          <a class="btn-menu" @click="toggleModule('isModuleMenu')"></a>
+          <div class="user-info">
+            <span class="user-name txt-over-hide">{{ userName }}</span>
+            <span class="user-coin"><i class="icon-coin"></i>{{ coin }}</span>
+          </div>
+          <span class="logo"></span>
+          <div class="coin-operations">
+            <a class="btn-recharge" @click="getRechargeList"></a>
+            <a class="btn-withdraw" @click="withdraw"></a>
+          </div>
+        </header>
+
+        <main class="main-container flex-row">
+          <a class="game-item game-item1" @click="gameStart()">
+            <img class="item-img" src="./img/zhajinhua.png">
+          </a>
+          <a class="game-item game-item2"  @click="gameStart('1')">
+            <img class="item-img" src="./img/dezhoupuke.png">
+            <i class="icon-start"></i>
+          </a>
+          <a class="game-item game-item3"  @click="gameStart('2')">
+            <img class="item-img" src="./img/erbagang.png">
+            <i class="icon-start"></i>
+          </a>
+          <a class="game-item game-item4"  @click="gameStart('3')">
+            <img class="item-img" src="./img/niuniu.png">
+            <i class="icon-start"></i>
+          </a>
+        </main>
+
+        <a class="customer-service" :href="'http://wpa.qq.com/msgrd?v=3&uin=' + serviceCustomerQQ + '&site=qq&menu=yes'"><i class="icon-qq"></i>联系客服</a>
+      </div>
+
+      <!-- 弹窗-菜单 -->
+      <section class="module module-menu" v-show="isModuleMenu">
+        <div class="module-wrapper no-bgc" @click="toggleModule('isModuleMenu')"></div>
+
+        <div class="module-container no-title">
+          <a class="menu-item" @click="viewWithdrawRecord"><i class="item-icon icon-withdraw"></i>提现记录</a>
+          <a class="menu-item" @click="viewRechargeRecord"><i class="item-icon icon-recharge"></i>充值记录</a>
+          <a class="menu-item" @click="menuToEditPassword"><i class="item-icon icon-editpwd"></i>修改密码</a>
+          <a class="menu-item" @click="switchAccount"><i class="item-icon icon-logout"></i>切换账号</a>
+        </div>
+      </section>
+
+      <!-- 弹窗-登录方式 -->
+      <section class="module module-login-way" v-if="isModuleLoginWay">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container no-title">
+          <a class="module-close" @click="toggleModule('isModuleLoginWay')"></a>
+          <a class="btn-demo" @click="visitorLogin"></a>
+          <!-- <span class="demo-count">您还有{{ visitorAvailCount }}次试玩机会</span> -->
+          <a class="btn-loginskew" @click="toggleModule('isModuleLogin', 'isModuleLoginWay')"></a>
+        </div>
+      </section>
+
+      <!-- 弹窗-登录 -->
+      <section class="module module-login" v-if="isModuleLogin">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">快速登录</p>
+          <a class="module-close" @click="toggleModule('isModuleLogin')"></a>
+          <div class="content">
+            <div class="form-row flex-row username">账号：<div class="input-wrapper"><input type="text" class="input" ref="inputLoginAccount" v-model="inputLoginAccount" placeholder="请输入手机号"><i class="icon-input-clear" v-show="inputLoginAccount != ''" @click="clearInput('inputLoginAccount')"></i></div></div>
+            <div class="form-row flex-row password">密码：<div class="input-wrapper"><input :type="inputLoginPasswordType" class="input" maxlength="16" ref="inputLoginPassword" v-model="inputLoginPassword" placeholder="请输入6-16位的密码"><i class="icon-pwdcheck" v-show="inputLoginPassword != '' && inputLoginPasswordType == 'password'" @click="inputLoginPasswordType = 'text'"></i><i class="icon-pwdhide" v-show="inputLoginPasswordType != '' && inputLoginPasswordType == 'text'" @click="inputLoginPasswordType = 'password'"></i></div></div>
+            <a class="find-pwd" @click="toggleModule('isModuleEditPassword', 'isModuleLogin')">忘记密码？</a>
+            <div class="btns flex-row">
+              <a class="btn-register" @click="toggleModule('isModuleRegister', 'isModuleLogin')"></a>
+              <a class="btn-login" @click="login"></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-注册 -->
+      <section class="module module-register" v-if="isModuleRegister">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">注册</p>
+          <a class="module-close" @click="toggleModule('isModuleRegister')"></a>
+          <div class="content">
+            <div class="form-row phone">手机号：<div class="input-wrapper"><input type="text" class="input" ref="inputRegisterAccount" v-model="inputRegisterAccount" placeholder="请输入手机号"><i class="icon-input-clear" v-show="inputRegisterAccount != ''"  @click="clearInput('inputRegisterAccount')"></i></div></div>
+            <div class="form-row captcha">验证码：<div class="input-wrapper"><input type="tel" class="input" ref="inputRegisterCaptcha" v-model="inputRegisterCaptcha" placeholder="请输入验证码"><i class="icon-input-clear" v-show="inputRegisterCaptcha != ''" @click="clearInput('inputRegisterCaptcha')"></i></div><a class="btn-captcha" :class="{ disable: !isGetRegisterCaptcha }" @click="getCaptcha('register', inputRegisterAccount)">{{ textRegisterCaptcha }}</a></div>
+            <div class="btns">
+              <a class="btn-register" @click="register"></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-设置密码 -->
+      <section class="module module-setpwd" v-if="isModuleSetPassword">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">设置密码</p>
+          <a class="module-close" @click="toggleModule('isModuleSetPassword')"></a>
+          <div class="content">
+            <p class="desc">请设置登录密码</p>
+            <div class="input-wrapper"><input type="password" class="input password" maxlength="16" ref="inputSetPassword" v-model="inputSetPassword" placeholder="请输入6-16位的密码"><i class="icon-input-clear" v-show="inputSetPassword != ''" @click="clearInput('inputSetPassword')"></i></div>
+            <a class="btn-normal" @click="setPassword">下一步</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-设置昵称 -->
+      <section class="module module-setnickname" v-if="isModuleSetNickName">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">设置昵称</p>
+          <a class="module-close" @click="toggleModule('isModuleSetNickName')"></a>
+          <div class="content">
+            <p class="desc">账号昵称只可设置一次，不可修改</p>
+            <div class="input-wrapper"><input type="text" maxlength="8" v-model="inputSetNickName" class="input nickname" ref="inputSetNickName" placeholder="请输入3-8位汉字、数字或字母"><i class="icon-input-clear" v-show="inputSetNickName != ''" @click="clearInput('inputSetNickName')"></i></div>
+            <a class="btn-normal" @click="setNickName">完&nbsp;&nbsp;成</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-修改密码 -->
+      <section class="module module-editpwd" v-if="isModuleEditPassword">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">修改密码</p>
+          <a class="module-close" @click="toggleModule('isModuleEditPassword')"></a>
+          <div class="content" v-if="stepEditPwd == '1'">
+            <p class="desc">为保证您的账户安全，请先验证手机号：</p>
+            <p class="phone" v-if="Token != ''">{{ phoneNumberForShow }}</p>
+            <div class="form-row phone" v-else><div class="input-wrapper"><input type="tel" class="input" ref="inputEditPwdAccount" v-model="inputEditPwdAccount" placeholder="请输入手机号"><i class="icon-input-clear" v-show="inputEditPwdAccount != ''" @click="clearInput('inputEditPwdAccount')"></i></div></div>
+            <div class="form-row captcha" v-if="Token != ''"><div class="input-wrapper"><input type="tel" class="input" ref="inputEditPwdCaptcha" v-model="inputEditPwdCaptcha" placeholder="请输入验证码"><i class="icon-input-clear" v-show="inputEditPwdCaptcha != ''" @click="clearInput('inputEditPwdCaptcha')"></i></div><a class="btn-captcha" :class="{ disable: !isEditPwdCaptchaCountdownEnd }" @click="getCaptcha('editPassword', inputEditPwdAccount)">{{ textEditPwdCaptcha }}</a></div>
+            <div class="form-row captcha" v-else><div class="input-wrapper"><input type="tel" class="input" ref="inputEditPwdCaptcha" v-model="inputEditPwdCaptcha" placeholder="请输入验证码"><i class="icon-input-clear" v-show="inputEditPwdCaptcha != ''" @click="clearInput('inputEditPwdCaptcha')"></i></div><a class="btn-captcha" :class="{ disable: !verifyPhoneNumber(inputEditPwdAccount) || !isEditPwdCaptchaCountdownEnd }" @click="getCaptcha('forgetPassword', inputEditPwdAccount)">{{ textEditPwdCaptcha }}</a></div>
+            <a class="btn-normal" @click="verifyEditPwdCaptcha">下一步</a>
+          </div>
+
+          <div class="content"  v-if="stepEditPwd == '2'">
+            <p class="desc">请设置登录密码</p>
+            <div class="input-wrapper password"><input type="password" class="input password" maxlength="16" ref="inputEditPassword" v-model="inputEditPassword" placeholder="请输入6-16位的密码"><i class="icon-input-clear" v-show="inputEditPassword != ''" @click="clearInput('inputEditPassword')"></i></div>
+            <a class="btn-normal confirm" @click="editPassword">确定</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-充值列表 -->
+      <section class="module module-rechargelist" v-if="isModuleRechargeList">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">充值商城</p>
+          <a class="module-close" @click="toggleModule('isModuleRechargeList')"></a>
+          <div class="content">
+            <!-- <p class="desc">微信充值可享受30%的充值折扣，详询在线客服</p> -->
+            <p class="desc">&nbsp;</p>
+            <ul class="recharge-list flex-row">
+              <li class="list-item" v-for="item in rechargeList" @click="recharge(item)"><img class="img-rechargecoin" :src="item.image_url"></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-充值 -->
+      <section class="module module-recharge" v-if="isModuleRecharge">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">充值</p>
+          <a class="module-return" @click="toggleModule('isModuleRechargeList', 'isModuleRecharge')"></a>
+          <div class="content" v-if="!rechargeQrcodeData">
+            <p class="desc">￥{{ rechargeInfo ? rechargeInfo.price : '0' }}</p>
+            <div class="split"></div>
+            <div class="recharge-type flex-row">
+              <a class="type-item" :class="{ active: rechargeTypeIndex == item.payType }" v-for="item in payType" @click="switchRechargeType(item.payType)"><img class="icon-pay" :src="item.icon"><span class="item-name">{{ item.payName }}<p class="recommand" v-if="item.isRecommend == '1'">（推荐）</p></span></a>
+            </div>
+            <a class="btn-confirmpay" @click="rechargeConfirm"></a>
+          </div>
+
+          <div class="content qrcode" v-if="rechargeQrcodeData">
+            <p class="desc">订单号：{{ rechargeQrcodeData.orderId }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金额：<span class="amount">{{ rechargeQrcodeData.payMoney }}元</span></p>
+            <img class="img-qrcode" :src="rechargeQrcodeData.qrcode">
+            <p class="tip">请使用微信扫描二维码完成支付（请在5分钟内完成支付）</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-充值记录 -->
+      <section class="module module-rechargerecord" v-if="isModuleRechargeRecord">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">充值记录</p>
+          <a class="module-close" @click="toggleModule('isModuleRechargeRecord')"></a>
+          <div class="content" v-if="rechargeRecordList.length > 0">
+            <ul class="table-head flex-row">
+              <li class="item-datetime">充值时间</li>
+              <li class="item-amount">金额</li>
+              <li class="item-way">充值方式</li>
+              <li class="item-status">充值状态</li>
+            </ul>
+            <ul class="table-body">
+              <li class="body-item flex-row" v-for="item in rechargeRecordList">
+                <span class="item-datetime">{{ item.createDate | formatDate }}</span>
+                <span class="item-amount">{{ item.amount }}元</span>
+                <span class="item-way">{{ item.tradeTypeEnum.desc }}</span>
+                <span class="item-status">{{ item.tradeStatusEnum.desc }}</span>
+              </li>
+            </ul>
+            <p class="table-desc">展示最近10条记录！</p>
+          </div>
+          <div class="content" v-else>
+            <p class="table-no-result">暂无充值记录</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-提现 -->
+      <section class="module module-withdraw" v-if="isModuleWithdraw">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">提现</p>
+          <a class="module-close" @click="toggleModule('isModuleWithdraw')"></a>
+          <div class="content" v-if="stepWithdraw == '1'">
+            <p class="desc money">请输入提现金额：</p>
+            <div class="form-row money"><div class="input-wrapper"><input type="number" v-model="inputWithdrawAmount" class="input" ref="inputWithdrawAmount" :placeholder="'可提现金额' + coin + '元'"><i class="icon-input-clear" @click="clearInput('inputWithdrawAmount')"></i></div></div>
+            <a class="btn-normal money" @click="withdrawVerifyAmount">下一步</a>
+          </div>
+          <div class="content" v-else-if="stepWithdraw == '2'">
+            <p class="desc">为保证您的账户安全，请先验证手机号：</p>
+            <p class="phone">{{ phoneNumberForShow }}</p>
+            <div class="form-row captcha"><div class="input-wrapper"><input type="tel" v-model="inputWithdrawCaptcha" class="input" ref="inputWithdrawCaptcha" placeholder="请输入验证码"><i class="icon-input-clear" @click="clearInput('inputWithdrawCaptcha')"></i></div><a class="btn-captcha" :class="{ disable: !isWithdrawCaptchaCountdownEnd }" @click="getCaptcha('withdraw')">{{ textWithdrawCaptcha }}</a></div>
+            <a class="btn-normal" @click="withdrawVerifyCaptcha">下一步</a>
+          </div>
+
+          <div class="content" v-else-if="stepWithdraw == '3'">
+            <p class="withdraw-title">您正在发起提现：</p>
+            <span class="withdraw-amount">{{ inputWithdrawAmount }}元</span>
+            <p class="withdraw-account">提现账户：中国工商银行（2679）</p>
+            <p class="withdraw-date">到账时间：1个工作日内</p>
+            <a class="btn-normal" @click="withdrawConfirm">确定</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-提现记录 -->
+      <section class="module module-withdrawrecord" v-if="isModuleWithdrawRecord">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">提现记录</p>
+          <a class="module-close" @click="toggleModule('isModuleWithdrawRecord')"></a>
+          <div class="content" v-if="withdrawRecordList.length > 0">
+            <ul class="table-head flex-row">
+              <li class="item-datetime">提现时间</li>
+              <li class="item-amount">金额</li>
+              <li class="item-status">提现状态</li>
+            </ul>
+            <ul class="table-body">
+              <li class="body-item flex-row" v-for="item in withdrawRecordList">
+                <span class="item-datetime">{{ item.createDate | formatDate }}</span>
+                <span class="item-amount">{{ item.amount }}元</span>
+                <span class="item-status">{{ item.tradeStatusEnum.desc }}</span>
+              </li>
+            </ul>
+            <p class="table-desc">展示最近10条记录！</p>
+          </div>
+          <div class="content" v-else>
+            <p class="table-no-result">暂无提现记录</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-绑定银行卡 -->
+      <section class="module module-bindbankcard" v-if="isModuleBindBankCard">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">绑定银行卡</p>
+          <a class="module-close" @click="toggleModule('isModuleBindBankCard')"></a>
+          <div class="content" v-if="stepBindBankCard == '1'">
+            <div class="form-row bank">户&nbsp;&nbsp;&nbsp;&nbsp;名：<div class="input-wrapper"><input type="text" class="input" ref="inputBindBankCardName" v-model="inputBindBankCardName" placeholder="请填写户名"><i class="icon-input-clear" v-show="inputBindBankCardName != ''" @click="clearInput('inputBindBankCardName')"></i></div></div>
+            <div class="form-row depositbank">银行卡：<div class="input-wrapper"><input type="text" class="input" ref="inputBindBankCardId" v-model="inputBindBankCardId" placeholder="请输入银行卡号"><i class="icon-input-clear" v-show="inputBindBankCardId != ''" @click="clearInput('inputBindBankCardId')"></i></div></div>
+            <a class="btn-normal" @click="verifyBankCardInfo">下一步</a>
+            <p class="warn">以上信息一旦填写，只能联系在线客服修改！</p>
+          </div>
+
+          <div class="content" v-if="stepBindBankCard == '2'">
+            <div class="form-row bank">
+              银&nbsp;&nbsp;&nbsp;&nbsp;行：<div class="input-wrapper">
+                <div class="downlist" @click="isBankList = !isBankList">{{ textBindBankSelectedBank }}
+                  <ul class="bank-list input-wrapper" v-show="isBankList">
+                    <li class="list-item" v-for="item in bankList" @click="selectBank(item)">{{ item.bankName }}</li>
+                  </ul>
+                </div>
+                <i class="icon-arrow down" v-show="!isBankList"></i>
+                <i class="icon-arrow up" v-show="isBankList"></i>
+              </div>
+            </div>
+            <div class="form-row depositbank">开户行：<div class="input-wrapper"><input type="text" class="input" ref="inputBindBankCardOpeningBank" v-model="inputBindBankCardOpeningBank" placeholder="单笔打款大于5万需要开户行信息"><i class="icon-input-clear" v-show="inputBindBankCardOpeningBank != ''" @click="clearInput('inputBindBankCardOpeningBank')"></i></div></div>
+            <a class="btn-normal" @click="bindBankCardConfirm">确定</a>
+            <p class="warn">以上信息一旦填写，只能联系在线客服修改！</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-充值信息 -->
+      <section class="module module-rechargeresult" v-if="isModuleRechargeResult">
+        <div class="module-wrapper"></div>
+
+        <div class="module-container">
+          <p class="title">{{ rechargeResultData.status == 2 ? '充值成功' : '充值失败' }}</p>
+          <a class="module-close" @click="toggleModule('isModuleRechargeResult')"></a>
+          <div class="content" v-if="rechargeResultData.status == 2">
+            <p class="amount">￥{{ rechargeResultData.amount }}</p>
+            <p class="trade-id"><span class="info-title">订单编号：</span>{{ rechargeResultData.id }}</p>
+            <p class="date"><span class="info-title">充值时间：</span>{{ rechargeResultData.date | formatDate }}</p>
+            <a class="btn-normal" @click="toggleModule('isModuleRechargeResult')">完成</a>
+          </div>
+          <div class="content error" v-else>
+            <p class="message">充值失败，请重试</p>
+            <a class="btn-normal" @click="toggleModule('isModuleRechargeResult')">确定</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 弹窗-提示信息 -->
+      <section class="alert" v-show="isAlert">
+        <div class="alert-wrapper" @click="isAlert = false;alertCallback && alertCallback();"></div>
+
+        <span class="alert-container">{{ alertMsg }}</span>
+      </section>
+
+      <!-- 弹窗-对话框 -->
+      <section class="module module-dialog" v-show="dialogData.isDialog">
+        <div class="module-wrapper"></div>
+
+        <main class="module-container">
+          <p class="title">{{ dialogData.title }}</p>
+          <div class="content">
+            <p class="message">{{ dialogData.message }}</p>
+            <div class="btns flex-row">
+              <a class="btn-normal" @click="dialogData.btnsText[0].callback && dialogData.btnsText[0].callback()">{{ dialogData.btnsText[0].text }}</a>
+              <a class="btn-normal" @click="dialogData.btnsText[1].callback && dialogData.btnsText[1].callback()">{{ dialogData.btnsText[1].text }}</a>
+            </div>
+            <div class="if-remind" v-if="dialogData.showNextRemind" @click="dialogData.isNextRemind = !dialogData.isNextRemind"><i class="icon-select" v-show="dialogData.isNextRemind"></i><i class="icon-unselect" v-show="!dialogData.isNextRemind"></i><span class="remind-text">下次不再提醒</span></div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 弹窗-loading -->
+      <section class="loading" v-show="isLoading">
+        <div class="loading-wrapper"></div>
+
+        <div class="loading-container">
+          <img class="icon-loading" src="./img/loading.png">
+        </div>
+      </section>
+
+      <!-- 表单-支付-新宝 -->
+      <!--<form v-if="payData" v-show="false" method="post" name="formForPay" action="https://api.bankspay.net/payment/gateway">
+        <input type="text" name="amount" v-model="payData.amount">
+        <input type="text" name="attach" v-model="payData.attach">
+        <input type="text" name="bank_code" v-model="payData.bank_code">
+        <input type="text" name="notify_url" v-model="payData.notify_url">
+        <input type="text" name="order_no" v-model="payData.order_no">
+        <input type="text" name="partner_id" v-model="payData.partner_id">
+        <input type="text" name="pay_type" v-model="payData.pay_type">
+        <input type="text" name="return_url" v-model="payData.return_url">
+        <input type="text" name="sign" v-model="payData.sign">
+        <input type="text" name="summary" v-model="payData.summary">
+        <input type="text" name="version" v-model="payData.version">
+        <input type="submit">
+      </form> -->
+
+      <!-- 窗口-游戏 -->
+      <section class="game-main" v-show="isGameFrame">
+        <a class="btn-return" @click="toggleModule('isGameFrame')"></a>
+        <iframe class="main-frame" :src="gameFrameSrc"></iframe>
+      </section>
+    </div>
+
+    <script src="./js/vue-2.3.0.min.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <!-- <script src="./js/qs.min.js"></script> -->
+    <script src="./js/api.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

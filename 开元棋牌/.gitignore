@@ -1,0 +1,7 @@
+.DS_Store
+kk.server/kk.api/target/
+kk.server/kk.api/.idea/
+kk.server/kk.api/api.kk.iml
+kk.server/kk.cms/target/
+kk.server/kk.cms/.idea/
+kk.server/kk.cms/cms.kk.iml

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cicada.mapper.ClientAccountDetailMapper">
+
+    <resultMap id="tradeVoResultMap" type="com.cicada.pojo.vo.TradeVo">
+        <id column="uad_id" property="uadId" jdbcType="BIGINT"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="phonenumber" property="phonenumber" jdbcType="VARCHAR"/>
+        <result column="coins" property="coins" jdbcType="DECIMAL"/>
+        <result column="from_type" property="fromType" jdbcType="INTEGER" javaType="com.cicada.enums.TradeTypeEnum"/>
+        <result column="trade_status" property="tradeStatus" jdbcType="VARCHAR"/>
+        <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+        <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+        <result column="recharge_id" property="rechargeId" jdbcType="BIGINT"/>
+        <result column="activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="operater" property="operater" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--获取玩家列表-->
+    <select id="selectTradeList" resultMap="tradeVoResultMap" parameterType="java.util.Map">
+        <bind name="nick" value="'%'+_parameter.nickname+'%'"/>
+        <bind name="phone" value="'%'+_parameter.phonenumber+'%'"/>
+        SELECT t.uad_id,t.account_id,t.user_id,u.nickname,u.phonenumber,t.coins,t.from_type,
+               cu.nickname,t.create_date,'成功' AS trade_status,
+               t.task_id,t.order_id,t.recharge_id,t.activity_id
+        FROM t_user_account_detail t
+        JOIN m_users u on t.user_id = u.user_id
+        LEFT JOIN m_users cu on cu.user_id = t.create_by
+        <where>
+            t.is_delete = 0
+            <if test=" nickname != null and nickname != '' ">
+                AND nickname LIKE #{nick}
+            </if>
+            <if test=" phonenumber != null and phonenumber != '' ">
+                AND phonenumber LIKE #{phone}
+            </if>
+            <if test=" userId != null and userId != 0 ">
+                AND t.user_id = #{userId}
+            </if>
+            <if test=" startTime != null ">
+                <![CDATA[ AND create_date >= #{startTime} ]]>
+            </if>
+            <if test=" endTime != null ">
+                <![CDATA[ AND create_date <= #{endTime} ]]>
+            </if>
+        </where>
+        ORDER BY t.uad_id DESC limit #{limit} offset #{offset}
+    </select>
+
+    <!--玩家记录总数-->
+    <select id="selectTradeRecordsTotal" parameterType="java.util.Map" resultType="java.lang.Long" >
+        <bind name="nick" value="'%'+_parameter.nickname+'%'"/>
+        <bind name="phone" value="'%'+_parameter.phonenumber+'%'"/>
+        SELECT COUNT(1) cnt
+        FROM t_user_account_detail t
+        JOIN m_users u on t.user_id = u.user_id
+        LEFT JOIN m_users cu on cu.user_id = t.create_by
+        <where>
+            t.is_delete = 0
+            <if test=" nickname != null and nickname != '' ">
+                AND nickname LIKE #{nick}
+            </if>
+            <if test=" phonenumber != null and phonenumber != '' ">
+                AND phonenumber LIKE #{phone}
+            </if>
+            <if test=" userId != null and userId != 0 ">
+                AND t.user_id = #{userId}
+            </if>
+            <if test=" startTime != null ">
+                <![CDATA[ AND create_date >= #{startTime} ]]>
+            </if>
+            <if test=" endTime != null ">
+                <![CDATA[ AND create_date <= #{endTime} ]]>
+            </if>
+        </where>
+    </select>
+
+</mapper>

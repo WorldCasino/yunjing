@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<h1ad>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .title {
+            font-size: 30px;
+            text-align: center;
+            line-height: 100px;
+            background: #E2E2E2;
+        }
+        
+        .msgCan {
+            width: 300px;
+            height: 500px;
+            background: pink;
+            margin: 50px auto;
+            padding: 10px;
+        }
+        
+        .msgCan p {
+            margin-bottom: 10px;
+        }
+        
+        .mymsg {
+            text-align: right; overflow-y: scroll;
+        }
+        .visitor {
+          color: red;
+        }
+        
+        .my{
+          color:  blue; text-align: right;
+        }
+    </style>
+    </head>
+
+    <body>
+        <h1 class="title">socket聊天</h1>
+        <h3 id="people"></h3>
+
+        <input type="text" id="text" /><br />
+        <button id="btn">发送</button>
+        <div id="msgCan" class="msgCan"></div>
+
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
+		
+        <script>
+            // 创建websocket连接 
+            var url = 'http://192.168.1.55:8080'
+//            var url = 'ws:192.168.1.201:80'
+
+            var socket = io.connect(url)
+                socket.on('connect', function(){
+                  console.log(212121)
+                  socket.on('message', function(msg){
+                    console.log(msg)
+                    var dom = document.createElement('p')
+                    dom.className = 'visitor'
+                    dom.innerHTML = msg
+                    msgCan.appendChild(dom)
+                  })
+                  
+                  
+                  socket.on('online', function(msg){
+                    console.log(msg)
+                  })
+                  
+                  socket.on('oneLeave', function(msg){
+                    console.log(msg)
+                  })  
+                })
+                
+                document.getElementById("btn").onclick=function(){
+                  if (text.value) {
+                      socket.send(text.value)
+                      var dom = document.createElement('p')
+                      dom.className = 'my'
+                      dom.innerHTML = text.value
+                      msgCan.appendChild(dom)
+                      text.value = ''
+                  } 
+                }
+        </script>
+    </body>
+
+</html>

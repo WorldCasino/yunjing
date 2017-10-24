@@ -1,0 +1,42 @@
+{
+    "name": "com.caiyicai.guess",
+    "displayName": "quiz",
+    "version": "1.0.0",
+    "description": "A sample Apache Cordova application that responds to the deviceready event.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Apache Cordova Team",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "cordova-hot-code-push-plugin": "^1.5.3",
+        "cordova-ios": "^4.4.0",
+        "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-inapppurchase": "git+https://github.com/AlexDisler/cordova-plugin-inapppurchase.git",
+        "cordova-plugin-statusbar": "^2.2.3",
+        "cordova-plugin-wechat": "^2.0.0",
+        "cordova-plugin-whitelist": "^1.3.2",
+        "cordova-plugin-xgpush": "https://github.com/ETENG-OSP/xgpush-cordova",
+        "xgpush-cordova": "git+https://github.com/ETENG-OSP/xgpush-cordova.git"
+    },
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-console": {},
+            "cordova-plugin-inapppurchase": {},
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-xgpush": {
+                "ACCESS_ID": "1627738298",
+                "ACCESS_KEY": "1253930144"
+            },
+            "cordova-plugin-wechat": {
+                "WECHATAPPID": "wx90bb3475e4e8850a"
+            },
+            "cordova-hot-code-push-plugin": {}
+        },
+        "platforms": [
+            "ios"
+        ]
+    }
+}

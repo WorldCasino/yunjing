@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2cc2e746-29d1-424b-94f8-97d22be78b26" name="aliyun-guess" url="http://116.62.21.46:8080">
+        <fileTransfer host="116.62.21.46" port="22" rootFolder="/home/www/node" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

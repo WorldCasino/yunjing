@@ -1,0 +1,47 @@
+{
+  "_from": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+  "_id": "xgpush-cordova@0.2.0",
+  "_inBundle": false,
+  "_integrity": "sha1-gkvDPHLapE6pybvIllHLtAgT5Gc=",
+  "_location": "/xgpush-cordova",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/ETENG-OSP/xgpush-cordova",
+    "rawSpec": "https://github.com/ETENG-OSP/xgpush-cordova",
+    "saveSpec": "git+https://github.com/ETENG-OSP/xgpush-cordova.git",
+    "fetchSpec": "https://github.com/ETENG-OSP/xgpush-cordova.git",
+    "gitCommittish": "master"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/ETENG-OSP/xgpush-cordova.git#e83f5164b2902f7f37ff85c954d8feca0ae180b5",
+  "_spec": "https://github.com/ETENG-OSP/xgpush-cordova",
+  "_where": "/Users/homepaasserver/work/guess/LetsGuess/Source/m-vortex/vortex-flow/app/node_modules",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/gengen1988/xgpush-cordova/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "es6-promise": "^3.0.2",
+    "eventemitter3": "^1.1.1"
+  },
+  "deprecated": false,
+  "description": "腾讯信鸽推送服务：http://xg.qq.com/",
+  "devDependencies": {},
+  "homepage": "https://github.com/gengen1988/xgpush-cordova#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "name": "xgpush-cordova",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gengen1988/xgpush-cordova.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.2.0"
+}

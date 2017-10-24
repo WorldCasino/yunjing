@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="api.kk:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="api.kk-1.0.war">
-      <element id="artifact" artifact-name="api.kk:war exploded" />
-    </root>
-  </artifact>
-</component>
